@@ -39,9 +39,9 @@ jobs:
       - name: Set npm package versions
         run: |
           VERSION="${{ steps.ver.outputs.version }}"
-          npm version "$VERSION" --no-git-tag-version --workspace=@bari77/gc-sdk
-          npm version "$VERSION" --no-git-tag-version --workspace=@bari77/gc-msw
-          npm version "$VERSION" --no-git-tag-version --workspace=@bari77/gc-playground
+          for ws in @bari77/gc-sdk @bari77/gc-msw @bari77/gc-playground; do
+            npm pkg set "version=${VERSION}" --workspace="$ws"
+          done
           npm pkg set "dependencies.@bari77/gc-sdk=${VERSION}" --workspace=@bari77/gc-msw
           npm pkg set "dependencies.@bari77/gc-sdk=${VERSION}" --workspace=@bari77/gc-playground
           npm install
