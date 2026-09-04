@@ -1,0 +1,118 @@
+openapi: 3.0.3
+info:
+  title: Game API (gateway contract)
+  version: 0.1.0
+  description: >
+    Template OpenAPI minimal pour un microservice jeu exposé via Gateway / DevGateway.
+    Remplacer {ms} et étendre les ressources selon le jeu.
+servers:
+  - url: http://localhost:8081
+    description: DevGateway local
+paths:
+  /api/{ms}/Classes:
+    parameters:
+      - $ref: '#/components/parameters/MicroserviceId'
+    get:
+      operationId: listClasses
+      summary: List classes
+      responses:
+        '200':
+          description: Liste JSON des classes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GameClass'
+    post:
+      operationId: createClass
+      summary: Create class
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameClassInput'
+      responses:
+        '201':
+          description: Identifiant créé
+  /api/{ms}/Classes/{id}:
+    parameters:
+      - $ref: '#/components/parameters/MicroserviceId'
+      - $ref: '#/components/parameters/ResourceId'
+    get:
+      operationId: getClass
+      summary: Get class by id
+      responses:
+        '200':
+          description: Classe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameClass'
+    put:
+      operationId: updateClass
+      summary: Update class
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameClassInput'
+      responses:
+        '204':
+          description: Mis à jour
+    delete:
+      operationId: deleteClass
+      summary: Delete class
+      responses:
+        '204':
+          description: Supprimé
+  /api/health:
+    get:
+      operationId: health
+      summary: Gateway health
+      responses:
+        '200':
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Healthy
+                  gateway:
+                    type: string
+                    example: dev
+components:
+  parameters:
+    MicroserviceId:
+      name: ms
+      in: path
+      required: true
+      schema:
+        type: string
+        example: worldofwarcraft
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+  schemas:
+    GameClass:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    GameClassInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string

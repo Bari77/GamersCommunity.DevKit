@@ -1,0 +1,28 @@
+{
+  "name": "@bari77/gc-sdk",
+  "version": "0.1.0",
+  "description": "Types et helpers partagés pour les fronts jeu GamersCommunity",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bari77/GamersCommunity.DevKit.git"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0"
+  },
+  "license": "UNLICENSED"
+}

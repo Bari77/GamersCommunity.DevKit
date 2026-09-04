@@ -1,0 +1,93 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: bari77/gc-devgateway
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve version from tag
+        id: ver
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: https://npm.pkg.github.com
+          scope: "@bari77"
+
+      - name: Install workspaces
+        run: npm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set npm package versions
+        run: |
+          VERSION="${{ steps.ver.outputs.version }}"
+          npm version "$VERSION" --no-git-tag-version --workspace=@bari77/gc-sdk
+          npm version "$VERSION" --no-git-tag-version --workspace=@bari77/gc-msw
+          npm version "$VERSION" --no-git-tag-version --workspace=@bari77/gc-playground
+          # Align internal dependency ranges to the release version
+          npm pkg set "dependencies.@bari77/gc-sdk=${VERSION}" --workspace=@bari77/gc-msw
+          npm pkg set "dependencies.@bari77/gc-sdk=${VERSION}" --workspace=@bari77/gc-playground
+
+      - name: Verify TypeScript
+        run: npm run build
+
+      - name: Publish npm packages
+        run: |
+          npm publish --workspace=@bari77/gc-sdk --access restricted
+          npm publish --workspace=@bari77/gc-msw --access restricted
+          npm publish --workspace=@bari77/gc-playground --access restricted
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push DevGateway image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: src/DevGateway/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.ver.outputs.version }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          secrets: |
+            nuget_token=${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: DevKit ${{ steps.ver.outputs.version }}
+          generate_release_notes: true
+          body: |
+            ## Packages npm (GitHub Packages)
+            - `@bari77/gc-sdk@${{ steps.ver.outputs.version }}`
+            - `@bari77/gc-msw@${{ steps.ver.outputs.version }}`
+            - `@bari77/gc-playground@${{ steps.ver.outputs.version }}`
+
+            ## Image
+            - `ghcr.io/bari77/gc-devgateway:${{ steps.ver.outputs.version }}`

@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gamerscommunity.local/schemas/federation.contract.schema.json",
+  "title": "FederationContract",
+  "description": "Contrat Module Federation exposé par un remote jeu vers le shell Front.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["remoteName", "expose", "routePrefix", "remoteEntryDev"],
+  "properties": {
+    "remoteName": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Nom du remote federation (ex. worldofwarcraft)."
+    },
+    "expose": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Chemin d'expose du module (ex. ./Routes)."
+    },
+    "routePrefix": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Préfixe de route shell pour ce jeu (ex. /wow)."
+    },
+    "remoteEntryDev": {
+      "type": "string",
+      "minLength": 1,
+      "description": "URL du remoteEntry en développement (ex. http://localhost:4201/remoteEntry.json)."
+    },
+    "resources": {
+      "type": "array",
+      "description": "Ressources gateway déclarées pour ce jeu (optionnel).",
+      "items": {
+        "$ref": "#/$defs/gatewayResource"
+      }
+    }
+  },
+  "$defs": {
+    "gatewayResource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "name"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["DATA", "APP", "INFRA"]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

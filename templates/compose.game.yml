@@ -1,0 +1,54 @@
+# Reference compose for a game team (no Core / DevKit sibling checkout).
+
+name: gc-game-dev
+
+services:
+  rabbitmq:
+    image: docker.io/library/rabbitmq:3.13-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-admin}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-admin}
+    networks:
+      - game
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-Your_password123}
+    networks:
+      - game
+
+  # consumer:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     secrets:
+  #       - nuget_token
+  #   ...
+
+  devgateway:
+    image: ghcr.io/bari77/gc-devgateway:${DEVGATEWAY_VERSION:-latest}
+    ports:
+      - "8081:8080"
+    environment:
+      RabbitMQ__Hostname: rabbitmq
+      RabbitMQ__Username: ${RABBITMQ_USER:-admin}
+      RabbitMQ__Password: ${RABBITMQ_PASSWORD:-admin}
+      DevGateway__MicroserviceId: yourgame
+      DevGateway__Queue: yourgame_queue
+    networks:
+      - game
+
+networks:
+  game:
+    driver: bridge
+
+secrets:
+  nuget_token:
+    environment: GITHUB_TOKEN
