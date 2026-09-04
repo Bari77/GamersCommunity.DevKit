@@ -42,15 +42,18 @@ jobs:
           npm version "$VERSION" --no-git-tag-version --workspace=@bari77/gc-sdk
           npm version "$VERSION" --no-git-tag-version --workspace=@bari77/gc-msw
           npm version "$VERSION" --no-git-tag-version --workspace=@bari77/gc-playground
-          # Align internal dependency ranges to the release version
           npm pkg set "dependencies.@bari77/gc-sdk=${VERSION}" --workspace=@bari77/gc-msw
           npm pkg set "dependencies.@bari77/gc-sdk=${VERSION}" --workspace=@bari77/gc-playground
+          npm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Verify TypeScript
         run: npm run build
 
       - name: Publish npm packages
         run: |
+          # sdk first — msw/playground depend on it
           npm publish --workspace=@bari77/gc-sdk --access restricted
           npm publish --workspace=@bari77/gc-msw --access restricted
           npm publish --workspace=@bari77/gc-playground --access restricted
