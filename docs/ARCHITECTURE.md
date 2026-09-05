@@ -17,13 +17,17 @@ Shared foundations so a game team can develop **Front + Back** without cloning t
 | Artefact | Registry |
 |----------|----------|
 | `@bari77/gc-sdk` / `gc-msw` / `gc-playground` | GitHub Packages (npm) |
-| `@bari77/gc-create-game` | GitHub Packages (npm) — scaffolds a full game repo |
+| `@bari77/gc-create-game` | GitHub Packages (npm) — clones `GamersCommunity.Games.Template` and renames |
 | `GamersCommunity.Core*` | GitHub Packages (NuGet) — Core repo |
 | `ghcr.io/bari77/gc-devgateway` | GHCR |
 
 Publishing: push a `v*` tag → see [RELEASE.md](./RELEASE.md).
 
 Federation (no iframes): [FEDERATION.md](./FEDERATION.md).
+
+## Scaffold flow
+
+`gc-create-game` shallow-clones `https://github.com/Bari77/GamersCommunity.Games.Template.git` (`main`), strips `.git`, then rewrites identity (`Template` → game Pascal, `template` → id/kebab/camel, ports, queue, compose name, CSS prefix). Runtime no longer depends on `templates/game` inside DevKit.
 
 ## DevGateway flow
 

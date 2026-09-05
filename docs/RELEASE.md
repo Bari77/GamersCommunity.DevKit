@@ -8,7 +8,7 @@ Pushing a `vX.Y.Z` tag runs `.github/workflows/release.yml`:
    - `@bari77/gc-sdk`
    - `@bari77/gc-msw`
    - `@bari77/gc-playground`
-   - `@bari77/gc-create-game`
+   - `@bari77/gc-create-game` (clones `GamersCommunity.Games.Template` at runtime — no template bundled in the package)
 2. Build & push image **`ghcr.io/bari77/gc-devgateway:X.Y.Z`**
 3. Create a **GitHub Release**
 
@@ -18,11 +18,11 @@ Pushing a `vX.Y.Z` tag runs `.github/workflows/release.yml`:
 ## Publish
 
 ```bash
-git tag v0.2.0
-git push origin v0.2.0
+git tag v0.3.1
+git push origin v0.3.1
 ```
 
-**Recommended order**: publish a **Core** tag first (NuGet `GamersCommunity.Core`) before DevKit, because the DevGateway image restores that package.
+**Recommended order**: publish a **Core** tag first (NuGet `GamersCommunity.Core`) before DevKit, because the DevGateway image restores that package. Keep `GamersCommunity.Games.Template` `main` usable before publishing a create-game that clones it.
 
 ## Consume (game teams)
 
@@ -43,9 +43,9 @@ npm install
 ```json
 {
   "dependencies": {
-    "@bari77/gc-sdk": "0.3.0",
-    "@bari77/gc-msw": "0.3.0",
-    "@bari77/gc-playground": "0.3.0"
+    "@bari77/gc-sdk": "0.3.1",
+    "@bari77/gc-msw": "0.3.1",
+    "@bari77/gc-playground": "0.3.1"
   }
 }
 ```
@@ -54,13 +54,14 @@ npm install
 
 ```bash
 npx @bari77/gc-create-game YourGame
+# clones Bari77/GamersCommunity.Games.Template (main), renames Template → YourGame
 ```
 
 ### DevGateway (game-full)
 
 ```yaml
 devgateway:
-  image: ghcr.io/bari77/gc-devgateway:0.3.0
+  image: ghcr.io/bari77/gc-devgateway:0.3.1
 ```
 
 ```powershell

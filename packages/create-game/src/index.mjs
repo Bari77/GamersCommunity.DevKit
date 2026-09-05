@@ -1,21 +1,20 @@
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const TEMPLATE_REPO = "https://github.com/Bari77/GamersCommunity.Games.Template.git";
+const TEMPLATE_REF = "main";
 
-const TOKENS = [
-  "__GamePascal__",
-  "__GameKebab__",
-  "__GameCamel__",
-  "__MicroserviceId__",
-  "__QueueName__",
-  "__ComposeName__",
-  "__NetworkName__",
-  "__FrontPort__",
-  "__GatewayPort__",
-  "__CssPrefix__",
-];
+const SRC = {
+  pascal: "Template",
+  lower: "template",
+  queue: "template_queue",
+  compose: "gc-template-dev",
+  css: "tpl",
+  frontPort: "4202",
+  gatewayPort: "8082",
+};
 
 /**
  * @param {string} raw
@@ -24,7 +23,6 @@ export function deriveNames(raw) {
   const trimmed = raw.trim();
   if (!trimmed) throw new Error("Game name is required.");
 
-  // Accept "StarCraft", "star-craft", "star craft"
   const pascal = trimmed
     .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
     .split(/[\s_\-./]+/)
@@ -54,35 +52,69 @@ export function deriveNames(raw) {
   };
 }
 
-export function resolveTemplateDir() {
-  const candidates = [
-    path.join(__dirname, "..", "template"),
-    path.join(__dirname, "..", "..", "..", "templates", "game"),
-  ];
-  for (const c of candidates) {
-    if (fs.existsSync(path.join(c, "compose.yml"))) return c;
-  }
-  throw new Error("Game template not found. Reinstall @bari77/gc-create-game or run from DevKit checkout.");
-}
-
 /**
  * @param {string} content
- * @param {Record<string, string>} map
+ * @param {{ GamePascal: string, GameKebab: string, GameCamel: string, MicroserviceId: string, QueueName: string, ComposeName: string, NetworkName: string, CssPrefix: string, FrontPort: string, GatewayPort: string }} map
  */
-export function applyTokens(content, map) {
+export function rewriteTemplateContent(content, map) {
   let out = content;
-  for (const [key, value] of Object.entries(map)) {
-    out = out.split(`__${key}__`).join(value);
+  out = out.split(SRC.queue).join(map.QueueName);
+  out = out.split(SRC.compose).join(map.ComposeName);
+  out = out.split(SRC.gatewayPort).join(map.GatewayPort);
+  out = out.split(SRC.frontPort).join(map.FrontPort);
+  out = out.split(SRC.pascal).join(map.GamePascal);
+  out = out.split(SRC.css).join(map.CssPrefix);
+
+  const { GameKebab: kebab, GameCamel: camel, MicroserviceId: id, NetworkName: network } = map;
+  const collapsed = kebab === camel && camel === id;
+
+  if (collapsed) {
+    return out.split(SRC.lower).join(id);
   }
+
+  const MK_ROUTES = "\0GC_KEBAB_ROUTES\0";
+  const MK_PREFIX = "\0GC_KEBAB_PREFIX\0";
+  const MK_QID = "\0GC_QUOTED_ID\0";
+  const MK_QID_S = "\0GC_QUOTED_ID_S\0";
+  const MK_NET = "\0GC_NETWORK\0";
+  const MK_ID = "\0GC_ID\0";
+
+  out = out.split(`${SRC.lower}.routes`).join(`${MK_ROUTES}.routes`);
+  out = out.split(`/${SRC.lower}`).join(`/${MK_PREFIX}`);
+  out = out.split(`"${SRC.lower}"`).join(MK_QID);
+  out = out.split(`'${SRC.lower}'`).join(MK_QID_S);
+  out = out.split(`- ${SRC.lower}`).join(`- ${MK_NET}`);
+  out = out.split(`  ${SRC.lower}:`).join(`  ${MK_NET}:`);
+  out = out.split(SRC.lower).join(MK_ID);
+
+  out = out.split(MK_ROUTES).join(kebab);
+  out = out.split(MK_PREFIX).join(kebab);
+  out = out.split(MK_QID).join(`"${id}"`);
+  out = out.split(MK_QID_S).join(`'${id}'`);
+  out = out.split(MK_NET).join(network);
+  out = out.split(MK_ID).join(id);
   return out;
 }
 
 /**
  * @param {string} name
- * @param {Record<string, string>} map
+ * @param {{ GamePascal: string, GameKebab: string, GameCamel: string, MicroserviceId: string, CssPrefix: string }} map
  */
-export function applyTokensToPath(name, map) {
-  return applyTokens(name, map);
+export function rewriteTemplatePath(name, map) {
+  let out = name;
+  out = out.split(SRC.pascal).join(map.GamePascal);
+  out = out.split(SRC.css).join(map.CssPrefix);
+  if (out.includes(`${SRC.lower}.routes`)) {
+    out = out.split(`${SRC.lower}.routes`).join(`${map.GameKebab}.routes`);
+  }
+  const collapsed =
+    map.GameKebab === map.GameCamel && map.GameCamel === map.MicroserviceId;
+  if (collapsed) {
+    out = out.split(SRC.lower).join(map.MicroserviceId);
+  } else if (out.includes(SRC.lower)) {
+    out = out.split(SRC.lower).join(map.GameKebab);
+  }
+  return out;
 }
 
 /**
@@ -90,19 +122,15 @@ export function applyTokensToPath(name, map) {
  * @param {string} destDir
  * @param {Record<string, string>} map
  */
-export function copyTemplate(srcDir, destDir, map) {
+export function copyRewrittenTree(srcDir, destDir, map) {
   fs.mkdirSync(destDir, { recursive: true });
   for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
+    if (entry.name === ".git") continue;
     const from = path.join(srcDir, entry.name);
-    const toName = applyTokensToPath(entry.name, map);
+    const toName = rewriteTemplatePath(entry.name, map);
     const to = path.join(destDir, toName);
     if (entry.isDirectory()) {
-      copyTemplate(from, to, map);
-      continue;
-    }
-    if (entry.name === ".gitkeep") {
-      fs.mkdirSync(path.dirname(to), { recursive: true });
-      fs.writeFileSync(to, "");
+      copyRewrittenTree(from, to, map);
       continue;
     }
     const raw = fs.readFileSync(from);
@@ -110,8 +138,34 @@ export function copyTemplate(srcDir, destDir, map) {
     if (isBinary) {
       fs.writeFileSync(to, raw);
     } else {
-      fs.writeFileSync(to, applyTokens(raw.toString("utf8"), map), "utf8");
+      fs.writeFileSync(to, rewriteTemplateContent(raw.toString("utf8"), map), "utf8");
     }
+  }
+}
+
+/**
+ * @param {string} dest
+ * @param {Record<string, string>} map
+ */
+function scaffoldFromClone(dest, map) {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "gc-create-game-"));
+  const cloneDir = path.join(tmp, "template");
+  try {
+    const result = spawnSync(
+      "git",
+      ["clone", "--depth", "1", "--branch", TEMPLATE_REF, TEMPLATE_REPO, cloneDir],
+      { encoding: "utf8" },
+    );
+    if (result.status !== 0) {
+      const detail = (result.stderr || result.stdout || "").trim();
+      throw new Error(
+        `Failed to clone game template (${TEMPLATE_REPO}). Is git installed and the repo reachable?\n${detail}`,
+      );
+    }
+    fs.rmSync(path.join(cloneDir, ".git"), { recursive: true, force: true });
+    copyRewrittenTree(cloneDir, dest, map);
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
   }
 }
 
@@ -135,7 +189,8 @@ function parseArgs(argv) {
 function printHelp() {
   console.log(`Usage: gc-create-game <GameName> [options]
 
-Scaffold GamersCommunity.Games.<GameName> (Front + Consumer + Database + compose).
+Scaffold GamersCommunity.Games.<GameName> by cloning
+${TEMPLATE_REPO} (${TEMPLATE_REF}) and renaming Template → your game.
 
 Options:
   --out <dir>             Output parent directory (default: cwd)
@@ -175,9 +230,8 @@ export async function main(argv) {
     throw new Error(`Target already exists: ${dest}`);
   }
 
-  const template = resolveTemplateDir();
-  console.log(`Scaffolding ${names.GamePascal} from ${template}`);
-  copyTemplate(template, dest, map);
+  console.log(`Scaffolding ${names.GamePascal} from ${TEMPLATE_REPO} (${TEMPLATE_REF})`);
+  scaffoldFromClone(dest, map);
 
   console.log(`
 Created: ${dest}
@@ -203,6 +257,3 @@ Next steps:
        → API http://localhost:${opts.gatewayPort}
 `);
 }
-
-// silence unused TOKENS in typecheck-less world
-void TOKENS;

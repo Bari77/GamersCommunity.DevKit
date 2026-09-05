@@ -1,9 +1,0 @@
-{
-  "remoteName": "__GameCamel__",
-  "expose": "./Routes",
-  "routePrefix": "/__GameKebab__",
-  "remoteEntryDev": "http://localhost:__FrontPort__/remoteEntry.json",
-  "resources": [
-    { "type": "DATA", "name": "Items", "actions": ["List", "Get"] }
-  ]
-}

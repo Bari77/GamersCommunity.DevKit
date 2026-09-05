@@ -1,15 +1,14 @@
 {
   "name": "@bari77/gc-create-game",
-  "version": "0.3.0",
-  "description": "Scaffold a new GamersCommunity game repo (Front + Consumer + Database)",
+  "version": "0.3.1",
+  "description": "Scaffold a new GamersCommunity game repo by cloning Games.Template",
   "type": "module",
   "bin": {
     "gc-create-game": "./bin/gc-create-game.mjs"
   },
   "files": [
     "bin",
-    "src",
-    "template"
+    "src"
   ],
   "exports": {
     ".": "./src/index.mjs"

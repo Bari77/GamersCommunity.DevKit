@@ -48,11 +48,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Bundle game template into create-game package
-        run: |
-          rm -rf packages/create-game/template
-          cp -a templates/game packages/create-game/template
-
       - name: Verify TypeScript
         run: npm run build
 

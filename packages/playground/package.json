@@ -1,6 +1,6 @@
 {
   "name": "@bari77/gc-playground",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Playground / mocks bootstrap for GamersCommunity game fronts",
   "type": "module",
   "main": "./src/index.ts",
