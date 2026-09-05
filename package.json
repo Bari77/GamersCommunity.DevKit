@@ -1,8 +1,8 @@
 {
   "name": "gamerscommunity-devkit",
   "private": true,
-  "version": "0.1.0",
-  "description": "Outils et contrats de développement pour les équipes jeu GamersCommunity",
+  "version": "0.2.0",
+  "description": "Development tools and contracts for GamersCommunity game teams",
   "workspaces": [
     "packages/*"
   ],

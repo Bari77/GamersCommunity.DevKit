@@ -1,33 +1,33 @@
-# Publication DevKit (tags → Release + npm + image)
+# DevKit publishing (tags → Release + npm + image)
 
-## Principe
+## Principle
 
-Push d’un tag `vX.Y.Z` → workflow `.github/workflows/release.yml` :
+Pushing a `vX.Y.Z` tag runs `.github/workflows/release.yml`:
 
-1. Publie les packages npm sur **GitHub Packages**
+1. Publish npm packages to **GitHub Packages**
    - `@bari77/gc-sdk`
    - `@bari77/gc-msw`
    - `@bari77/gc-playground`
-2. Build & push l’image **`ghcr.io/bari77/gc-devgateway:X.Y.Z`**
-3. Crée une **GitHub Release**
+2. Build & push image **`ghcr.io/bari77/gc-devgateway:X.Y.Z`**
+3. Create a **GitHub Release**
 
-> Scope npm = owner GitHub (`Bari77`). D’où `@bari77/gc-*` plutôt que `@gamerscommunity/*`.  
-> Si vous créez plus tard l’organisation `gamerscommunity`, on pourra renommer le scope.
+> npm scope = GitHub owner (`Bari77`). Hence `@bari77/gc-*` rather than `@gamerscommunity/*`.  
+> If you later create a `gamerscommunity` organization, the scope can be renamed.
 
-## Publier
+## Publish
 
 ```bash
 git tag v0.2.0
 git push origin v0.2.0
 ```
 
-**Ordre recommandé** : publier d’abord un tag **Core** (NuGet `GamersCommunity.Core`) avant DevKit, car l’image DevGateway restaure ce package.
+**Recommended order**: publish a **Core** tag first (NuGet `GamersCommunity.Core`) before DevKit, because the DevGateway image restores that package.
 
-## Consommer (équipes jeu)
+## Consume (game teams)
 
 ### npm
 
-`.npmrc` dans le Front :
+Front `.npmrc`:
 
 ```
 @bari77:registry=https://npm.pkg.github.com
@@ -60,12 +60,12 @@ devgateway:
 echo $env:GITHUB_TOKEN | docker login ghcr.io -u USER --password-stdin
 ```
 
-### Layout équipe jeu
+### Game team layout
 
 ```text
 clone GamersCommunity.Games.<YourGame>
-(+ auth GitHub Packages / GHCR)
-# pas de Core, pas de Gateway prod, pas de Front shell
+(+ GitHub Packages / GHCR auth)
+# no Core, no prod Gateway, no shell Front
 ```
 
-Les leads plateforme gardent Core / Front / Gateway / Local.
+Platform leads keep Core / Front / Gateway / Local.

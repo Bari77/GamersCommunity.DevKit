@@ -5,19 +5,23 @@ name: gc-game-dev
 services:
   rabbitmq:
     image: docker.io/library/rabbitmq:3.13-management-alpine
+    # Rootless Podman on Windows: rabbitmq user gets eacces on .erlang.cookie
+    user: "0:0"
     ports:
       - "5672:5672"
       - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-admin}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-admin}
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE:-gc-game-dev}
     networks:
       - game
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    # Host 1433 is often already taken by a local Windows SQL Server instance.
     ports:
-      - "1433:1433"
+      - "${MSSQL_HOST_PORT:-14333}:1433"
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-Your_password123}

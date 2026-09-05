@@ -3,11 +3,11 @@ info:
   title: Game API (gateway contract)
   version: 0.1.0
   description: >
-    Template OpenAPI minimal pour un microservice jeu exposé via Gateway / DevGateway.
-    Remplacer {ms} et étendre les ressources selon le jeu.
+    Minimal OpenAPI template for a game microservice exposed via Gateway / DevGateway.
+    Replace {ms} and extend resources per game.
 servers:
   - url: http://localhost:8081
-    description: DevGateway local
+    description: Local DevGateway
 paths:
   /api/{ms}/Classes:
     parameters:
@@ -17,7 +17,7 @@ paths:
       summary: List classes
       responses:
         '200':
-          description: Liste JSON des classes
+          description: JSON array of classes
           content:
             application/json:
               schema:
@@ -35,7 +35,7 @@ paths:
               $ref: '#/components/schemas/GameClassInput'
       responses:
         '201':
-          description: Identifiant créé
+          description: Created id
   /api/{ms}/Classes/{id}:
     parameters:
       - $ref: '#/components/parameters/MicroserviceId'
@@ -45,7 +45,7 @@ paths:
       summary: Get class by id
       responses:
         '200':
-          description: Classe
+          description: Class
           content:
             application/json:
               schema:
@@ -61,13 +61,13 @@ paths:
               $ref: '#/components/schemas/GameClassInput'
       responses:
         '204':
-          description: Mis à jour
+          description: Updated
     delete:
       operationId: deleteClass
       summary: Delete class
       responses:
         '204':
-          description: Supprimé
+          description: Deleted
   /api/health:
     get:
       operationId: health

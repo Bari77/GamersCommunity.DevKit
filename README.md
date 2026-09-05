@@ -1,14 +1,14 @@
 # GamersCommunity.DevKit
 
-Kit local pour les équipes jeu : DevGateway, packages npm (`@bari77/gc-*`), templates.
+Local kit for game teams: DevGateway, npm packages (`@bari77/gc-*`), templates.
 
-## Publication
+## Publishing
 
-Voir [docs/RELEASE.md](docs/RELEASE.md) — **tag `vX.Y.Z` → Release + npm + image GHCR**.
+See [docs/RELEASE.md](docs/RELEASE.md) — **tag `vX.Y.Z` → Release + npm + GHCR image**.
 
-Architecture : [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-## Developper sur DevKit (leads)
+## Developing DevKit (leads)
 
 ```bash
 npm install
@@ -16,11 +16,11 @@ dotnet restore
 dotnet run --project src/DevGateway
 ```
 
-Authentification GitHub Packages requise pour restaurer `GamersCommunity.Core` (NuGet).
+GitHub Packages authentication is required to restore `GamersCommunity.Core` (NuGet).
 
-## Consommer depuis un jeu
+## Consuming from a game
 
-Pas de `file:` / sibling. Versions publiées :
+No `file:` / sibling links. Use published versions:
 
 ```json
 "@bari77/gc-sdk": "0.1.0",

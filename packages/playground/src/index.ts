@@ -13,3 +13,5 @@ export async function bootstrapMocks(
   if (!enabled) return;
   await startWorker();
 }
+
+export { providePlaygroundUi } from './ui';

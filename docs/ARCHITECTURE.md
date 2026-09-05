@@ -1,40 +1,40 @@
-# Architecture DevKit
+# DevKit architecture
 
-## Rôle
+## Role
 
-Fondations partagées pour qu’une équipe jeu développe **Front + Back** sans cloner la plateforme (Core en sibling, Gateway prod, Shell).
+Shared foundations so a game team can develop **Front + Back** without cloning the platform (sibling Core, prod Gateway, Shell).
 
 ## Modes
 
 | Mode | Repos | Runtime |
 |------|-------|---------|
-| **UI-only** | Jeu seul | MSW (`@bari77/gc-msw`) |
-| **Game-full** | Jeu seul | Compose : Rabbit + SQL + consumer + image `gc-devgateway` |
-| **Platform** | Shell + Local + … | Intégration federation / auth réelle |
+| **UI-only** | Game only | MSW (`@bari77/gc-msw`) |
+| **Game-full** | Game only | Compose: Rabbit + SQL + consumer + `gc-devgateway` image |
+| **Platform** | Shell + Local + … | Real federation / auth integration |
 
 ## Packages
 
 | Artefact | Registry |
 |----------|----------|
 | `@bari77/gc-sdk` / `gc-msw` / `gc-playground` | GitHub Packages (npm) |
-| `GamersCommunity.Core*` | GitHub Packages (NuGet) — repo Core |
+| `GamersCommunity.Core*` | GitHub Packages (NuGet) — Core repo |
 | `ghcr.io/bari77/gc-devgateway` | GHCR |
 
-Publication : push de tag `v*` → voir [RELEASE.md](./RELEASE.md).
+Publishing: push a `v*` tag → see [RELEASE.md](./RELEASE.md).
 
-Fédération (pas d’iframes) : [FEDERATION.md](./FEDERATION.md).
+Federation (no iframes): [FEDERATION.md](./FEDERATION.md).
 
-## Flux DevGateway
+## DevGateway flow
 
 ```
-Front → HTTP /api/{ms}/… → DevGateway (fake Caller) → RabbitMQ → Consumer jeu
+Front → HTTP /api/{ms}/… → DevGateway (fake Caller) → RabbitMQ → game Consumer
 ```
 
-Même contrat d’URL que le Gateway prod ; auth OIDC désactivée.
+Same URL contract as the prod Gateway; OIDC auth is disabled.
 
-## Onboarding équipe jeu
+## Game team onboarding
 
 1. Clone `GamersCommunity.Games.<YourGame>`
-2. PAT `read:packages` → NuGet + npm + pull GHCR
-3. `npm start` (mocks) ou `compose up` + `npm run start:api`
-4. Contrat federation / OpenAPI → équipe Shell pour brancher le remote
+2. PAT `read:packages` → NuGet + npm + GHCR pull
+3. `npm start` (mocks) or `compose up` + `npm run start:api`
+4. Federation / OpenAPI contract → Shell team wires the remote

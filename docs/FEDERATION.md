@@ -1,36 +1,42 @@
-# Module Federation — ce que c’est (et ce que ce n’est pas)
+# Module Federation — what it is (and is not)
 
-## Pas des iframes
+## Not iframes
 
-Native Federation charge du **JavaScript/TypeScript** (bundles Angular) dans **la même page** que le shell.
+Native Federation loads **JavaScript/TypeScript** (Angular bundles) into **the same page** as the shell.
 
-- Même document HTML, même CSS cascade possible, même router Angular
-- Communication = imports, services partagés, events — pas `postMessage` cross-frame
-- Performance proche d’un lazy-load de routes classiques
+- Same HTML document, shared CSS cascade possible, same Angular router
+- Communication = imports, shared services, events — not cross-frame `postMessage`
+- Performance close to classic lazy-loaded routes
 
-Les iframes isolent un document entier (lourd, SEO/a11y/design difficiles). Ce n’est **pas** le modèle utilisé.
+Iframes isolate an entire document (heavy; SEO/a11y/design are harder). That is **not** the model used here.
 
-## Pas non plus des Web Components (obligatoires)
+## Design (Nebular) in the playground
 
-On peut exposer des composants Angular ; le contrat actuel expose surtout des **routes** (`./Routes`) montées dans le shell via `loadRemoteModule`.
+The shell owns `NbThemeModule.forRoot()`. The remote **must not** call it in federated routes.
 
-C’est un **micro-frontend** : un remote déployable indépendamment, composé au runtime dans l’app hôte.
+In **standalone** (playground), the remote may initialize Nebular in its own `app.config` (`providePlaygroundUi`): that config is **not** executed when the shell only loads `./Routes`.
 
-## À quoi ça sert ici
+## Not mandatory Web Components either
 
-| Objectif | Federation |
-|----------|------------|
-| Séparer les équipes (Shell vs WoW vs …) | Oui |
-| Déployer un jeu sans republier tout le shell | Oui (URL `remoteEntry`) |
-| Site réactif type SPA | Oui (pas d’iframe) |
-| Isoler totalement CSS/JS comme un widget tiers | Non (partage du runtime Angular) |
+Angular components can be exposed; the current contract mainly exposes **routes** (`./Routes`) mounted in the shell via `loadRemoteModule`.
 
-## Flux
+This is a **micro-frontend**: an independently deployable remote, composed at runtime into the host app.
+
+## Why it matters here
+
+| Goal | Federation |
+|------|------------|
+| Split teams (Shell vs WoW vs …) | Yes |
+| Deploy a game without republishing the whole shell | Yes (`remoteEntry` URL) |
+| SPA-like reactive site | Yes (no iframe) |
+| Fully isolate CSS/JS like a third-party widget | No (shared Angular runtime) |
+
+## Flow
 
 ```
-Shell (host)  --loadRemoteModule-->  remoteEntry.json du jeu
-                                    expose ./Routes
-                                    → routes Angular montées sous /world-of-warcraft
+Shell (host)  --loadRemoteModule-->  game remoteEntry.json
+                                    exposes ./Routes
+                                    → Angular routes mounted under /world-of-warcraft
 ```
 
-Le remote peut tourner **seul** (playground) pour l’équipe jeu ; le shell ne fait que le référencer à l’intégration.
+The remote can run **alone** (playground) for the game team; the shell only references it at integration time.

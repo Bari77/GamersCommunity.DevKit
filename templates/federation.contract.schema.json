@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://gamerscommunity.local/schemas/federation.contract.schema.json",
   "title": "FederationContract",
-  "description": "Contrat Module Federation exposé par un remote jeu vers le shell Front.",
+  "description": "Module Federation contract exposed by a game remote to the Front shell.",
   "type": "object",
   "additionalProperties": false,
   "required": ["remoteName", "expose", "routePrefix", "remoteEntryDev"],
@@ -10,26 +10,26 @@
     "remoteName": {
       "type": "string",
       "minLength": 1,
-      "description": "Nom du remote federation (ex. worldofwarcraft)."
+      "description": "Federation remote name (e.g. worldofwarcraft)."
     },
     "expose": {
       "type": "string",
       "minLength": 1,
-      "description": "Chemin d'expose du module (ex. ./Routes)."
+      "description": "Exposed module path (e.g. ./Routes)."
     },
     "routePrefix": {
       "type": "string",
       "minLength": 1,
-      "description": "Préfixe de route shell pour ce jeu (ex. /wow)."
+      "description": "Shell route prefix for this game (e.g. /wow)."
     },
     "remoteEntryDev": {
       "type": "string",
       "minLength": 1,
-      "description": "URL du remoteEntry en développement (ex. http://localhost:4201/remoteEntry.json)."
+      "description": "Dev remoteEntry URL (e.g. http://localhost:4201/remoteEntry.json)."
     },
     "resources": {
       "type": "array",
-      "description": "Ressources gateway déclarées pour ce jeu (optionnel).",
+      "description": "Gateway resources declared for this game (optional).",
       "items": {
         "$ref": "#/$defs/gatewayResource"
       }
