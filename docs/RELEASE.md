@@ -8,6 +8,7 @@ Pushing a `vX.Y.Z` tag runs `.github/workflows/release.yml`:
    - `@bari77/gc-sdk`
    - `@bari77/gc-msw`
    - `@bari77/gc-playground`
+   - `@bari77/gc-create-game`
 2. Build & push image **`ghcr.io/bari77/gc-devgateway:X.Y.Z`**
 3. Create a **GitHub Release**
 
@@ -42,18 +43,24 @@ npm install
 ```json
 {
   "dependencies": {
-    "@bari77/gc-sdk": "0.2.0",
-    "@bari77/gc-msw": "0.2.0",
-    "@bari77/gc-playground": "0.2.0"
+    "@bari77/gc-sdk": "0.3.0",
+    "@bari77/gc-msw": "0.3.0",
+    "@bari77/gc-playground": "0.3.0"
   }
 }
+```
+
+### Create a game
+
+```bash
+npx @bari77/gc-create-game YourGame
 ```
 
 ### DevGateway (game-full)
 
 ```yaml
 devgateway:
-  image: ghcr.io/bari77/gc-devgateway:0.2.0
+  image: ghcr.io/bari77/gc-devgateway:0.3.0
 ```
 
 ```powershell
@@ -63,7 +70,7 @@ echo $env:GITHUB_TOKEN | docker login ghcr.io -u USER --password-stdin
 ### Game team layout
 
 ```text
-clone GamersCommunity.Games.<YourGame>
+npx @bari77/gc-create-game YourGame
 (+ GitHub Packages / GHCR auth)
 # no Core, no prod Gateway, no shell Front
 ```

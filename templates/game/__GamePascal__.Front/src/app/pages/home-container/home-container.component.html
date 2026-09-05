@@ -1,0 +1,14 @@
+<nb-card>
+  <nb-card-header>__GamePascal__ Items</nb-card-header>
+  <nb-card-body>
+    @if (loading()) {
+      <div [nbSpinner]="true"></div>
+    } @else {
+      <ul>
+        @for (item of list(); track item.id) {
+          <li>{{ item.entitled }}</li>
+        }
+      </ul>
+    }
+  </nb-card-body>
+</nb-card>

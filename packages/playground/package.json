@@ -1,6 +1,6 @@
 {
   "name": "@bari77/gc-playground",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Playground / mocks bootstrap for GamersCommunity game fronts",
   "type": "module",
   "main": "./src/index.ts",
@@ -22,7 +22,7 @@
     "url": "https://github.com/Bari77/GamersCommunity.DevKit.git"
   },
   "dependencies": {
-    "@bari77/gc-sdk": "0.1.0"
+    "@bari77/gc-sdk": "0.3.0"
   },
   "peerDependencies": {
     "@angular/animations": "^21.0.0",

@@ -1,6 +1,6 @@
 {
   "name": "@bari77/gc-msw",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "MSW helpers to mock GamersCommunity gateway routes",
   "type": "module",
   "main": "./src/index.ts",
@@ -22,7 +22,7 @@
     "url": "https://github.com/Bari77/GamersCommunity.DevKit.git"
   },
   "dependencies": {
-    "@bari77/gc-sdk": "0.1.0"
+    "@bari77/gc-sdk": "0.3.0"
   },
   "peerDependencies": {
     "msw": "^2.0.0"

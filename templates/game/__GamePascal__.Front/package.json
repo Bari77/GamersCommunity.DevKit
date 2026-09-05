@@ -1,0 +1,42 @@
+{
+  "name": "__GameKebab__.front",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "ng serve --port __FrontPort__",
+    "start:mocks": "ng serve --port __FrontPort__",
+    "start:api": "ng serve --port __FrontPort__ --configuration api",
+    "build": "ng build"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^21.2.17",
+    "@angular/cdk": "^21.0.6",
+    "@angular/common": "21.2.17",
+    "@angular/compiler": "21.2.17",
+    "@angular/core": "21.2.17",
+    "@angular/forms": "21.2.17",
+    "@angular/platform-browser": "21.2.17",
+    "@angular/router": "21.2.17",
+    "@bari77/gc-msw": "0.3.0",
+    "@bari77/gc-playground": "0.3.0",
+    "@bari77/gc-sdk": "0.3.0",
+    "@nebular/eva-icons": "^17.0.0",
+    "@nebular/theme": "^17.0.0",
+    "es-module-shims": "^2.8.0",
+    "msw": "^2.7.0",
+    "rxjs": "7.8.2",
+    "tslib": "2.8.1",
+    "zone.js": "0.15.1"
+  },
+  "overrides": { "@angular/cdk": "21.0.6" },
+  "devDependencies": {
+    "@angular-architects/native-federation-v4": "^21.2.3",
+    "@angular-devkit/build-angular": "21.2.15",
+    "@angular/build": "21.2.15",
+    "@angular/cli": "21.2.15",
+    "@angular/compiler-cli": "21.2.17",
+    "@softarc/native-federation-orchestrator": "^4.2.2",
+    "typescript": "~5.9.2"
+  },
+  "msw": { "workerDirectory": ["public"] }
+}

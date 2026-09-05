@@ -1,0 +1,37 @@
+openapi: 3.0.3
+info:
+  title: __GamePascal__ API (gateway contract)
+  version: 0.1.0
+  description: >
+    HTTP contracts exposed via Gateway / DevGateway for the __MicroserviceId__ microservice.
+servers:
+  - url: http://localhost:__GatewayPort__
+    description: Local DevGateway
+paths:
+  /api/__MicroserviceId__/Items:
+    get:
+      operationId: listItems
+      summary: List items
+      responses:
+        '200':
+          description: ItemDto array
+  /api/__MicroserviceId__/Items/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      operationId: getItem
+      summary: Item by id
+      responses:
+        '200':
+          description: ItemDto
+  /api/health:
+    get:
+      operationId: health
+      summary: DevGateway health
+      responses:
+        '200':
+          description: Healthy

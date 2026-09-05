@@ -1,0 +1,25 @@
+{
+  "name": "@bari77/gc-create-game",
+  "version": "0.3.0",
+  "description": "Scaffold a new GamersCommunity game repo (Front + Consumer + Database)",
+  "type": "module",
+  "bin": {
+    "gc-create-game": "./bin/gc-create-game.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "template"
+  ],
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
+  },
+  "license": "UNLICENSED"
+}

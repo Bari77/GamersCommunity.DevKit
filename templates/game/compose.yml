@@ -1,0 +1,75 @@
+# Game-full stack. Set GITHUB_TOKEN (read:packages) before build/pull.
+
+name: __ComposeName__
+
+services:
+  rabbitmq:
+    image: docker.io/library/rabbitmq:3.13-management-alpine
+    user: "0:0"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-admin}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-admin}
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_ERLANG_COOKIE:-__ComposeName__}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - __NetworkName__
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - "${MSSQL_HOST_PORT:-14333}:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-Your_password123}
+    networks:
+      - __NetworkName__
+
+  consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ConnectionStrings__Database: "Server=mssql;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Your_password123};Initial Catalog=__GamePascal__;TrustServerCertificate=True;Encrypt=True;"
+      RabbitMQ__Hostname: rabbitmq
+      RabbitMQ__Username: ${RABBITMQ_USER:-admin}
+      RabbitMQ__Password: ${RABBITMQ_PASSWORD:-admin}
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mssql:
+        condition: service_started
+    networks:
+      - __NetworkName__
+
+  devgateway:
+    image: ghcr.io/bari77/gc-devgateway:${DEVGATEWAY_VERSION:-latest}
+    ports:
+      - "__GatewayPort__:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      RabbitMQ__Hostname: rabbitmq
+      RabbitMQ__Username: ${RABBITMQ_USER:-admin}
+      RabbitMQ__Password: ${RABBITMQ_PASSWORD:-admin}
+      DevGateway__MicroserviceId: __MicroserviceId__
+      DevGateway__Queue: __QueueName__
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      consumer:
+        condition: service_started
+    networks:
+      - __NetworkName__
+
+networks:
+  __NetworkName__:
+    driver: bridge

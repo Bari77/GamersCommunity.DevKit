@@ -17,6 +17,7 @@ Shared foundations so a game team can develop **Front + Back** without cloning t
 | Artefact | Registry |
 |----------|----------|
 | `@bari77/gc-sdk` / `gc-msw` / `gc-playground` | GitHub Packages (npm) |
+| `@bari77/gc-create-game` | GitHub Packages (npm) — scaffolds a full game repo |
 | `GamersCommunity.Core*` | GitHub Packages (NuGet) — Core repo |
 | `ghcr.io/bari77/gc-devgateway` | GHCR |
 
@@ -34,7 +35,7 @@ Same URL contract as the prod Gateway; OIDC auth is disabled.
 
 ## Game team onboarding
 
-1. Clone `GamersCommunity.Games.<YourGame>`
+1. `npx @bari77/gc-create-game YourGame` (or clone an existing `GamersCommunity.Games.*`)
 2. PAT `read:packages` → NuGet + npm + GHCR pull
 3. `npm start` (mocks) or `compose up` + `npm run start:api`
 4. Federation / OpenAPI contract → Shell team wires the remote
