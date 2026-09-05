@@ -4,13 +4,14 @@
 
 Pushing a `vX.Y.Z` tag runs `.github/workflows/release.yml`:
 
-1. Publish npm packages to **GitHub Packages**
+1. Pin package versions from the tag, then `npm install` (workspace packages keep `"@bari77/gc-sdk": "*"` in source; the workflow rewrites that to `X.Y.Z` before publish)
+2. Publish npm packages to **GitHub Packages**
    - `@bari77/gc-sdk`
    - `@bari77/gc-msw`
    - `@bari77/gc-playground`
    - `@bari77/gc-create-game` (clones `GamersCommunity.Games.Template` at runtime — no template bundled in the package)
-2. Build & push image **`ghcr.io/bari77/gc-devgateway:X.Y.Z`**
-3. Create a **GitHub Release**
+3. Build & push image **`ghcr.io/bari77/gc-devgateway:X.Y.Z`**
+4. Create a **GitHub Release**
 
 > npm scope = GitHub owner (`Bari77`). Hence `@bari77/gc-*` rather than `@gamerscommunity/*`.  
 > If you later create a `gamerscommunity` organization, the scope can be renamed.

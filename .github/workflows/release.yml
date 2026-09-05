@@ -31,11 +31,8 @@ jobs:
           registry-url: https://npm.pkg.github.com
           scope: "@bari77"
 
-      - name: Install workspaces
-        run: npm install
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+      # Bump versions before install so workspace deps never pin a missing registry version.
+      # Source packages use "@bari77/gc-sdk": "*" (workspace link); publish pins the exact tag version.
       - name: Set npm package versions
         run: |
           VERSION="${{ steps.ver.outputs.version }}"
@@ -44,7 +41,9 @@ jobs:
           done
           npm pkg set "dependencies.@bari77/gc-sdk=${VERSION}" --workspace=@bari77/gc-msw
           npm pkg set "dependencies.@bari77/gc-sdk=${VERSION}" --workspace=@bari77/gc-playground
-          npm install
+
+      - name: Install workspaces
+        run: npm install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
