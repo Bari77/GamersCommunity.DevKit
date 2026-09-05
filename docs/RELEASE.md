@@ -62,7 +62,8 @@ npx @bari77/gc-create-game YourGame
 
 ```yaml
 devgateway:
-  image: ghcr.io/bari77/gc-devgateway:0.3.1
+  image: ghcr.io/bari77/gc-devgateway:latest
+  # or pin: ghcr.io/bari77/gc-devgateway:0.3.1 / DEVGATEWAY_VERSION=0.3.1
 ```
 
 ```powershell

@@ -39,5 +39,5 @@ No `file:` / sibling links. Use published versions:
 ```
 
 ```yaml
-image: ghcr.io/bari77/gc-devgateway:0.3.1
+image: ghcr.io/bari77/gc-devgateway:latest
 ```
