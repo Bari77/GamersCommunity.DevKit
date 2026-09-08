@@ -9,7 +9,6 @@ import {
     output,
     signal,
     untracked,
-    viewChild,
 } from '@angular/core';
 import {
     CompactType,
@@ -20,7 +19,7 @@ import {
     GridsterItemConfig,
     GridType,
 } from 'angular-gridster2';
-import { WidgetLayout, normalizeLayout } from './layout';
+import { normalizeLayout, WidgetLayout } from './layout';
 import { WidgetDefDirective } from './widget-def.directive';
 
 type GridWidgetItem = GridsterItemConfig & { id: string };
@@ -52,21 +51,21 @@ export class WidgetGridComponent {
 
     protected readonly items = signal<GridWidgetItem[]>([]);
 
-    private readonly gridsterRef = viewChild(Gridster);
-
     protected readonly options = computed<GridsterConfig>(() => {
         const editing = this.editing();
+        const columns = this.columns();
         return {
-            gridType: GridType.Fit,
+            gridType: GridType.VerticalFixed,
             compactType: CompactType.CompactUp,
             displayGrid: editing ? DisplayGrid.Always : DisplayGrid.None,
-            setGridSize: false,
+            setGridSize: true,
             disableScrollHorizontal: true,
             fixedRowHeight: this.rowHeight(),
             margin: this.gap(),
             outerMargin: false,
-            minCols: this.columns(),
-            maxCols: this.columns(),
+            minCols: columns,
+            maxCols: columns,
+            maxItemCols: columns,
             minRows: 1,
             pushItems: true,
             swap: false,
@@ -79,8 +78,6 @@ export class WidgetGridComponent {
                 enabled: editing,
                 handles: { s: true, e: true, se: true, n: false, w: false, ne: false, sw: false, nw: false },
             },
-            initCallback: () => this.scheduleResize(),
-            gridSizeChangedCallback: () => this.scheduleResize(),
             itemChangeCallback: () => this.emitDraft(),
             itemResizeCallback: () => this.emitDraft(),
         };
@@ -89,9 +86,6 @@ export class WidgetGridComponent {
     private readonly defs = contentChildren(WidgetDefDirective, { descendants: true });
 
     public constructor() {
-        // While editing, gridster owns the item objects and mutates them in place.
-        // Re-syncing only outside edit mode is what makes Cancel restore the committed
-        // layout and Save keep the persisted one, without any extra bookkeeping.
         effect(() => {
             const layout = this.layout();
             const columns = this.columns();
@@ -99,10 +93,9 @@ export class WidgetGridComponent {
                 return;
             }
 
-            untracked(() => {
-                this.items.set(normalizeLayout(layout, columns).map((item) => ({ ...item })));
-                this.scheduleResize();
-            });
+            untracked(() =>
+                this.items.set(normalizeLayout(layout, columns).map((item) => ({ ...item }))),
+            );
         });
 
         effect(() => {
@@ -114,13 +107,8 @@ export class WidgetGridComponent {
                 const layout = this.layout();
                 const columns = this.columns();
                 this.items.set(normalizeLayout(layout, columns).map((item) => ({ ...item })));
-                this.scheduleResize();
             });
         });
-    }
-
-    private scheduleResize(): void {
-        queueMicrotask(() => this.gridsterRef()?.api?.resize?.());
     }
 
     protected labelFor(id: string): string {
