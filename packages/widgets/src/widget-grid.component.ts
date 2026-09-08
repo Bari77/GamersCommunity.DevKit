@@ -64,11 +64,11 @@ export class WidgetGridComponent {
         const editing = this.editing();
         const columns = this.columns();
         return {
-            gridType: GridType.Fit,
+            gridType: GridType.VerticalFixed,
             compactType: CompactType.CompactUp,
             displayGrid: editing ? DisplayGrid.Always : DisplayGrid.None,
-            // Parent-driven width: avoids gridster growing its inline width while dragging.
-            setGridSize: false,
+            // Gridster computes its own height from rows; width is clamped to the viewport below.
+            setGridSize: true,
             disableScrollHorizontal: true,
             fixedRowHeight: this.rowHeight(),
             margin: this.gap(),
@@ -88,10 +88,17 @@ export class WidgetGridComponent {
                 enabled: editing,
                 handles: { s: true, e: true, se: true, n: false, w: false, ne: false, sw: false, nw: false },
             },
-            initCallback: () => this.scheduleResize(),
+            initCallback: () => this.syncGridDimensions(),
+            gridSizeChangedCallback: () => this.syncGridDimensions(),
             itemValidateCallback: (item) => this.validateItem(item),
-            itemChangeCallback: () => this.emitDraft(),
-            itemResizeCallback: () => this.emitDraft(),
+            itemChangeCallback: () => {
+                this.syncGridDimensions();
+                this.emitDraft();
+            },
+            itemResizeCallback: () => {
+                this.syncGridDimensions();
+                this.emitDraft();
+            },
         };
     });
 
@@ -99,10 +106,10 @@ export class WidgetGridComponent {
 
     public constructor() {
         afterNextRender(() => {
-            const observer = new ResizeObserver(() => this.scheduleResize());
+            const observer = new ResizeObserver(() => this.syncGridDimensions());
             observer.observe(this.host.nativeElement);
             this.destroyRef.onDestroy(() => observer.disconnect());
-            this.scheduleResize();
+            this.syncGridDimensions();
         });
 
         effect(() => {
@@ -114,7 +121,7 @@ export class WidgetGridComponent {
 
             untracked(() => {
                 this.items.set(normalizeLayout(layout, columns).map((item) => ({ ...item })));
-                this.scheduleResize();
+                this.syncGridDimensions();
             });
         });
 
@@ -127,7 +134,7 @@ export class WidgetGridComponent {
                 const layout = this.layout();
                 const columns = this.columns();
                 this.items.set(normalizeLayout(layout, columns).map((item) => ({ ...item })));
-                this.scheduleResize();
+                this.syncGridDimensions();
             });
         });
     }
@@ -147,8 +154,20 @@ export class WidgetGridComponent {
         return x >= 0 && cols >= 1 && cols <= columns && x + cols <= columns;
     }
 
-    private scheduleResize(): void {
-        queueMicrotask(() => this.gridsterRef()?.api?.resize?.());
+    /** Keeps gridster visible (setGridSize) while preventing runaway inline width. */
+    private syncGridDimensions(): void {
+        queueMicrotask(() => {
+            const viewport = this.host.nativeElement.querySelector('.gc-widget-grid__viewport');
+            const gridsterEl = this.host.nativeElement.querySelector('gridster');
+            const width = viewport instanceof HTMLElement ? viewport.clientWidth : this.host.nativeElement.clientWidth;
+
+            if (gridsterEl instanceof HTMLElement && width > 0) {
+                gridsterEl.style.width = `${width}px`;
+                gridsterEl.style.maxWidth = '100%';
+            }
+
+            this.gridsterRef()?.api?.resize?.();
+        });
     }
 
     private emitDraft(): void {

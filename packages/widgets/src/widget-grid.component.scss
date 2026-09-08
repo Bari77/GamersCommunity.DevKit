@@ -4,9 +4,14 @@
     max-width: 100%;
 }
 
+.gc-widget-grid__viewport {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+}
+
 gridster {
     display: block;
-    width: 100%;
     max-width: 100%;
     background: transparent;
 }
