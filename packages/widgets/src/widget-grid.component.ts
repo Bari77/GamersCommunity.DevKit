@@ -1,14 +1,19 @@
 import { NgTemplateOutlet } from '@angular/common';
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     computed,
     contentChildren,
+    DestroyRef,
     effect,
+    ElementRef,
+    inject,
     input,
     output,
     signal,
     untracked,
+    viewChild,
 } from '@angular/core';
 import {
     CompactType,
@@ -51,14 +56,19 @@ export class WidgetGridComponent {
 
     protected readonly items = signal<GridWidgetItem[]>([]);
 
+    private readonly host = inject(ElementRef<HTMLElement>);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly gridsterRef = viewChild(Gridster);
+
     protected readonly options = computed<GridsterConfig>(() => {
         const editing = this.editing();
         const columns = this.columns();
         return {
-            gridType: GridType.VerticalFixed,
+            gridType: GridType.Fit,
             compactType: CompactType.CompactUp,
             displayGrid: editing ? DisplayGrid.Always : DisplayGrid.None,
-            setGridSize: true,
+            // Parent-driven width: avoids gridster growing its inline width while dragging.
+            setGridSize: false,
             disableScrollHorizontal: true,
             fixedRowHeight: this.rowHeight(),
             margin: this.gap(),
@@ -78,6 +88,8 @@ export class WidgetGridComponent {
                 enabled: editing,
                 handles: { s: true, e: true, se: true, n: false, w: false, ne: false, sw: false, nw: false },
             },
+            initCallback: () => this.scheduleResize(),
+            itemValidateCallback: (item) => this.validateItem(item),
             itemChangeCallback: () => this.emitDraft(),
             itemResizeCallback: () => this.emitDraft(),
         };
@@ -86,6 +98,13 @@ export class WidgetGridComponent {
     private readonly defs = contentChildren(WidgetDefDirective, { descendants: true });
 
     public constructor() {
+        afterNextRender(() => {
+            const observer = new ResizeObserver(() => this.scheduleResize());
+            observer.observe(this.host.nativeElement);
+            this.destroyRef.onDestroy(() => observer.disconnect());
+            this.scheduleResize();
+        });
+
         effect(() => {
             const layout = this.layout();
             const columns = this.columns();
@@ -93,9 +112,10 @@ export class WidgetGridComponent {
                 return;
             }
 
-            untracked(() =>
-                this.items.set(normalizeLayout(layout, columns).map((item) => ({ ...item }))),
-            );
+            untracked(() => {
+                this.items.set(normalizeLayout(layout, columns).map((item) => ({ ...item })));
+                this.scheduleResize();
+            });
         });
 
         effect(() => {
@@ -107,6 +127,7 @@ export class WidgetGridComponent {
                 const layout = this.layout();
                 const columns = this.columns();
                 this.items.set(normalizeLayout(layout, columns).map((item) => ({ ...item })));
+                this.scheduleResize();
             });
         });
     }
@@ -117,6 +138,17 @@ export class WidgetGridComponent {
 
     protected templateFor(id: string) {
         return this.defs().find((def) => def.id() === id)?.template ?? null;
+    }
+
+    private validateItem(item: GridsterItemConfig): boolean {
+        const columns = this.columns();
+        const cols = item.cols ?? 1;
+        const x = item.x ?? 0;
+        return x >= 0 && cols >= 1 && cols <= columns && x + cols <= columns;
+    }
+
+    private scheduleResize(): void {
+        queueMicrotask(() => this.gridsterRef()?.api?.resize?.());
     }
 
     private emitDraft(): void {
