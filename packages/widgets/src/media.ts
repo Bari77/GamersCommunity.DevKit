@@ -1,3 +1,5 @@
+import { GC_LINK_NETWORKS } from './link-networks';
+
 /** Shape shared by the gallery widgets, whatever backend feeds them. */
 export interface GcGalleryItem {
     id?: string;
@@ -64,6 +66,16 @@ export function videoEmbedUrl(raw: string): string | null {
     return null;
 }
 
+/** Hosts that do not carry their network key, checked before the key itself. */
+const HOST_ALIASES: Readonly<Record<string, string>> = {
+    'x.com': 'twitter',
+    'bsky.app': 'bluesky',
+    'youtu.be': 'youtube',
+    'fb.com': 'facebook',
+    'steamcommunity.com': 'steam',
+    'steampowered.com': 'steam',
+};
+
 /** Best-effort social network key, used to pick an icon or a colour. */
 export function linkNetwork(url: string): string {
     const host = safeHostname(url);
@@ -71,8 +83,10 @@ export function linkNetwork(url: string): string {
         return 'link';
     }
 
-    const known = ['youtube', 'twitch', 'twitter', 'instagram', 'tiktok', 'discord', 'bluesky', 'github', 'reddit'];
-    return known.find((name) => host.includes(name)) ?? (host.includes('x.com') ? 'twitter' : 'link');
+    const alias = Object.keys(HOST_ALIASES).find((fragment) => host.includes(fragment));
+    return alias
+        ? HOST_ALIASES[alias]
+        : (GC_LINK_NETWORKS.find((network) => host.includes(network.key))?.key ?? 'link');
 }
 
 export function linkLabel(url: string): string {
