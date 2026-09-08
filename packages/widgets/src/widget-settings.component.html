@@ -11,10 +11,10 @@
         <input
             class="gc-settings__input"
             type="text"
-            [placeholder]="entry().label"
             [value]="value('title')"
             (change)="setValue('title', $event)"
         />
+        <small>{{ titleHint() }}</small>
     </label>
 
     @for (field of fields(); track field.key) {

@@ -29,6 +29,7 @@ gridster-item {
 }
 
 .gc-widget {
+    position: relative;
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -60,10 +61,29 @@ gridster-item {
     white-space: nowrap;
 }
 
+.gc-widget__title--muted {
+    font-style: italic;
+    opacity: 0.4;
+}
+
 .gc-widget__actions {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
+}
+
+/* An untitled widget has no bar to hang the gear off, and reserving one would cost the
+   body the height the owner asked for by leaving the title blank. */
+.gc-widget__actions--floating {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 1;
+}
+
+.gc-widget__actions--floating .gc-widget__action {
+    background: var(--gc-widget-background, var(--gc-surface-2, rgba(255, 255, 255, 0.03)));
+    backdrop-filter: blur(3px);
 }
 
 .gc-widget__action {

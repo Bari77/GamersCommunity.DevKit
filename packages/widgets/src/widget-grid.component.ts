@@ -40,7 +40,10 @@ export const GC_LINKS_WIDGET = 'gc-links';
 type GridWidget = GridsterItemConfig & {
     id: string;
     type: string;
+    /** What the owner typed, empty when they left it blank. */
     title: string;
+    /** Catalog name, shown only in edit mode to tell an untitled widget apart. */
+    label: string;
     settings: WidgetSettings;
     context: WidgetTemplateContext;
 };
@@ -190,7 +193,8 @@ export class WidgetGridComponent {
         return {
             id: widget.id,
             type: widget.type,
-            title: typeof custom === 'string' && custom.trim() ? custom.trim() : (entry?.label ?? widget.type),
+            title: typeof custom === 'string' ? custom.trim() : '',
+            label: entry?.label ?? widget.type,
             settings: widget.settings,
             context: { $implicit: widget.settings, instance: widget },
             x: Math.min(Math.max(0, widget.x), columns - cols),

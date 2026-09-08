@@ -3,39 +3,57 @@
         @for (item of items(); track item.id) {
             <gridster-item [item]="item">
                 <section class="gc-widget" [class.gc-widget--editing]="editing()">
-                    <header class="gc-widget__handle">
-                        <span class="gc-widget__title">{{ item.title }}</span>
-                        @if (editing() || canConfigure()) {
-                            <span
-                                class="gc-widget__actions"
-                                (mousedown)="$event.stopPropagation()"
-                                (touchstart)="$event.stopPropagation()"
-                            >
-                                <button
-                                    type="button"
-                                    class="gc-widget__action"
-                                    [class.gc-widget__action--quiet]="!editing()"
-                                    [attr.aria-label]="settingsLabel()"
-                                    [title]="settingsLabel()"
-                                    (click)="configure.emit(item.id)"
+                    <!-- Leaving the title blank is how an owner asks for a bare widget. Edit mode
+                         keeps the bar anyway: it is what the widget is dragged and removed by. -->
+                    @if (editing() || item.title) {
+                        <header class="gc-widget__handle">
+                            <span class="gc-widget__title" [class.gc-widget__title--muted]="!item.title">
+                                {{ item.title || item.label }}
+                            </span>
+                            @if (editing() || canConfigure()) {
+                                <span
+                                    class="gc-widget__actions"
+                                    (mousedown)="$event.stopPropagation()"
+                                    (touchstart)="$event.stopPropagation()"
                                 >
-                                    &#9881;
-                                </button>
-                                @if (editing()) {
                                     <button
                                         type="button"
-                                        class="gc-widget__action gc-widget__action--danger"
-                                        [attr.aria-label]="removeLabel()"
-                                        [title]="removeLabel()"
-                                        (click)="remove.emit(item.id)"
+                                        class="gc-widget__action"
+                                        [class.gc-widget__action--quiet]="!editing()"
+                                        [attr.aria-label]="settingsLabel()"
+                                        [title]="settingsLabel()"
+                                        (click)="configure.emit(item.id)"
                                     >
-                                        &#10005;
+                                        &#9881;
                                     </button>
-                                    <span class="gc-widget__grip" aria-hidden="true"></span>
-                                }
-                            </span>
-                        }
-                    </header>
+                                    @if (editing()) {
+                                        <button
+                                            type="button"
+                                            class="gc-widget__action gc-widget__action--danger"
+                                            [attr.aria-label]="removeLabel()"
+                                            [title]="removeLabel()"
+                                            (click)="remove.emit(item.id)"
+                                        >
+                                            &#10005;
+                                        </button>
+                                        <span class="gc-widget__grip" aria-hidden="true"></span>
+                                    }
+                                </span>
+                            }
+                        </header>
+                    } @else if (canConfigure()) {
+                        <span class="gc-widget__actions gc-widget__actions--floating">
+                            <button
+                                type="button"
+                                class="gc-widget__action gc-widget__action--quiet"
+                                [attr.aria-label]="settingsLabel()"
+                                [title]="settingsLabel()"
+                                (click)="configure.emit(item.id)"
+                            >
+                                &#9881;
+                            </button>
+                        </span>
+                    }
                     <div class="gc-widget__body">
                         @if (templateFor(item.type); as tpl) {
                             <ng-container [ngTemplateOutlet]="tpl" [ngTemplateOutletContext]="item.context" />

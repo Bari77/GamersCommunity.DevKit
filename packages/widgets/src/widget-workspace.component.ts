@@ -93,6 +93,8 @@ export class WidgetWorkspaceComponent {
 
     public readonly widgetTitleLabel = input('Widget title');
 
+    public readonly widgetTitleHint = input('Leave empty to drop the header.');
+
     public readonly doneLabel = input('Done');
 
     public readonly editing = model(false);

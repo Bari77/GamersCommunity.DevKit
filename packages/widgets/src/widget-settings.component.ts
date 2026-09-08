@@ -26,6 +26,8 @@ export class WidgetSettingsComponent {
 
     public readonly titleLabel = input('Widget title');
 
+    public readonly titleHint = input('Leave empty to drop the header.');
+
     public readonly addRowLabel = input('Add');
 
     public readonly removeRowLabel = input('Remove');
