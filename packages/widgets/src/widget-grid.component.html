@@ -1,0 +1,19 @@
+<gridster [options]="options()">
+    @for (item of items(); track item.id) {
+        <gridster-item [item]="item">
+            <section class="gc-widget" [class.gc-widget--editing]="editing()">
+                @if (editing() || labelFor(item.id)) {
+                    <header class="gc-widget__handle">
+                        <span class="gc-widget__title">{{ labelFor(item.id) }}</span>
+                        @if (editing()) {
+                            <span class="gc-widget__grip" aria-hidden="true"></span>
+                        }
+                    </header>
+                }
+                <div class="gc-widget__body">
+                    <ng-container [ngTemplateOutlet]="templateFor(item.id)" />
+                </div>
+            </section>
+        </gridster-item>
+    }
+</gridster>

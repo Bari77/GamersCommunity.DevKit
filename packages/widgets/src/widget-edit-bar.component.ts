@@ -10,54 +10,8 @@ import { ChangeDetectionStrategy, Component, input, model, output } from '@angul
     selector: 'gc-widget-edit-bar',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `
-        @if (editing()) {
-            <button type="button" class="gc-widget-bar__button" [disabled]="saving()" (click)="onCancel()">
-                {{ cancelLabel() }}
-            </button>
-            <button
-                type="button"
-                class="gc-widget-bar__button gc-widget-bar__button--primary"
-                [disabled]="saving()"
-                (click)="save.emit()"
-            >
-                {{ saveLabel() }}
-            </button>
-        } @else {
-            <button type="button" class="gc-widget-bar__button" (click)="editing.set(true)">
-                {{ editLabel() }}
-            </button>
-        }
-    `,
-    styles: [
-        `
-            :host {
-                display: inline-flex;
-                gap: 0.5rem;
-            }
-
-            .gc-widget-bar__button {
-                padding: 0.4rem 0.9rem;
-                border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.18));
-                border-radius: var(--gc-widget-radius, 0.5rem);
-                background: transparent;
-                color: inherit;
-                font: inherit;
-                cursor: pointer;
-            }
-
-            .gc-widget-bar__button:disabled {
-                cursor: default;
-                opacity: 0.5;
-            }
-
-            .gc-widget-bar__button--primary {
-                border-color: transparent;
-                background: var(--gc-widget-accent, #3366ff);
-                color: var(--gc-widget-accent-contrast, #fff);
-            }
-        `,
-    ],
+    templateUrl: './widget-edit-bar.component.html',
+    styleUrl: './widget-edit-bar.component.scss',
 })
 export class WidgetEditBarComponent {
     public readonly editing = model(false);

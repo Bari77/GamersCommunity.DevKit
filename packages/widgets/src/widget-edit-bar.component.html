@@ -1,0 +1,17 @@
+@if (editing()) {
+    <button type="button" class="gc-widget-bar__button" [disabled]="saving()" (click)="onCancel()">
+        {{ cancelLabel() }}
+    </button>
+    <button
+        type="button"
+        class="gc-widget-bar__button gc-widget-bar__button--primary"
+        [disabled]="saving()"
+        (click)="save.emit()"
+    >
+        {{ saveLabel() }}
+    </button>
+} @else {
+    <button type="button" class="gc-widget-bar__button" (click)="editing.set(true)">
+        {{ editLabel() }}
+    </button>
+}

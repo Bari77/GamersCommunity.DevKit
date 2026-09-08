@@ -7,6 +7,20 @@ nb-layout-footer.fixed {
     z-index: 1040;
 }
 
+/* Cosmic ships Open Sans on the header; re-apply GC tokens for shell chrome. */
+.nb-theme-cosmic nb-layout-header,
+nb-layout-header {
+    font-family: var(--gc-font-body);
+}
+
+.nb-theme-cosmic nb-layout-header [nbButton],
+.nb-theme-cosmic nb-layout-header app-user-handle .user-handle__nickname,
+nb-layout-header [nbButton],
+nb-layout-header app-user-handle .user-handle__nickname {
+    font-family: var(--gc-font-display);
+    letter-spacing: 0.04em;
+}
+
 nb-layout-header [nbButton].appearance-filled.status-basic {
     background-color: transparent;
     border-color: transparent;
