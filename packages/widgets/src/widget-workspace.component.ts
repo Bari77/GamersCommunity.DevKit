@@ -19,6 +19,7 @@ import {
     renamePage,
     updateWidgetSettings,
     WidgetInstance,
+    WidgetPage,
     WidgetSettings,
     WidgetWorkspace,
 } from './workspace';
@@ -95,7 +96,8 @@ export class WidgetWorkspaceComponent {
 
     protected readonly view = computed(() => this.draft() ?? this.workspace());
 
-    protected readonly activePage = computed(() => {
+    /** Undefined only while a workspace holds no page at all. */
+    protected readonly activePage = computed<WidgetPage | undefined>(() => {
         const pages = this.view().pages;
         const id = this.activePageId();
         return pages.find((page) => page.id === id) ?? pages[0];
