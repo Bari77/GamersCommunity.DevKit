@@ -3,19 +3,51 @@
         @for (item of items(); track item.id) {
             <gridster-item [item]="item">
                 <section class="gc-widget" [class.gc-widget--editing]="editing()">
-                    @if (editing() || labelFor(item.id)) {
-                        <header class="gc-widget__handle">
-                            <span class="gc-widget__title">{{ labelFor(item.id) }}</span>
-                            @if (editing()) {
+                    <header class="gc-widget__handle">
+                        <span class="gc-widget__title">{{ item.title }}</span>
+                        @if (editing()) {
+                            <span class="gc-widget__actions" (mousedown)="$event.stopPropagation()">
+                                @if (item.configurable) {
+                                    <button
+                                        type="button"
+                                        class="gc-widget__action"
+                                        [attr.aria-label]="settingsLabel()"
+                                        [title]="settingsLabel()"
+                                        (click)="configure.emit(item.id)"
+                                    >
+                                        &#9881;
+                                    </button>
+                                }
+                                <button
+                                    type="button"
+                                    class="gc-widget__action gc-widget__action--danger"
+                                    [attr.aria-label]="removeLabel()"
+                                    [title]="removeLabel()"
+                                    (click)="remove.emit(item.id)"
+                                >
+                                    &#10005;
+                                </button>
                                 <span class="gc-widget__grip" aria-hidden="true"></span>
-                            }
-                        </header>
-                    }
+                            </span>
+                        }
+                    </header>
                     <div class="gc-widget__body">
-                        <ng-container [ngTemplateOutlet]="templateFor(item.id)" />
+                        @if (templateFor(item.type); as tpl) {
+                            <ng-container [ngTemplateOutlet]="tpl" [ngTemplateOutletContext]="item.context" />
+                        } @else if (item.type === twitchType) {
+                            <gc-twitch-embed [channel]="asText(item.settings['channel'])" />
+                        } @else if (item.type === linksType) {
+                            <gc-link-list [links]="asLinks(item.settings['links'])" />
+                        } @else {
+                            <p class="gc-widget__missing">{{ unknownLabel() }}</p>
+                        }
                     </div>
                 </section>
             </gridster-item>
         }
     </gridster>
+
+    @if (items().length === 0) {
+        <p class="gc-widget-grid__empty">{{ emptyLabel() }}</p>
+    }
 </div>

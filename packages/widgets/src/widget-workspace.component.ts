@@ -1,0 +1,215 @@
+import { ChangeDetectionStrategy, Component, computed, contentChildren, effect, input, model, output, signal, untracked } from '@angular/core';
+import { findCatalogEntry, WidgetCatalog, WidgetCatalogEntry } from './catalog';
+import { WidgetDefDirective } from './widget-def.directive';
+import { WidgetEditBarComponent } from './widget-edit-bar.component';
+import { WidgetGridComponent, WidgetPosition } from './widget-grid.component';
+import { WidgetNavComponent, WidgetPageMove, WidgetPageRename } from './widget-nav.component';
+import { WidgetPickerComponent } from './widget-picker.component';
+import { WidgetSettingsComponent } from './widget-settings.component';
+import {
+    addPage,
+    addWidget,
+    applyPositions,
+    cloneWorkspace,
+    findPage,
+    movePage,
+    normalizeWorkspace,
+    removePage,
+    removeWidget,
+    renamePage,
+    updateWidgetSettings,
+    WidgetInstance,
+    WidgetSettings,
+    WidgetWorkspace,
+} from './workspace';
+
+/**
+ * Whole customisable profile: page rail, widget grid, catalog picker and settings.
+ * Edits stay in a local draft until `save` is emitted, so a failed persist keeps
+ * the owner in edit mode with their changes intact.
+ */
+@Component({
+    selector: 'gc-widget-workspace',
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        WidgetEditBarComponent,
+        WidgetGridComponent,
+        WidgetNavComponent,
+        WidgetPickerComponent,
+        WidgetSettingsComponent,
+    ],
+    templateUrl: './widget-workspace.component.html',
+    styleUrl: './widget-workspace.component.scss',
+})
+export class WidgetWorkspaceComponent {
+    /** Committed workspace. Never bind the value emitted by `save` back before it persists. */
+    public readonly workspace = input.required<WidgetWorkspace>();
+
+    public readonly catalog = input.required<WidgetCatalog>();
+
+    public readonly canEdit = input(false);
+
+    public readonly saving = input(false);
+
+    public readonly columns = input(12);
+
+    public readonly rowHeight = input(90);
+
+    public readonly gap = input(12);
+
+    public readonly navLabel = input('Profile pages');
+
+    public readonly addPageLabel = input('New page');
+
+    public readonly removePageLabel = input('Delete page');
+
+    public readonly moveUpLabel = input('Move up');
+
+    public readonly moveDownLabel = input('Move down');
+
+    public readonly addWidgetLabel = input('Add a widget');
+
+    public readonly editLabel = input('Edit');
+
+    public readonly cancelLabel = input('Cancel');
+
+    public readonly saveLabel = input('Save');
+
+    public readonly emptyPageLabel = input('This page has no widget yet.');
+
+    public readonly hintLabel = input('Drag a widget by its header to move it, or its bottom-right corner to resize it.');
+
+    public readonly newPageTitle = input('New page');
+
+    public readonly editing = model(false);
+
+    public readonly save = output<WidgetWorkspace>();
+
+    protected readonly pickerOpen = signal(false);
+    protected readonly configuringId = signal<string | null>(null);
+    protected readonly activePageId = signal<string | null>(null);
+    protected readonly defs = contentChildren(WidgetDefDirective, { descendants: true });
+
+    private readonly draft = signal<WidgetWorkspace | null>(null);
+
+    protected readonly view = computed(() => this.draft() ?? this.workspace());
+
+    protected readonly activePage = computed(() => {
+        const pages = this.view().pages;
+        const id = this.activePageId();
+        return pages.find((page) => page.id === id) ?? pages[0];
+    });
+
+    protected readonly usedTypes = computed(() =>
+        this.view().pages.flatMap((page) => page.widgets.map((widget) => widget.type)),
+    );
+
+    protected readonly configuring = computed<{ widget: WidgetInstance; entry: WidgetCatalogEntry } | null>(() => {
+        const id = this.configuringId();
+        const widget = this.activePage()?.widgets.find((item) => item.id === id);
+        const entry = widget ? findCatalogEntry(this.catalog(), widget.type) : undefined;
+        return widget && entry ? { widget, entry } : null;
+    });
+
+    public constructor() {
+        effect(() => {
+            const editing = this.editing();
+            const committed = this.workspace();
+
+            untracked(() => {
+                this.pickerOpen.set(false);
+                this.configuringId.set(null);
+                this.draft.set(editing ? cloneWorkspace(committed) : null);
+            });
+        });
+
+        effect(() => {
+            const pages = this.view().pages;
+            untracked(() => {
+                if (!pages.some((page) => page.id === this.activePageId())) {
+                    this.activePageId.set(pages[0]?.id ?? null);
+                }
+            });
+        });
+    }
+
+    protected onPositions(positions: WidgetPosition[]): void {
+        this.mutate((current, pageId) => applyPositions(current, pageId, positions));
+    }
+
+    protected onAddPage(): void {
+        const current = this.draft();
+        if (!current) {
+            return;
+        }
+
+        const next = addPage(current, this.newPageTitle());
+        this.draft.set(next);
+        this.activePageId.set(next.pages[next.pages.length - 1].id);
+    }
+
+    protected onRenamePage(event: WidgetPageRename): void {
+        this.mutate((current) => renamePage(current, event.id, event.title));
+    }
+
+    protected onRemovePage(id: string): void {
+        this.mutate((current) => removePage(current, id));
+    }
+
+    protected onMovePage(event: WidgetPageMove): void {
+        this.mutate((current) => movePage(current, event.id, event.offset));
+    }
+
+    protected onPickWidget(type: string): void {
+        const entry = findCatalogEntry(this.catalog(), type);
+        if (!entry) {
+            return;
+        }
+
+        this.mutate((current, pageId) =>
+            addWidget(current, pageId, {
+                type,
+                cols: entry.cols,
+                rows: entry.rows,
+                settings: { ...entry.defaultSettings },
+            }),
+        );
+        this.pickerOpen.set(false);
+    }
+
+    protected onRemoveWidget(widgetId: string): void {
+        if (this.configuringId() === widgetId) {
+            this.configuringId.set(null);
+        }
+        this.mutate((current, pageId) => removeWidget(current, pageId, widgetId));
+    }
+
+    protected onSettingsChange(settings: WidgetSettings): void {
+        const widgetId = this.configuringId();
+        if (widgetId) {
+            this.mutate((current, pageId) => updateWidgetSettings(current, pageId, widgetId, settings));
+        }
+    }
+
+    protected onCancel(): void {
+        this.draft.set(null);
+    }
+
+    protected onSave(): void {
+        const current = this.draft();
+        if (current) {
+            this.save.emit(normalizeWorkspace(current, this.columns()));
+        }
+    }
+
+    private mutate(project: (current: WidgetWorkspace, pageId: string) => WidgetWorkspace): void {
+        const current = this.draft();
+        const pageId = this.activePage()?.id;
+        if (!current || !pageId || !findPage(current, pageId)) {
+            return;
+        }
+
+        this.draft.set(project(current, pageId));
+    }
+}

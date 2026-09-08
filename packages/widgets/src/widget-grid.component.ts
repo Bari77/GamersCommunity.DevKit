@@ -12,6 +12,7 @@ import {
     input,
     output,
     signal,
+    TemplateRef,
     untracked,
     viewChild,
 } from '@angular/core';
@@ -24,24 +25,44 @@ import {
     GridsterItemConfig,
     GridType,
 } from 'angular-gridster2';
-import { normalizeLayout, WidgetLayout } from './layout';
-import { WidgetDefDirective } from './widget-def.directive';
-
-type GridWidgetItem = GridsterItemConfig & { id: string };
+import { findCatalogEntry, WidgetCatalog } from './catalog';
+import { GcLink, LinkListComponent } from './components/link-list.component';
+import { TwitchEmbedComponent } from './components/twitch-embed.component';
+import { WidgetDefDirective, WidgetTemplateContext } from './widget-def.directive';
+import { WidgetInstance, WidgetSettings } from './workspace';
 
 export const WIDGET_DRAG_HANDLE_CLASS = 'gc-widget__handle';
+
+/** Widget types the package renders on its own, with no host template. */
+export const GC_TWITCH_WIDGET = 'gc-twitch';
+export const GC_LINKS_WIDGET = 'gc-links';
+
+type GridWidget = GridsterItemConfig & {
+    id: string;
+    type: string;
+    title: string;
+    configurable: boolean;
+    settings: WidgetSettings;
+    context: WidgetTemplateContext;
+};
+
+export type WidgetPosition = Pick<WidgetInstance, 'id' | 'x' | 'y' | 'cols' | 'rows'>;
 
 @Component({
     selector: 'gc-widget-grid',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [Gridster, GridsterItem, NgTemplateOutlet],
+    imports: [Gridster, GridsterItem, LinkListComponent, NgTemplateOutlet, TwitchEmbedComponent],
     templateUrl: './widget-grid.component.html',
     styleUrl: './widget-grid.component.scss',
 })
 export class WidgetGridComponent {
-    /** Committed layout. Never bind the value emitted by `layoutChange` back to it. */
-    public readonly layout = input.required<WidgetLayout>();
+    public readonly widgets = input.required<WidgetInstance[]>();
+
+    public readonly catalog = input<WidgetCatalog>([]);
+
+    /** Set by `gc-widget-workspace`, which owns the `gcWidget` templates of the host. */
+    public readonly defs = input<readonly WidgetDefDirective[] | null>(null);
 
     public readonly editing = input(false);
 
@@ -51,14 +72,30 @@ export class WidgetGridComponent {
 
     public readonly gap = input(12);
 
-    /** Draft layout, emitted on every move or resize. Persist it on save. */
-    public readonly layoutChange = output<WidgetLayout>();
+    public readonly emptyLabel = input('This page has no widget yet.');
 
-    protected readonly items = signal<GridWidgetItem[]>([]);
+    public readonly removeLabel = input('Remove widget');
+
+    public readonly settingsLabel = input('Widget settings');
+
+    public readonly unknownLabel = input('This widget is not available.');
+
+    /** Emitted on every move or resize; positions only, never settings. */
+    public readonly positionsChange = output<WidgetPosition[]>();
+
+    public readonly remove = output<string>();
+
+    public readonly configure = output<string>();
+
+    protected readonly twitchType = GC_TWITCH_WIDGET;
+    protected readonly linksType = GC_LINKS_WIDGET;
+    protected readonly items = signal<GridWidget[]>([]);
 
     private readonly host = inject(ElementRef<HTMLElement>);
     private readonly destroyRef = inject(DestroyRef);
     private readonly gridsterRef = viewChild(Gridster);
+    private readonly ownDefs = contentChildren(WidgetDefDirective, { descendants: true });
+    private lastEmitted = '';
 
     protected readonly options = computed<GridsterConfig>(() => {
         const editing = this.editing();
@@ -93,16 +130,14 @@ export class WidgetGridComponent {
             itemValidateCallback: (item) => this.validateItem(item),
             itemChangeCallback: () => {
                 this.syncGridDimensions();
-                this.emitDraft();
+                this.emitPositions();
             },
             itemResizeCallback: () => {
                 this.syncGridDimensions();
-                this.emitDraft();
+                this.emitPositions();
             },
         };
     });
-
-    private readonly defs = contentChildren(WidgetDefDirective, { descendants: true });
 
     public constructor() {
         afterNextRender(() => {
@@ -113,38 +148,55 @@ export class WidgetGridComponent {
         });
 
         effect(() => {
-            const layout = this.layout();
+            const widgets = this.widgets();
+            const catalog = this.catalog();
             const columns = this.columns();
-            if (this.editing()) {
-                return;
-            }
+            const key = JSON.stringify(widgets);
 
             untracked(() => {
-                this.items.set(normalizeLayout(layout, columns).map((item) => ({ ...item })));
-                this.syncGridDimensions();
-            });
-        });
+                // Positions we just reported come back through the input; rebuilding on
+                // them would reset gridster mid-drag.
+                if (key === this.lastEmitted) {
+                    return;
+                }
 
-        effect(() => {
-            if (!this.editing()) {
-                return;
-            }
-
-            untracked(() => {
-                const layout = this.layout();
-                const columns = this.columns();
-                this.items.set(normalizeLayout(layout, columns).map((item) => ({ ...item })));
+                this.lastEmitted = key;
+                this.items.set(widgets.map((widget) => this.toGridWidget(widget, catalog, columns)));
                 this.syncGridDimensions();
             });
         });
     }
 
-    protected labelFor(id: string): string {
-        return this.defs().find((def) => def.id() === id)?.label() ?? '';
+    protected templateFor(type: string): TemplateRef<WidgetTemplateContext> | null {
+        const defs = this.defs() ?? this.ownDefs();
+        return defs.find((def) => def.type() === type)?.template ?? null;
     }
 
-    protected templateFor(id: string) {
-        return this.defs().find((def) => def.id() === id)?.template ?? null;
+    protected asText(value: unknown): string {
+        return typeof value === 'string' ? value : '';
+    }
+
+    protected asLinks(value: unknown): GcLink[] {
+        return Array.isArray(value) ? (value as GcLink[]) : [];
+    }
+
+    private toGridWidget(widget: WidgetInstance, catalog: WidgetCatalog, columns: number): GridWidget {
+        const entry = findCatalogEntry(catalog, widget.type);
+        const custom = widget.settings['title'];
+        const cols = Math.min(Math.max(1, widget.cols), columns);
+
+        return {
+            id: widget.id,
+            type: widget.type,
+            title: typeof custom === 'string' && custom.trim() ? custom.trim() : (entry?.label ?? widget.type),
+            configurable: (entry?.fields?.length ?? 0) > 0,
+            settings: widget.settings,
+            context: { $implicit: widget.settings, instance: widget },
+            x: Math.min(Math.max(0, widget.x), columns - cols),
+            y: Math.max(0, widget.y),
+            cols,
+            rows: Math.max(1, widget.rows),
+        };
     }
 
     private validateItem(item: GridsterItemConfig): boolean {
@@ -170,18 +222,21 @@ export class WidgetGridComponent {
         });
     }
 
-    private emitDraft(): void {
-        this.layoutChange.emit(
-            normalizeLayout(
-                this.items().map((item) => ({
-                    id: item.id,
-                    x: item.x,
-                    y: item.y,
-                    cols: item.cols,
-                    rows: item.rows,
-                })),
-                this.columns(),
-            ),
+    private emitPositions(): void {
+        const positions = this.items().map((item) => ({
+            id: item.id,
+            x: item.x ?? 0,
+            y: item.y ?? 0,
+            cols: item.cols ?? 1,
+            rows: item.rows ?? 1,
+        }));
+
+        this.lastEmitted = JSON.stringify(
+            this.widgets().map((widget) => {
+                const next = positions.find((position) => position.id === widget.id);
+                return next ? { ...widget, ...next } : widget;
+            }),
         );
+        this.positionsChange.emit(positions);
     }
 }

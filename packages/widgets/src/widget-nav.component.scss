@@ -1,0 +1,119 @@
+:host {
+    display: block;
+}
+
+.gc-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.gc-nav__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.gc-nav__row {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: var(--gc-widget-radius, 0.5rem);
+}
+
+.gc-nav__page {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid transparent;
+    border-radius: var(--gc-widget-radius, 0.5rem);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.gc-nav__page:hover {
+    background: var(--gc-widget-hover, rgba(255, 255, 255, 0.05));
+}
+
+.gc-nav__row--active .gc-nav__page {
+    border-color: var(--gc-widget-accent, #3366ff);
+    background: var(--gc-widget-hover, rgba(255, 255, 255, 0.06));
+    font-weight: 600;
+}
+
+.gc-nav__icon {
+    flex: none;
+    font-size: 0.95rem;
+    opacity: 0.75;
+}
+
+.gc-nav__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gc-nav__input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.15rem 0.3rem;
+    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.18));
+    border-radius: 0.35rem;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+}
+
+.gc-nav__tools {
+    display: inline-flex;
+    gap: 0.15rem;
+}
+
+.gc-nav__tool {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.3rem;
+    height: 1.3rem;
+    padding: 0;
+    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.14));
+    border-radius: 0.3rem;
+    background: transparent;
+    color: inherit;
+    font-size: 0.55rem;
+    cursor: pointer;
+}
+
+.gc-nav__tool:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.gc-nav__tool--danger:not(:disabled):hover {
+    border-color: var(--gc-widget-danger, #ff3d71);
+    color: var(--gc-widget-danger, #ff3d71);
+}
+
+.gc-nav__add {
+    margin-top: 0.35rem;
+    padding: 0.5rem 0.7rem;
+    border: 1px dashed var(--gc-widget-border, rgba(255, 255, 255, 0.22));
+    border-radius: var(--gc-widget-radius, 0.5rem);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.gc-nav__add:hover {
+    border-color: var(--gc-widget-accent, #3366ff);
+}

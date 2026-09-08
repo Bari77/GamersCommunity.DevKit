@@ -10,6 +10,14 @@
     overflow-x: clip;
 }
 
+.gc-widget-grid__empty {
+    margin: 0;
+    padding: 2rem 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    opacity: 0.6;
+}
+
 gridster {
     display: block;
     max-width: 100%;
@@ -47,6 +55,40 @@ gridster-item {
     letter-spacing: 0.08em;
     text-transform: uppercase;
     opacity: 0.7;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.gc-widget__actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.gc-widget__action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.4rem;
+    height: 1.4rem;
+    padding: 0;
+    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.14));
+    border-radius: 0.35rem;
+    background: transparent;
+    color: inherit;
+    font-size: 0.7rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.gc-widget__action:hover {
+    border-color: var(--gc-widget-accent, #3366ff);
+}
+
+.gc-widget__action--danger:hover {
+    border-color: var(--gc-widget-danger, #ff3d71);
+    color: var(--gc-widget-danger, #ff3d71);
 }
 
 .gc-widget__grip {
@@ -62,6 +104,12 @@ gridster-item {
     min-height: 0;
     overflow: auto;
     padding: 0.85rem;
+}
+
+.gc-widget__missing {
+    margin: 0;
+    font-size: 0.85rem;
+    opacity: 0.55;
 }
 
 .gc-widget--editing {

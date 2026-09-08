@@ -1,0 +1,33 @@
+<section class="gc-picker">
+    <header class="gc-picker__head">
+        <h3 class="gc-picker__title">{{ title() }}</h3>
+        <button type="button" class="gc-picker__close" [attr.aria-label]="closeLabel()" (click)="close.emit()">
+            &#10005;
+        </button>
+    </header>
+
+    @if (entries().length === 0) {
+        <p class="gc-picker__empty">{{ emptyLabel() }}</p>
+    } @else {
+        <ul class="gc-picker__list">
+            @for (entry of entries(); track entry.type) {
+                <li>
+                    <button
+                        type="button"
+                        class="gc-picker__item"
+                        [disabled]="entry.used"
+                        (click)="pick.emit(entry.type)"
+                    >
+                        <span class="gc-picker__label">{{ entry.label }}</span>
+                        @if (entry.description) {
+                            <span class="gc-picker__description">{{ entry.description }}</span>
+                        }
+                        @if (entry.used) {
+                            <span class="gc-picker__badge">{{ usedLabel() }}</span>
+                        }
+                    </button>
+                </li>
+            }
+        </ul>
+    }
+</section>

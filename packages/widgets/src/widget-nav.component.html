@@ -1,0 +1,64 @@
+<nav class="gc-nav" [attr.aria-label]="ariaLabel()">
+    <ul class="gc-nav__list">
+        @for (page of pages(); track page.id; let first = $first; let last = $last) {
+            <li class="gc-nav__row" [class.gc-nav__row--active]="page.id === activeId()">
+                <button type="button" class="gc-nav__page" (click)="select.emit(page.id)">
+                    @if (page.icon) {
+                        <span class="gc-nav__icon" aria-hidden="true">{{ page.icon }}</span>
+                    }
+                    @if (editing() && !page.locked) {
+                        <input
+                            class="gc-nav__input"
+                            type="text"
+                            maxlength="40"
+                            [value]="page.title"
+                            (click)="$event.stopPropagation()"
+                            (change)="onRename(page.id, $event)"
+                        />
+                    } @else {
+                        <span class="gc-nav__label">{{ page.title }}</span>
+                    }
+                </button>
+
+                @if (editing()) {
+                    <span class="gc-nav__tools">
+                        <button
+                            type="button"
+                            class="gc-nav__tool"
+                            [disabled]="first"
+                            [attr.aria-label]="moveUpLabel()"
+                            [title]="moveUpLabel()"
+                            (click)="move.emit({ id: page.id, offset: -1 })"
+                        >
+                            &#9650;
+                        </button>
+                        <button
+                            type="button"
+                            class="gc-nav__tool"
+                            [disabled]="last"
+                            [attr.aria-label]="moveDownLabel()"
+                            [title]="moveDownLabel()"
+                            (click)="move.emit({ id: page.id, offset: 1 })"
+                        >
+                            &#9660;
+                        </button>
+                        <button
+                            type="button"
+                            class="gc-nav__tool gc-nav__tool--danger"
+                            [disabled]="page.locked || pages().length <= 1"
+                            [attr.aria-label]="removeLabel()"
+                            [title]="removeLabel()"
+                            (click)="remove.emit(page.id)"
+                        >
+                            &#10005;
+                        </button>
+                    </span>
+                }
+            </li>
+        }
+    </ul>
+
+    @if (editing()) {
+        <button type="button" class="gc-nav__add" (click)="add.emit()">+ {{ addLabel() }}</button>
+    }
+</nav>

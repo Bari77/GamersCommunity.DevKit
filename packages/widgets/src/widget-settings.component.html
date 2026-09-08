@@ -1,0 +1,69 @@
+<section class="gc-settings">
+    <header class="gc-settings__head">
+        <h3 class="gc-settings__title">{{ entry().label }}</h3>
+        <button type="button" class="gc-settings__close" [attr.aria-label]="closeLabel()" (click)="close.emit()">
+            &#10005;
+        </button>
+    </header>
+
+    @for (field of entry().fields ?? []; track field.key) {
+        @if (field.type === "list") {
+            @let list = asList(field);
+            <fieldset class="gc-settings__list">
+                <legend>{{ list.label }}</legend>
+
+                @for (row of rows(list.key); track $index) {
+                    <div class="gc-settings__row">
+                        @for (item of list.itemFields; track item.key) {
+                            <input
+                                class="gc-settings__input"
+                                [type]="item.type === 'number' ? 'number' : 'text'"
+                                [placeholder]="item.placeholder ?? item.label"
+                                [attr.aria-label]="item.label"
+                                [value]="rowValue(row, item.key)"
+                                (change)="setRowValue(list.key, $index, item.key, $event)"
+                            />
+                        }
+                        <button
+                            type="button"
+                            class="gc-settings__tool gc-settings__tool--danger"
+                            [attr.aria-label]="removeRowLabel()"
+                            (click)="removeRow(list.key, $index)"
+                        >
+                            &#10005;
+                        </button>
+                    </div>
+                }
+
+                <button type="button" class="gc-settings__add" (click)="addRow(list.key)">
+                    + {{ list.addLabel ?? addRowLabel() }}
+                </button>
+            </fieldset>
+        } @else {
+            @let text = asText(field);
+            <label class="gc-settings__field">
+                <span>{{ text.label }}</span>
+                @if (text.type === "textarea") {
+                    <textarea
+                        class="gc-settings__input"
+                        rows="3"
+                        [placeholder]="text.placeholder ?? ''"
+                        [value]="value(text.key)"
+                        (change)="setValue(text.key, $event)"
+                    ></textarea>
+                } @else {
+                    <input
+                        class="gc-settings__input"
+                        [type]="text.type === 'number' ? 'number' : 'text'"
+                        [placeholder]="text.placeholder ?? ''"
+                        [value]="value(text.key)"
+                        (change)="setValue(text.key, $event)"
+                    />
+                }
+                @if (text.hint) {
+                    <small>{{ text.hint }}</small>
+                }
+            </label>
+        }
+    }
+</section>

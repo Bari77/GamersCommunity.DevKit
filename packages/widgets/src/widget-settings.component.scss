@@ -1,0 +1,120 @@
+:host {
+    display: block;
+}
+
+.gc-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.9rem;
+    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.12));
+    border-radius: var(--gc-widget-radius, 0.75rem);
+    background: var(--gc-widget-background, var(--gc-surface-2, rgba(255, 255, 255, 0.03)));
+}
+
+.gc-settings__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.gc-settings__title {
+    margin: 0;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    opacity: 0.7;
+}
+
+.gc-settings__close {
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.14));
+    border-radius: 0.35rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+.gc-settings__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+}
+
+.gc-settings__field > span {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.65;
+}
+
+.gc-settings__field small {
+    opacity: 0.5;
+    font-size: 0.72rem;
+}
+
+.gc-settings__input {
+    width: 100%;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.18));
+    border-radius: 0.4rem;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+}
+
+.gc-settings__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0.6rem;
+    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.12));
+    border-radius: 0.5rem;
+}
+
+.gc-settings__list legend {
+    padding: 0 0.35rem;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.65;
+}
+
+.gc-settings__row {
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+}
+
+.gc-settings__tool {
+    flex: none;
+    width: 1.7rem;
+    height: 1.7rem;
+    padding: 0;
+    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.14));
+    border-radius: 0.35rem;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+
+.gc-settings__tool--danger:hover {
+    border-color: var(--gc-widget-danger, #ff3d71);
+    color: var(--gc-widget-danger, #ff3d71);
+}
+
+.gc-settings__add {
+    align-self: flex-start;
+    padding: 0.35rem 0.7rem;
+    border: 1px dashed var(--gc-widget-border, rgba(255, 255, 255, 0.22));
+    border-radius: 0.4rem;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
