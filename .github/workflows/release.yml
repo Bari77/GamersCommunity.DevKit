@@ -36,7 +36,7 @@ jobs:
       - name: Set npm package versions
         run: |
           VERSION="${{ steps.ver.outputs.version }}"
-          for ws in @bari77/gc-sdk @bari77/gc-msw @bari77/gc-playground @bari77/gc-create-game; do
+          for ws in @bari77/gc-sdk @bari77/gc-msw @bari77/gc-playground @bari77/gc-widgets @bari77/gc-create-game; do
             npm pkg set "version=${VERSION}" --workspace="$ws"
           done
           npm pkg set "dependencies.@bari77/gc-sdk=${VERSION}" --workspace=@bari77/gc-msw
@@ -56,6 +56,7 @@ jobs:
           npm publish --workspace=@bari77/gc-sdk --access restricted
           npm publish --workspace=@bari77/gc-msw --access restricted
           npm publish --workspace=@bari77/gc-playground --access restricted
+          npm publish --workspace=@bari77/gc-widgets --access restricted
           npm publish --workspace=@bari77/gc-create-game --access restricted
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -91,6 +92,7 @@ jobs:
             - `@bari77/gc-sdk@${{ steps.ver.outputs.version }}`
             - `@bari77/gc-msw@${{ steps.ver.outputs.version }}`
             - `@bari77/gc-playground@${{ steps.ver.outputs.version }}`
+            - `@bari77/gc-widgets@${{ steps.ver.outputs.version }}`
             - `@bari77/gc-create-game@${{ steps.ver.outputs.version }}`
 
             ## Image

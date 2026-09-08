@@ -1,7 +1,7 @@
 {
-  "name": "@bari77/gc-sdk",
+  "name": "@bari77/gc-widgets",
   "version": "0.4.0",
-  "description": "Shared types and helpers for GamersCommunity game fronts",
+  "description": "Draggable / resizable widget dashboard shared by the GamersCommunity shell and game remotes",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -21,7 +21,15 @@
     "type": "git",
     "url": "https://github.com/Bari77/GamersCommunity.DevKit.git"
   },
+  "peerDependencies": {
+    "@angular/common": "^21.0.0",
+    "@angular/core": "^21.0.0",
+    "angular-gridster2": "^21.0.0"
+  },
   "devDependencies": {
+    "@angular/common": "21.2.22",
+    "@angular/core": "21.2.22",
+    "angular-gridster2": "21.0.1",
     "typescript": "^5.8.0"
   },
   "license": "UNLICENSED"
