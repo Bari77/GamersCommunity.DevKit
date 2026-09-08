@@ -6,7 +6,11 @@
                     <header class="gc-widget__handle">
                         <span class="gc-widget__title">{{ item.title }}</span>
                         @if (editing()) {
-                            <span class="gc-widget__actions" (mousedown)="$event.stopPropagation()">
+                            <span
+                                class="gc-widget__actions"
+                                (mousedown)="$event.stopPropagation()"
+                                (touchstart)="$event.stopPropagation()"
+                            >
                                 @if (item.configurable) {
                                     <button
                                         type="button"

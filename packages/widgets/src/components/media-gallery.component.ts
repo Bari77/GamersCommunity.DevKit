@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    ElementRef,
+    inject,
+    input,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { GcGalleryItem, videoEmbedUrl } from '../media';
 
@@ -40,7 +50,7 @@ import { GcGalleryItem, videoEmbedUrl } from '../media';
             </div>
 
             @if (zoomed(); as photo) {
-                <div class="gc-gallery__lightbox" role="dialog" (click)="close()">
+                <div #lightbox class="gc-gallery__lightbox" role="dialog" (click)="close()">
                     <img [src]="photo.url" [alt]="photo.title || ''" />
                     @if (photo.title) {
                         <p>{{ photo.title }}</p>
@@ -130,6 +140,7 @@ export class MediaGalleryComponent {
 
     protected readonly zoomed = signal<GcGalleryItem | null>(null);
 
+    private readonly lightbox = viewChild<ElementRef<HTMLElement>>('lightbox');
     private readonly sanitizer = inject(DomSanitizer);
 
     protected readonly videos = computed(() =>
@@ -142,6 +153,17 @@ export class MediaGalleryComponent {
             };
         }),
     );
+
+    public constructor() {
+        // A gridster item is `transform`ed, which would anchor a fixed-position
+        // overlay to the widget instead of the viewport.
+        effect(() => {
+            const element = this.lightbox()?.nativeElement;
+            if (element && element.parentElement !== document.body) {
+                document.body.appendChild(element);
+            }
+        });
+    }
 
     protected open(item: GcGalleryItem): void {
         this.zoomed.set(item);
