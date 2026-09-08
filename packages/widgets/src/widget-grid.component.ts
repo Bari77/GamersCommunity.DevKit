@@ -41,7 +41,6 @@ type GridWidget = GridsterItemConfig & {
     id: string;
     type: string;
     title: string;
-    configurable: boolean;
     settings: WidgetSettings;
     context: WidgetTemplateContext;
 };
@@ -65,6 +64,9 @@ export class WidgetGridComponent {
     public readonly defs = input<readonly WidgetDefDirective[] | null>(null);
 
     public readonly editing = input(false);
+
+    /** Shows the gear outside edit mode, so the owner tweaks a widget without moving anything. */
+    public readonly canConfigure = input(false);
 
     public readonly columns = input(12);
 
@@ -189,7 +191,6 @@ export class WidgetGridComponent {
             id: widget.id,
             type: widget.type,
             title: typeof custom === 'string' && custom.trim() ? custom.trim() : (entry?.label ?? widget.type),
-            configurable: (entry?.fields?.length ?? 0) > 0,
             settings: widget.settings,
             context: { $implicit: widget.settings, instance: widget },
             x: Math.min(Math.max(0, widget.x), columns - cols),

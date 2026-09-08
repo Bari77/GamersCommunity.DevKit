@@ -20,5 +20,6 @@ export type { WidgetPosition } from './widget-grid.component';
 export { WidgetNavComponent } from './widget-nav.component';
 export type { WidgetPageMove, WidgetPageRename } from './widget-nav.component';
 export { WidgetPickerComponent } from './widget-picker.component';
-export { WidgetSettingsComponent } from './widget-settings.component';
+export { WidgetSettingsDefDirective } from './widget-settings-def.directive';
+export { WIDGET_TITLE_KEY, WidgetSettingsComponent } from './widget-settings.component';
 export { WidgetWorkspaceComponent } from './widget-workspace.component';

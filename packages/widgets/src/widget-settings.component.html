@@ -6,7 +6,18 @@
         </button>
     </header>
 
-    @for (field of entry().fields ?? []; track field.key) {
+    <label class="gc-settings__field">
+        <span>{{ titleLabel() }}</span>
+        <input
+            class="gc-settings__input"
+            type="text"
+            [placeholder]="entry().label"
+            [value]="value('title')"
+            (change)="setValue('title', $event)"
+        />
+    </label>
+
+    @for (field of fields(); track field.key) {
         @if (field.type === "list") {
             @let list = asList(field);
             <fieldset class="gc-settings__list">
@@ -24,6 +35,24 @@
                                 (change)="setRowValue(list.key, $index, item.key, $event)"
                             />
                         }
+                        <button
+                            type="button"
+                            class="gc-settings__tool"
+                            [disabled]="$first"
+                            [attr.aria-label]="moveUpLabel()"
+                            (click)="moveRow(list.key, $index, -1)"
+                        >
+                            &#8593;
+                        </button>
+                        <button
+                            type="button"
+                            class="gc-settings__tool"
+                            [disabled]="$last"
+                            [attr.aria-label]="moveDownLabel()"
+                            (click)="moveRow(list.key, $index, 1)"
+                        >
+                            &#8595;
+                        </button>
                         <button
                             type="button"
                             class="gc-settings__tool gc-settings__tool--danger"
@@ -66,4 +95,10 @@
             </label>
         }
     }
+
+    <ng-content />
+
+    <footer class="gc-settings__foot">
+        <button type="button" class="gc-settings__done" (click)="close.emit()">{{ doneLabel() }}</button>
+    </footer>
 </section>

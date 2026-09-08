@@ -1,8 +1,11 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { WidgetCatalogEntry, WidgetListField, WidgetSettingsField, WidgetTextField } from './catalog';
 import { WidgetSettings } from './workspace';
 
 type SettingsRow = Record<string, unknown>;
+
+/** Settings key every widget owns, whatever its catalog entry declares. */
+export const WIDGET_TITLE_KEY = 'title';
 
 /** Renders the settings form described by a catalog entry, so hosts declare data, not UI. */
 @Component({
@@ -19,13 +22,26 @@ export class WidgetSettingsComponent {
 
     public readonly closeLabel = input('Close');
 
+    public readonly doneLabel = input('Done');
+
+    public readonly titleLabel = input('Widget title');
+
     public readonly addRowLabel = input('Add');
 
     public readonly removeRowLabel = input('Remove');
 
+    public readonly moveUpLabel = input('Move up');
+
+    public readonly moveDownLabel = input('Move down');
+
     public readonly settingsChange = output<WidgetSettings>();
 
     public readonly close = output<void>();
+
+    /** The title is offered to every widget, so an entry declaring it would duplicate the input. */
+    protected readonly fields = computed(() =>
+        (this.entry().fields ?? []).filter((field) => field.key !== WIDGET_TITLE_KEY),
+    );
 
     protected asList(field: WidgetSettingsField): WidgetListField {
         return field as WidgetListField;
@@ -70,5 +86,17 @@ export class WidgetSettingsComponent {
     protected removeRow(listKey: string, index: number): void {
         const rows = this.rows(listKey).filter((_, position) => position !== index);
         this.settingsChange.emit({ ...this.settings(), [listKey]: rows });
+    }
+
+    protected moveRow(listKey: string, index: number, offset: number): void {
+        const rows = this.rows(listKey);
+        const target = index + offset;
+        if (target < 0 || target >= rows.length) {
+            return;
+        }
+
+        const next = [...rows];
+        [next[index], next[target]] = [next[target], next[index]];
+        this.settingsChange.emit({ ...this.settings(), [listKey]: next });
     }
 }

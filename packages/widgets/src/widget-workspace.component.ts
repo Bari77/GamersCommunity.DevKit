@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, contentChildren, effect, input, model, output, signal, untracked } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, contentChildren, effect, input, model, output, signal, TemplateRef, untracked } from '@angular/core';
 import { findCatalogEntry, WidgetCatalog, WidgetCatalogEntry } from './catalog';
-import { WidgetDefDirective } from './widget-def.directive';
+import { WidgetDefDirective, WidgetTemplateContext } from './widget-def.directive';
 import { WidgetEditBarComponent } from './widget-edit-bar.component';
 import { WidgetGridComponent, WidgetPosition } from './widget-grid.component';
 import { WidgetNavComponent, WidgetPageMove, WidgetPageRename } from './widget-nav.component';
 import { WidgetPickerComponent } from './widget-picker.component';
+import { WidgetSettingsDefDirective } from './widget-settings-def.directive';
 import { WidgetSettingsComponent } from './widget-settings.component';
 import {
     addPage,
@@ -34,6 +36,7 @@ import {
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        NgTemplateOutlet,
         WidgetEditBarComponent,
         WidgetGridComponent,
         WidgetNavComponent,
@@ -83,6 +86,14 @@ export class WidgetWorkspaceComponent {
 
     public readonly newPageTitle = input('New page');
 
+    public readonly settingsLabel = input('Widget settings');
+
+    public readonly removeWidgetLabel = input('Remove widget');
+
+    public readonly widgetTitleLabel = input('Widget title');
+
+    public readonly doneLabel = input('Done');
+
     public readonly editing = model(false);
 
     public readonly save = output<WidgetWorkspace>();
@@ -91,8 +102,12 @@ export class WidgetWorkspaceComponent {
     protected readonly configuringId = signal<string | null>(null);
     protected readonly activePageId = signal<string | null>(null);
     protected readonly defs = contentChildren(WidgetDefDirective, { descendants: true });
+    protected readonly settingsDefs = contentChildren(WidgetSettingsDefDirective, { descendants: true });
 
     private readonly draft = signal<WidgetWorkspace | null>(null);
+
+    /** Set while the gear is used outside edit mode, where closing the panel persists. */
+    private quickEdited = false;
 
     protected readonly view = computed(() => this.draft() ?? this.workspace());
 
@@ -122,6 +137,7 @@ export class WidgetWorkspaceComponent {
             untracked(() => {
                 this.pickerOpen.set(false);
                 this.configuringId.set(null);
+                this.quickEdited = false;
                 this.draft.set(editing ? cloneWorkspace(committed) : null);
             });
         });
@@ -187,11 +203,39 @@ export class WidgetWorkspaceComponent {
         this.mutate((current, pageId) => removeWidget(current, pageId, widgetId));
     }
 
+    protected settingsTemplateFor(type: string): TemplateRef<WidgetTemplateContext> | null {
+        return this.settingsDefs().find((def) => def.type() === type)?.template ?? null;
+    }
+
+    /** Outside edit mode the gear works on its own draft, committed when the panel closes. */
+    protected onConfigure(widgetId: string): void {
+        if (!this.draft()) {
+            this.draft.set(cloneWorkspace(this.workspace()));
+        }
+        this.configuringId.set(widgetId);
+    }
+
+    protected onCloseSettings(): void {
+        this.configuringId.set(null);
+        if (this.editing() || !this.quickEdited) {
+            return;
+        }
+
+        this.quickEdited = false;
+        const current = this.draft();
+        if (current) {
+            this.save.emit(normalizeWorkspace(current, this.columns()));
+        }
+    }
+
     protected onSettingsChange(settings: WidgetSettings): void {
         const widgetId = this.configuringId();
-        if (widgetId) {
-            this.mutate((current, pageId) => updateWidgetSettings(current, pageId, widgetId, settings));
+        if (!widgetId) {
+            return;
         }
+
+        this.quickEdited = this.quickEdited || !this.editing();
+        this.mutate((current, pageId) => updateWidgetSettings(current, pageId, widgetId, settings));
     }
 
     protected onCancel(): void {

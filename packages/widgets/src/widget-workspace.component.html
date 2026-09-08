@@ -59,9 +59,20 @@
             <gc-widget-settings
                 [entry]="target.entry"
                 [settings]="target.widget.settings"
+                [titleLabel]="widgetTitleLabel()"
+                [doneLabel]="doneLabel()"
+                [moveUpLabel]="moveUpLabel()"
+                [moveDownLabel]="moveDownLabel()"
                 (settingsChange)="onSettingsChange($event)"
-                (close)="configuringId.set(null)"
-            />
+                (close)="onCloseSettings()"
+            >
+                @if (settingsTemplateFor(target.widget.type); as tpl) {
+                    <ng-container
+                        [ngTemplateOutlet]="tpl"
+                        [ngTemplateOutletContext]="{ $implicit: target.widget.settings, instance: target.widget }"
+                    />
+                }
+            </gc-widget-settings>
         }
 
         <gc-widget-grid
@@ -69,13 +80,16 @@
             [catalog]="catalog()"
             [defs]="defs()"
             [editing]="editing()"
+            [canConfigure]="canEdit()"
             [columns]="columns()"
             [rowHeight]="rowHeight()"
             [gap]="gap()"
             [emptyLabel]="emptyPageLabel()"
+            [settingsLabel]="settingsLabel()"
+            [removeLabel]="removeWidgetLabel()"
             (positionsChange)="onPositions($event)"
             (remove)="onRemoveWidget($event)"
-            (configure)="configuringId.set($event)"
+            (configure)="onConfigure($event)"
         />
     </div>
 </div>
