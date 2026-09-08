@@ -19,6 +19,7 @@ import {
     removePage,
     removeWidget,
     renamePage,
+    serializeWorkspace,
     updateWidgetSettings,
     WidgetInstance,
     WidgetPage,
@@ -106,8 +107,8 @@ export class WidgetWorkspaceComponent {
 
     private readonly draft = signal<WidgetWorkspace | null>(null);
 
-    /** Set while the gear is used outside edit mode, where closing the panel persists. */
-    private quickEdited = false;
+    private previousEditing = false;
+    private previousCommitted: WidgetWorkspace | null = null;
 
     protected readonly view = computed(() => this.draft() ?? this.workspace());
 
@@ -135,9 +136,21 @@ export class WidgetWorkspaceComponent {
             const committed = this.workspace();
 
             untracked(() => {
+                const enteringEdit = editing && !this.previousEditing;
+                const rebased = committed !== this.previousCommitted;
+                this.previousEditing = editing;
+                this.previousCommitted = committed;
+
                 this.pickerOpen.set(false);
                 this.configuringId.set(null);
-                this.quickEdited = false;
+
+                // Switching to edit mode adopts what the gear already changed. Branching from
+                // the committed workspace here is what used to drop those changes silently.
+                if (enteringEdit && !rebased) {
+                    this.draft.set(this.draft() ?? cloneWorkspace(committed));
+                    return;
+                }
+
                 this.draft.set(editing ? cloneWorkspace(committed) : null);
             });
         });
@@ -153,7 +166,11 @@ export class WidgetWorkspaceComponent {
     }
 
     protected onPositions(positions: WidgetPosition[]): void {
-        this.mutate((current, pageId) => applyPositions(current, pageId, positions));
+        // Dragging is disabled outside edit mode, so anything reported there is gridster
+        // reflowing on its own and must not end up in a quick-config draft.
+        if (this.editing()) {
+            this.mutate((current, pageId) => applyPositions(current, pageId, positions));
+        }
     }
 
     protected onSelectPage(id: string): void {
@@ -221,17 +238,25 @@ export class WidgetWorkspaceComponent {
         this.configuringId.set(widgetId);
     }
 
+    /**
+     * Persists what the gear changed outside edit mode. Whether there is something to save is
+     * read off the draft itself: a flag raised on edit would not survive the committed
+     * workspace being recreated, which silently dropped the changes.
+     */
     protected onCloseSettings(): void {
         this.configuringId.set(null);
-        if (this.editing() || !this.quickEdited) {
+        const current = this.draft();
+        if (this.editing() || !current) {
             return;
         }
 
-        this.quickEdited = false;
-        const current = this.draft();
-        if (current) {
-            this.save.emit(normalizeWorkspace(current, this.columns()));
+        const next = normalizeWorkspace(current, this.columns());
+        if (serializeWorkspace(next) === serializeWorkspace(this.workspace())) {
+            this.draft.set(null);
+            return;
         }
+
+        this.save.emit(next);
     }
 
     protected onSettingsChange(settings: WidgetSettings): void {
@@ -240,7 +265,6 @@ export class WidgetWorkspaceComponent {
             return;
         }
 
-        this.quickEdited = this.quickEdited || !this.editing();
         this.mutate((current, pageId) => updateWidgetSettings(current, pageId, widgetId, settings));
     }
 
