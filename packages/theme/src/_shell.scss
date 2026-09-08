@@ -1,0 +1,14 @@
+/* Nebular layout chrome — shared between Platform shell and game playgrounds */
+nb-layout-header.fixed {
+    z-index: 1040;
+}
+
+nb-layout-footer.fixed {
+    z-index: 1040;
+}
+
+nb-layout-header [nbButton].appearance-filled.status-basic {
+    background-color: transparent;
+    border-color: transparent;
+    color: #edf1ff;
+}

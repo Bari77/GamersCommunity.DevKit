@@ -1,0 +1,14 @@
+/* GamersCommunity energy skin — CSS custom properties */
+:root {
+    --gc-accent: #2ee6a6;
+    --gc-accent-2: #3dd6ff;
+    --gc-surface-0: #070b14;
+    --gc-surface-1: #0e1524;
+    --gc-surface-2: #162033;
+    --game-accent: var(--gc-accent);
+    --gc-font-display: "Orbitron", sans-serif;
+    --gc-font-body: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --gc-discriminator: rgb(137 137 227);
+    --gc-card-list-gap: 0.5rem;
+    --gc-card-grid-gap: 1rem;
+}

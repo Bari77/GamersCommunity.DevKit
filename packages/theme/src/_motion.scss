@@ -1,0 +1,40 @@
+@keyframes gc-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(1rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes gc-pulse-accent {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--game-accent) 45%, transparent);
+    }
+    50% {
+        box-shadow: 0 0 0 0.35rem color-mix(in srgb, var(--game-accent) 0%, transparent);
+    }
+}
+
+.gc-enter {
+    animation: gc-fade-up 0.55s ease both;
+}
+
+.gc-enter-delay-1 {
+    animation-delay: 0.08s;
+}
+
+.gc-enter-delay-2 {
+    animation-delay: 0.16s;
+}
+
+.gc-enter-delay-3 {
+    animation-delay: 0.24s;
+}
+
+.gc-pulse-new {
+    animation: gc-pulse-accent 2s ease-in-out infinite;
+}

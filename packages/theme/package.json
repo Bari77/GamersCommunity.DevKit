@@ -1,0 +1,25 @@
+{
+  "name": "@bari77/gc-theme",
+  "version": "0.4.1",
+  "description": "Shared GamersCommunity design tokens and global styles",
+  "exports": {
+    ".": "./src/global.scss",
+    "./tokens": "./src/_tokens.scss",
+    "./typography": "./src/_typography.scss",
+    "./motion": "./src/_motion.scss",
+    "./scrollbar": "./src/_scrollbar.scss",
+    "./shell": "./src/_shell.scss",
+    "./utilities": "./src/_utilities.scss"
+  },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bari77/GamersCommunity.DevKit.git"
+  },
+  "license": "UNLICENSED"
+}

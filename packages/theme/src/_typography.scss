@@ -1,0 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap");
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    font-family: var(--gc-font-body);
+    background: var(--gc-surface-0);
+    color: #edf1ff;
+}
+
+h1,
+h2,
+h3,
+.gc-display {
+    font-family: var(--gc-font-display);
+    letter-spacing: 0.04em;
+}
