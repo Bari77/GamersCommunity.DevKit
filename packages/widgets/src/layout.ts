@@ -12,6 +12,20 @@ export function cloneLayout(layout: WidgetLayout): WidgetLayout {
     return layout.map((item) => ({ ...item }));
 }
 
+/** Keeps widget positions inside the grid after bad drags or legacy saved layouts. */
+export function normalizeLayout(layout: WidgetLayout, columns: number): WidgetLayout {
+    const maxCols = Math.max(1, columns);
+
+    return layout.map((item) => {
+        const cols = Math.min(Math.max(1, item.cols), maxCols);
+        const x = Math.min(Math.max(0, item.x), maxCols - cols);
+        const y = Math.max(0, item.y);
+        const rows = Math.max(1, item.rows);
+
+        return { ...item, x, y, cols, rows };
+    });
+}
+
 export function layoutsEqual(left: WidgetLayout, right: WidgetLayout): boolean {
     if (left.length !== right.length) {
         return false;
@@ -56,21 +70,26 @@ export function serializeLayout(layout: WidgetLayout): string {
     return JSON.stringify(layout);
 }
 
-export function parseLayout(raw: string | null | undefined, fallback: WidgetLayout): WidgetLayout {
+export function parseLayout(
+    raw: string | null | undefined,
+    fallback: WidgetLayout,
+    columns = 12,
+): WidgetLayout {
     if (!raw) {
-        return cloneLayout(fallback);
+        return normalizeLayout(cloneLayout(fallback), columns);
     }
 
     try {
         const parsed: unknown = JSON.parse(raw);
         if (!Array.isArray(parsed)) {
-            return cloneLayout(fallback);
+            return normalizeLayout(cloneLayout(fallback), columns);
         }
 
         const items = parsed.filter(isLayoutItem).map((item) => ({ ...item }));
-        return items.length > 0 ? mergeLayout(items, fallback) : cloneLayout(fallback);
+        const merged = items.length > 0 ? mergeLayout(items, fallback) : cloneLayout(fallback);
+        return normalizeLayout(merged, columns);
     } catch {
-        return cloneLayout(fallback);
+        return normalizeLayout(cloneLayout(fallback), columns);
     }
 }
 

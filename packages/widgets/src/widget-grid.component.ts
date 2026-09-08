@@ -9,6 +9,7 @@ import {
     output,
     signal,
     untracked,
+    viewChild,
 } from '@angular/core';
 import {
     CompactType,
@@ -19,7 +20,7 @@ import {
     GridsterItemConfig,
     GridType,
 } from 'angular-gridster2';
-import { WidgetLayout } from './layout';
+import { WidgetLayout, normalizeLayout } from './layout';
 import { WidgetDefDirective } from './widget-def.directive';
 
 type GridWidgetItem = GridsterItemConfig & { id: string };
@@ -51,13 +52,16 @@ export class WidgetGridComponent {
 
     protected readonly items = signal<GridWidgetItem[]>([]);
 
+    private readonly gridsterRef = viewChild(Gridster);
+
     protected readonly options = computed<GridsterConfig>(() => {
         const editing = this.editing();
         return {
-            gridType: GridType.VerticalFixed,
+            gridType: GridType.Fit,
             compactType: CompactType.CompactUp,
             displayGrid: editing ? DisplayGrid.Always : DisplayGrid.None,
-            setGridSize: true,
+            setGridSize: false,
+            disableScrollHorizontal: true,
             fixedRowHeight: this.rowHeight(),
             margin: this.gap(),
             outerMargin: false,
@@ -75,6 +79,8 @@ export class WidgetGridComponent {
                 enabled: editing,
                 handles: { s: true, e: true, se: true, n: false, w: false, ne: false, sw: false, nw: false },
             },
+            initCallback: () => this.scheduleResize(),
+            gridSizeChangedCallback: () => this.scheduleResize(),
             itemChangeCallback: () => this.emitDraft(),
             itemResizeCallback: () => this.emitDraft(),
         };
@@ -88,11 +94,33 @@ export class WidgetGridComponent {
         // layout and Save keep the persisted one, without any extra bookkeeping.
         effect(() => {
             const layout = this.layout();
+            const columns = this.columns();
             if (this.editing()) {
                 return;
             }
-            untracked(() => this.items.set(layout.map((item) => ({ ...item }))));
+
+            untracked(() => {
+                this.items.set(normalizeLayout(layout, columns).map((item) => ({ ...item })));
+                this.scheduleResize();
+            });
         });
+
+        effect(() => {
+            if (!this.editing()) {
+                return;
+            }
+
+            untracked(() => {
+                const layout = this.layout();
+                const columns = this.columns();
+                this.items.set(normalizeLayout(layout, columns).map((item) => ({ ...item })));
+                this.scheduleResize();
+            });
+        });
+    }
+
+    private scheduleResize(): void {
+        queueMicrotask(() => this.gridsterRef()?.api?.resize?.());
     }
 
     protected labelFor(id: string): string {
@@ -105,13 +133,16 @@ export class WidgetGridComponent {
 
     private emitDraft(): void {
         this.layoutChange.emit(
-            this.items().map((item) => ({
-                id: item.id,
-                x: item.x,
-                y: item.y,
-                cols: item.cols,
-                rows: item.rows,
-            })),
+            normalizeLayout(
+                this.items().map((item) => ({
+                    id: item.id,
+                    x: item.x,
+                    y: item.y,
+                    cols: item.cols,
+                    rows: item.rows,
+                })),
+                this.columns(),
+            ),
         );
     }
 }

@@ -1,4 +1,4 @@
-export { cloneLayout, layoutsEqual, mergeLayout, parseLayout, serializeLayout } from './layout';
+export { cloneLayout, layoutsEqual, mergeLayout, normalizeLayout, parseLayout, serializeLayout } from './layout';
 export type { WidgetLayout, WidgetLayoutItem } from './layout';
 export { WidgetDefDirective } from './widget-def.directive';
 export { WidgetEditBarComponent } from './widget-edit-bar.component';

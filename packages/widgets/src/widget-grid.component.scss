@@ -1,8 +1,15 @@
 :host {
     display: block;
+    width: 100%;
+    max-width: 100%;
 }
 
 gridster {
+    background: transparent;
+    width: 100%;
+}
+
+gridster-item {
     background: transparent;
 }
 
@@ -13,7 +20,8 @@ gridster {
     overflow: hidden;
     border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.08));
     border-radius: var(--gc-widget-radius, 0.75rem);
-    background: var(--gc-widget-background, rgba(255, 255, 255, 0.03));
+    background: var(--gc-widget-background, var(--gc-surface-2, rgba(255, 255, 255, 0.03)));
+    color: inherit;
 }
 
 .gc-widget__handle {
