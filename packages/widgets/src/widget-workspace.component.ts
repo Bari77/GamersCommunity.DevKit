@@ -156,6 +156,12 @@ export class WidgetWorkspaceComponent {
         this.mutate((current, pageId) => applyPositions(current, pageId, positions));
     }
 
+    protected onSelectPage(id: string): void {
+        // Leaving the page hides the settings panel, so commit before it disappears.
+        this.onCloseSettings();
+        this.activePageId.set(id);
+    }
+
     protected onAddPage(): void {
         const current = this.draft();
         if (!current) {

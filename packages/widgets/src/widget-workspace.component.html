@@ -9,7 +9,7 @@
             [removeLabel]="removePageLabel()"
             [moveUpLabel]="moveUpLabel()"
             [moveDownLabel]="moveDownLabel()"
-            (select)="activePageId.set($event)"
+            (select)="onSelectPage($event)"
             (add)="onAddPage()"
             (rename)="onRenamePage($event)"
             (remove)="onRemovePage($event)"
