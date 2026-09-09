@@ -9,6 +9,9 @@ Pushing a `vX.Y.Z` tag runs `.github/workflows/release.yml`:
    - `@bari77/gc-sdk`
    - `@bari77/gc-msw`
    - `@bari77/gc-playground`
+   - `@bari77/gc-ui`
+   - `@bari77/gc-widgets`
+   - `@bari77/gc-theme`
    - `@bari77/gc-create-game` (clones `GamersCommunity.Games.Template` at runtime — no template bundled in the package)
 3. Build & push image **`ghcr.io/bari77/gc-devgateway:X.Y.Z`**
 4. Create a **GitHub Release**
