@@ -1,6 +1,6 @@
 {
   "name": "@bari77/gc-workspace-editor",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "description": "CLI and standalone editor for default player workspace layouts in GamersCommunity game fronts",
   "type": "module",
   "bin": {
@@ -19,7 +19,7 @@
     "build:editor": "vite build --config editor/vite.config.mts"
   },
   "dependencies": {
-    "@analogjs/vite-plugin-angular": "^1.19.0",
+    "@analogjs/vite-plugin-angular": "2.7.2",
     "@angular/animations": "21.2.17",
     "@angular/build": "21.2.15",
     "@angular/cli": "21.2.15",
