@@ -1,0 +1,21 @@
+<div class="gc-create-wall__text">
+    @if (heading()) {
+        <p class="gc-create-wall__heading">{{ heading() }}</p>
+    }
+    @if (message()) {
+        <p class="gc-create-wall__message">{{ message() }}</p>
+    }
+    <ng-content />
+</div>
+
+@if (actionLabel()) {
+    <button
+        type="button"
+        class="gc-create-wall__action"
+        [disabled]="busy()"
+        [attr.aria-busy]="busy() ? 'true' : null"
+        (click)="action.emit()"
+    >
+        {{ actionLabel() }}
+    </button>
+}

@@ -1,0 +1,5 @@
+@if (playerUrl(); as url) {
+    <iframe class="gc-twitch__frame" [src]="url" [title]="channel()" allowfullscreen referrerpolicy="strict-origin"></iframe>
+} @else {
+    <p class="gc-twitch__empty">{{ emptyLabel() }}</p>
+}

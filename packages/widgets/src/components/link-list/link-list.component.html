@@ -1,0 +1,42 @@
+@if (entries().length === 0) {
+    <p class="gc-links__empty">{{ emptyLabel() }}</p>
+} @else {
+    <ul class="gc-links">
+        @for (entry of entries(); track entry.id) {
+            <li>
+                <a
+                    class="gc-links__card"
+                    [attr.data-network]="entry.network"
+                    [style.--gc-link-color]="entry.color"
+                    [href]="entry.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <span class="gc-links__icon">
+                        @if (entry.path) {
+                            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path [attr.d]="entry.path" />
+                            </svg>
+                        } @else {
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                aria-hidden="true"
+                            >
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                            </svg>
+                        }
+                    </span>
+                    <span class="gc-links__text">
+                        <span class="gc-links__label">{{ entry.label }}</span>
+                        <span class="gc-links__host">{{ entry.host }}</span>
+                    </span>
+                </a>
+            </li>
+        }
+    </ul>
+}

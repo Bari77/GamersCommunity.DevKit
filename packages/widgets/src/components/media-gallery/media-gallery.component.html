@@ -1,0 +1,41 @@
+@if (items().length === 0) {
+    <p class="gc-gallery__empty">{{ emptyLabel() }}</p>
+} @else if (kind() === 'video') {
+    <div class="gc-gallery gc-gallery--video">
+        @for (video of videos(); track video.url) {
+            <figure class="gc-gallery__cell">
+                @if (video.embed; as embed) {
+                    <iframe
+                        class="gc-gallery__frame"
+                        [src]="embed"
+                        [title]="video.title"
+                        allowfullscreen
+                        referrerpolicy="strict-origin"
+                    ></iframe>
+                } @else {
+                    <video class="gc-gallery__frame" [src]="video.url" controls preload="metadata"></video>
+                }
+                @if (video.title) {
+                    <figcaption>{{ video.title }}</figcaption>
+                }
+            </figure>
+        }
+    </div>
+} @else {
+    <div class="gc-gallery gc-gallery--photo">
+        @for (photo of items(); track photo.url) {
+            <button type="button" class="gc-gallery__thumb" (click)="open(photo)">
+                <img [src]="photo.thumbnailUrl || photo.url" [alt]="photo.title || ''" loading="lazy" />
+            </button>
+        }
+    </div>
+
+    @if (zoomed(); as photo) {
+        <div #lightbox class="gc-gallery__lightbox" role="dialog" (click)="close()">
+            <img [src]="photo.url" [alt]="photo.title || ''" />
+            @if (photo.title) {
+                <p>{{ photo.title }}</p>
+            }
+        </div>
+    }
+}

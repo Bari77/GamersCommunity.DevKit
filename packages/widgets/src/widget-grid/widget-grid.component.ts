@@ -25,11 +25,11 @@ import {
     GridsterItemConfig,
     GridType,
 } from 'angular-gridster2';
-import { findCatalogEntry, WidgetCatalog } from './catalog';
-import { GcLink, LinkListComponent } from './components/link-list.component';
-import { TwitchEmbedComponent } from './components/twitch-embed.component';
-import { WidgetDefDirective, WidgetTemplateContext } from './widget-def.directive';
-import { WidgetInstance, WidgetSettings } from './workspace';
+import { findCatalogEntry, WidgetCatalog } from '../catalog';
+import { GcLink, LinkListComponent } from '../components/link-list/link-list.component';
+import { TwitchEmbedComponent } from '../components/twitch-embed/twitch-embed.component';
+import { WidgetDefDirective, WidgetTemplateContext } from '../widget-def.directive';
+import { WidgetInstance, WidgetSettings } from '../workspace';
 
 export const WIDGET_DRAG_HANDLE_CLASS = 'gc-widget__handle';
 

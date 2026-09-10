@@ -1,0 +1,13 @@
+@if (open()) {
+    <div class="gc-modal__backdrop" (click)="requestClose('backdrop')"></div>
+    <div
+        #panel
+        class="gc-modal__panel"
+        role="dialog"
+        aria-modal="true"
+        tabindex="-1"
+        [attr.aria-label]="ariaLabel() || null"
+    >
+        <ng-content />
+    </div>
+}

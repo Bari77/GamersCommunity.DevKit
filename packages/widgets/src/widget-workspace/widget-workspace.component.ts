@@ -1,13 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, contentChildren, effect, input, model, output, signal, TemplateRef, untracked } from '@angular/core';
-import { findCatalogEntry, WidgetCatalog, WidgetCatalogEntry } from './catalog';
-import { WidgetDefDirective, WidgetTemplateContext } from './widget-def.directive';
-import { WidgetEditBarComponent } from './widget-edit-bar.component';
-import { WidgetGridComponent, WidgetPosition } from './widget-grid.component';
-import { WidgetNavComponent, WidgetPageMove, WidgetPageRename } from './widget-nav.component';
-import { WidgetPickerComponent } from './widget-picker.component';
-import { WidgetSettingsDefDirective } from './widget-settings-def.directive';
-import { WidgetSettingsComponent } from './widget-settings.component';
+import { findCatalogEntry, WidgetCatalog, WidgetCatalogEntry } from '../catalog';
+import { WidgetDefDirective, WidgetTemplateContext } from '../widget-def.directive';
+import { WidgetEditBarComponent } from '../widget-edit-bar/widget-edit-bar.component';
+import { WidgetGridComponent, WidgetPosition } from '../widget-grid/widget-grid.component';
+import { WidgetNavComponent, WidgetPageMove, WidgetPageRename } from '../widget-nav/widget-nav.component';
+import { WidgetPickerComponent } from '../widget-picker/widget-picker.component';
+import { WidgetSettingsDefDirective } from '../widget-settings-def.directive';
+import { WidgetSettingsComponent } from '../widget-settings/widget-settings.component';
 import {
     addPage,
     addWidget,
@@ -25,7 +25,7 @@ import {
     WidgetPage,
     WidgetSettings,
     WidgetWorkspace,
-} from './workspace';
+} from '../workspace';
 
 /**
  * Whole customisable profile: page rail, widget grid, catalog picker and settings.

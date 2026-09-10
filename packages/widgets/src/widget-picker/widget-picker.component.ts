@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { WidgetCatalog } from './catalog';
+import { WidgetCatalog } from '../catalog';
 
 /** Lists the widget types the owner can drop on the current page. */
 @Component({

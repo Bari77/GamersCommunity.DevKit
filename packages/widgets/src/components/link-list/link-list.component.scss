@@ -1,0 +1,74 @@
+:host {
+    display: block;
+}
+
+.gc-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.gc-links__card {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    height: 100%;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.12));
+    border-radius: 0.6rem;
+    color: inherit;
+    text-decoration: none;
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease;
+}
+
+.gc-links__card:hover,
+.gc-links__card:focus-visible {
+    border-color: var(--gc-link-color, var(--gc-widget-accent, #3366ff));
+    background: color-mix(in srgb, var(--gc-link-color, #3366ff) 12%, transparent);
+}
+
+.gc-links__icon {
+    display: flex;
+    flex: 0 0 auto;
+    color: var(--gc-link-color, currentColor);
+}
+
+.gc-links__icon svg {
+    width: 1.35rem;
+    height: 1.35rem;
+}
+
+/* The card is the click target, so the text must never widen it past its column. */
+.gc-links__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.05rem;
+    min-width: 0;
+}
+
+.gc-links__label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.gc-links__host {
+    font-size: 0.72rem;
+    opacity: 0.55;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.gc-links__empty {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.6;
+}

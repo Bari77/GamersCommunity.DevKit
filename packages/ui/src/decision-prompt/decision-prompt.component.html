@@ -1,0 +1,36 @@
+<gc-modal [open]="open()" [ariaLabel]="heading()" [dismissible]="!busy()" (dismissed)="secondary.emit()">
+    <h2 class="gc-decision-prompt__heading">{{ heading() }}</h2>
+
+    @if (message()) {
+        <p class="gc-decision-prompt__message">{{ message() }}</p>
+    }
+
+    <ng-content />
+
+    @if (optOutLabel()) {
+        <label class="gc-decision-prompt__opt-out">
+            <input type="checkbox" [checked]="optOut()" [disabled]="busy()" (change)="onOptOutToggle($event)" />
+            <span>{{ optOutLabel() }}</span>
+        </label>
+    }
+
+    <div class="gc-decision-prompt__actions">
+        <button
+            type="button"
+            class="gc-decision-prompt__button gc-decision-prompt__button--secondary"
+            [disabled]="busy()"
+            (click)="secondary.emit()"
+        >
+            {{ secondaryLabel() }}
+        </button>
+        <button
+            type="button"
+            class="gc-decision-prompt__button gc-decision-prompt__button--primary"
+            [disabled]="busy()"
+            [attr.aria-busy]="busy() ? 'true' : null"
+            (click)="primary.emit()"
+        >
+            {{ primaryButtonLabel() }}
+        </button>
+    </div>
+</gc-modal>

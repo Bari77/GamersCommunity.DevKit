@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { WidgetPage } from './workspace';
+import { WidgetPage } from '../workspace';
 
 export interface WidgetPageRename {
     id: string;

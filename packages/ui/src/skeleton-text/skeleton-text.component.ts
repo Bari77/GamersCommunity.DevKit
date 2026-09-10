@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { SkeletonComponent } from './skeleton.component';
+import { SkeletonComponent } from '../skeleton/skeleton.component';
 
 /** Stack of skeleton lines standing in for a paragraph or a block of labels. */
 @Component({
@@ -7,21 +7,8 @@ import { SkeletonComponent } from './skeleton.component';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [SkeletonComponent],
-    template: `
-        @for (line of lineIndexes(); track line) {
-            <gc-skeleton [width]="widthOf(line)" [height]="lineHeight()" [radius]="radius()" />
-        }
-    `,
-    styles: [
-        `
-            :host {
-                display: flex;
-                flex-direction: column;
-                gap: var(--gc-skeleton-text-gap, 0.5rem);
-                width: 100%;
-            }
-        `,
-    ],
+    templateUrl: './skeleton-text.component.html',
+    styleUrl: './skeleton-text.component.scss',
     host: {
         '[style.--gc-skeleton-text-gap]': 'gap()',
         '[attr.aria-hidden]': 'true',

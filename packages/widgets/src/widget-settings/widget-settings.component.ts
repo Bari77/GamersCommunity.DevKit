@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { WidgetCatalogEntry, WidgetListField, WidgetSettingsField, WidgetTextField } from './catalog';
-import { WidgetSettings } from './workspace';
+import { WidgetCatalogEntry, WidgetListField, WidgetSettingsField, WidgetTextField } from '../catalog';
+import { WidgetSettings } from '../workspace';
 
 type SettingsRow = Record<string, unknown>;
 
