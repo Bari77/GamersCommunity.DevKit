@@ -1,0 +1,66 @@
+@import '../../../../node_modules/@bari77/gc-theme/src/global.scss';
+
+:host {
+    display: block;
+    min-height: 100vh;
+    color: var(--gc-text);
+    background: var(--gc-background);
+}
+
+.shell {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem 0;
+}
+
+.shell h1 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.shell__path {
+    margin: 0.35rem 0 0;
+    opacity: 0.7;
+    font-family: ui-monospace, monospace;
+    font-size: 0.85rem;
+}
+
+.shell__hint {
+    margin: 0;
+    max-width: 28rem;
+    opacity: 0.75;
+    font-size: 0.9rem;
+}
+
+.shell__error {
+    margin: 1rem 1.5rem 0;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    background: rgb(255 61 113 / 12%);
+    white-space: pre-wrap;
+}
+
+.shell__loading {
+    padding: 2rem 1.5rem;
+    opacity: 0.7;
+}
+
+.workspace {
+    display: block;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 3rem;
+
+    --gc-widget-border: rgb(255 255 255 / 10%);
+    --gc-widget-background: var(--gc-surface-2);
+    --gc-widget-editing-border: rgb(120 170 255 / 55%);
+    --gc-widget-accent: #3366ff;
+    --gc-widget-danger: #ff3d71;
+    --gc-widget-hover: rgb(255 255 255 / 6%);
+}
+
+gc-widget-grid gridster-item {
+    background: transparent;
+}
