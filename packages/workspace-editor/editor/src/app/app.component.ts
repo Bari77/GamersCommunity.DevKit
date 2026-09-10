@@ -7,14 +7,7 @@ import {
     WidgetWorkspaceComponent,
 } from '@bari77/gc-widgets';
 import { gameWorkspaceRegistry } from 'virtual:game-editor-registry';
-
-interface WorkspaceConfigResponse {
-    layout: WidgetWorkspace;
-    catalog: WidgetCatalog;
-    columns: number;
-    rowHeight: number;
-    layoutPath: string;
-}
+import type { WorkspaceConfigResponse } from './workspace-config.types';
 
 @Component({
     selector: 'gc-workspace-editor-root',
