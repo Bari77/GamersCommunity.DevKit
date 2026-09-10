@@ -1,6 +1,6 @@
 {
   "name": "@bari77/gc-widgets",
-  "version": "0.7.1",
+  "version": "0.8.1",
   "description": "Draggable / resizable widget dashboard shared by the GamersCommunity shell and game remotes",
   "type": "module",
   "main": "./src/index.ts",

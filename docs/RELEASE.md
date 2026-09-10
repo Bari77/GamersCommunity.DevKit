@@ -1,5 +1,20 @@
 # DevKit publishing (tags → Release + npm + image)
 
+## Versioning: lockstep
+
+Every `@bari77/gc-*` package shares one version, driven by the tag. A `vX.Y.Z` tag publishes all
+seven packages at `X.Y.Z`, even the ones whose content did not change — same model as `@angular/*`.
+
+Consequences:
+
+- **Consumers must pin every `@bari77/*` dependency to the same version.** Mixing
+  `gc-ui@0.8.1` with `gc-theme@0.4.2` is not a supported combination, even when it happens to work.
+- The `version` field in each `packages/*/package.json` is kept in sync with the last published tag.
+  The workflow overwrites it at publish time, so it is documentation rather than the source of truth.
+- Cross-package deps (`gc-msw` → `gc-sdk`) stay `"*"` in source; the workflow pins them to the tag.
+
+There is no per-package release. If only `gc-ui` changed, still cut a full tag.
+
 ## Principle
 
 Pushing a `vX.Y.Z` tag runs `.github/workflows/release.yml`:
@@ -47,12 +62,15 @@ npm install
 ```json
 {
   "dependencies": {
-    "@bari77/gc-sdk": "0.3.1",
-    "@bari77/gc-msw": "0.3.1",
-    "@bari77/gc-playground": "0.3.1"
+    "@bari77/gc-sdk": "0.8.1",
+    "@bari77/gc-msw": "0.8.1",
+    "@bari77/gc-playground": "0.8.1"
   }
 }
 ```
+
+Pin exact versions, and keep them identical across every `@bari77/*` entry — see the lockstep
+section above.
 
 ### Create a game
 

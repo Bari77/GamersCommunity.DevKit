@@ -1,6 +1,6 @@
 {
   "name": "@bari77/gc-ui",
-  "version": "0.1.0",
+  "version": "0.8.1",
   "description": "Dumb, data-agnostic UI primitives shared by the GamersCommunity shell and game remotes",
   "type": "module",
   "main": "./src/index.ts",
