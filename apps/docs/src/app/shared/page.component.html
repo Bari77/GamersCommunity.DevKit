@@ -1,0 +1,20 @@
+<header class="page__head">
+    @if (eyebrow()) {
+        <span class="page__eyebrow">{{ eyebrow() }}</span>
+    }
+    <h1 class="page__title">{{ heading() }}</h1>
+    @if (selector()) {
+        <code class="page__selector">&lt;{{ selector() }} /&gt;</code>
+    }
+    @if (lead()) {
+        <p class="page__lead">{{ lead() }}</p>
+    }
+</header>
+
+@if (importSnippet()) {
+    <gcd-code [code]="importSnippet()" language="typescript" label="Import" />
+}
+
+<div class="gcd-prose">
+    <ng-content />
+</div>

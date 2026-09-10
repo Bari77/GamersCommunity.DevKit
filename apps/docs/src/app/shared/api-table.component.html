@@ -1,0 +1,36 @@
+@if (heading()) {
+    <h3 class="api__heading">{{ heading() }}</h3>
+}
+
+<div class="api__scroll">
+    <table class="api">
+        <thead>
+            <tr>
+                <th scope="col">Nom</th>
+                <th scope="col">Type</th>
+                @if (showDefault()) {
+                    <th scope="col">Défaut</th>
+                }
+                <th scope="col">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (row of rows(); track row.name) {
+                <tr>
+                    <td><code class="api__name">{{ row.name }}</code></td>
+                    <td><code class="api__type">{{ row.type }}</code></td>
+                    @if (showDefault()) {
+                        <td>
+                            @if (row.default) {
+                                <code>{{ row.default }}</code>
+                            } @else {
+                                <span class="api__none">—</span>
+                            }
+                        </td>
+                    }
+                    <td>{{ row.description }}</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

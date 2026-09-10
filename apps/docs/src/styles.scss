@@ -1,0 +1,154 @@
+:root {
+    --gcd-border: #1e2a40;
+    --gcd-text: #edf1ff;
+    --gcd-text-dim: #93a1bd;
+    --gcd-sidebar-width: 16rem;
+    --gcd-topbar-height: 3.5rem;
+    --gcd-content-max: 60rem;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: var(--gc-accent-2);
+}
+
+code {
+    font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+}
+
+/* Prose rhythm shared by every documentation page. */
+.gcd-prose {
+    color: var(--gcd-text);
+    line-height: 1.65;
+
+    p {
+        margin: 0 0 1rem;
+        max-width: 46rem;
+        color: #c9d4ea;
+    }
+
+    ul {
+        margin: 0 0 1rem;
+        padding-left: 1.2rem;
+        max-width: 46rem;
+        color: #c9d4ea;
+    }
+
+    li {
+        margin-bottom: 0.35rem;
+    }
+
+    strong {
+        color: var(--gcd-text);
+    }
+
+    > code,
+    p code,
+    li code,
+    td code {
+        padding: 0.1rem 0.35rem;
+        border: 1px solid var(--gcd-border);
+        border-radius: 0.25rem;
+        background: var(--gc-surface-2);
+        color: var(--gc-accent);
+        font-size: 0.875em;
+    }
+}
+
+.gcd-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.gcd-card {
+    display: block;
+    padding: 1rem;
+    border: 1px solid var(--gcd-border);
+    border-radius: 0.5rem;
+    background: var(--gc-surface-1);
+    text-decoration: none;
+
+    h3 {
+        margin: 0 0 0.35rem;
+        font-size: 0.95rem;
+        color: var(--gc-accent);
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.8125rem;
+        color: var(--gcd-text-dim);
+    }
+}
+
+a.gcd-card:hover {
+    border-color: var(--gc-accent);
+}
+
+/* Callout for the constraints a consumer will hit if they ignore them. */
+.gcd-note {
+    margin: 0 0 1.5rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--gcd-border);
+    border-left: 3px solid var(--gc-accent-2);
+    border-radius: 0.4rem;
+    background: var(--gc-surface-1);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #c9d4ea;
+
+    p {
+        margin: 0;
+        max-width: none;
+    }
+
+    p + p {
+        margin-top: 0.6rem;
+    }
+}
+
+.gcd-swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.gcd-swatch {
+    border: 1px solid var(--gcd-border);
+    border-radius: 0.45rem;
+    overflow: hidden;
+}
+
+.gcd-swatch__preview {
+    height: 3.5rem;
+}
+
+.gcd-swatch__body {
+    padding: 0.5rem 0.65rem;
+    background: var(--gc-surface-1);
+}
+
+.gcd-swatch__name {
+    display: block;
+    font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+    font-size: 0.75rem;
+    color: var(--gc-accent);
+}
+
+.gcd-swatch__value {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--gcd-text-dim);
+}

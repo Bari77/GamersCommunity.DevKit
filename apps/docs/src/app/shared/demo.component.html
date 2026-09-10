@@ -1,0 +1,35 @@
+<figure class="demo">
+    @if (title()) {
+        <figcaption class="demo__head">
+            <span class="demo__title">{{ title() }}</span>
+            @if (description()) {
+                <span class="demo__description">{{ description() }}</span>
+            }
+        </figcaption>
+    }
+
+    <div class="demo__preview" [class.demo__preview--bare]="bare()">
+        <ng-content />
+    </div>
+
+    @if (tabs().length > 0) {
+        <div class="demo__tabs">
+            @for (tab of tabs(); track tab.id) {
+                <button
+                    type="button"
+                    class="demo__tab"
+                    [class.demo__tab--active]="openTab() === tab.id"
+                    (click)="toggle(tab.id)"
+                >
+                    {{ tab.label }}
+                </button>
+            }
+        </div>
+
+        @if (activeTab(); as tab) {
+            <div class="demo__code">
+                <gcd-code [code]="tab.code" [language]="tab.language" [label]="tab.label" />
+            </div>
+        }
+    }
+</figure>

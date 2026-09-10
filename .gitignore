@@ -47,6 +47,10 @@ build/
 .turbo/
 .cache/
 *.tsbuildinfo
+
+## Angular
+.angular/
+out-tsc/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

@@ -1,0 +1,59 @@
+:host {
+    display: block;
+    margin: 0 0 2rem;
+}
+
+.api__heading {
+    margin: 0 0 0.6rem;
+    font-size: 0.95rem;
+    color: var(--gcd-text);
+}
+
+.api__scroll {
+    overflow-x: auto;
+    border: 1px solid var(--gcd-border);
+    border-radius: 0.5rem;
+}
+
+.api {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+}
+
+th {
+    padding: 0.6rem 0.85rem;
+    background: var(--gc-surface-2);
+    color: var(--gcd-text-dim);
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: left;
+    white-space: nowrap;
+}
+
+td {
+    padding: 0.6rem 0.85rem;
+    border-top: 1px solid var(--gcd-border);
+    color: #c9d4ea;
+    vertical-align: top;
+}
+
+code {
+    font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+    font-size: 0.78rem;
+    white-space: nowrap;
+}
+
+.api__name {
+    color: var(--gc-accent);
+}
+
+.api__type {
+    color: #7fd4ff;
+}
+
+.api__none {
+    color: #56637d;
+}

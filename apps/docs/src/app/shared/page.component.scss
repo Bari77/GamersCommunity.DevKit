@@ -1,0 +1,55 @@
+:host {
+    display: block;
+}
+
+.page__head {
+    margin-bottom: 1.5rem;
+}
+
+.page__eyebrow {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gc-accent);
+}
+
+.page__title {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--gcd-text);
+}
+
+.page__selector {
+    display: inline-block;
+    margin-top: 0.6rem;
+    padding: 0.15rem 0.45rem;
+    border: 1px solid var(--gcd-border);
+    border-radius: 0.3rem;
+    background: var(--gc-surface-2);
+    color: var(--gc-accent-2);
+    font-size: 0.8125rem;
+}
+
+.page__lead {
+    margin: 0.85rem 0 0;
+    max-width: 46rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--gcd-text-dim);
+}
+
+:host ::ng-deep .gcd-prose h2 {
+    margin: 2.5rem 0 0.85rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--gcd-border);
+    font-size: 1.25rem;
+    color: var(--gcd-text);
+}
+
+:host ::ng-deep .gcd-prose h3 {
+    margin: 1.75rem 0 0.6rem;
+    font-size: 1rem;
+    color: var(--gcd-text);
+}

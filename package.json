@@ -4,11 +4,14 @@
   "version": "0.8.2",
   "description": "Development tools and contracts for GamersCommunity game teams",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present"
+    "lint": "npm run lint --workspaces --if-present",
+    "docs": "npm start --workspace=@bari77/gc-docs",
+    "docs:build": "npm run build:site --workspace=@bari77/gc-docs"
   },
   "engines": {
     "node": ">=20"

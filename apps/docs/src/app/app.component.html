@@ -1,0 +1,47 @@
+<header class="topbar">
+    <button type="button" class="topbar__burger" (click)="toggleMenu()" aria-label="Ouvrir la navigation">
+        <span></span><span></span><span></span>
+    </button>
+
+    <a class="topbar__brand" routerLink="/" (click)="closeMenu()">
+        <span class="topbar__mark">GC</span>
+        <span class="topbar__name">DevKit</span>
+    </a>
+
+    <span class="topbar__version">v{{ version }}</span>
+
+    <a class="topbar__repo" [href]="repository" target="_blank" rel="noreferrer">GitHub</a>
+</header>
+
+<div class="shell">
+    <nav class="sidebar" [class.sidebar--open]="menuOpen()">
+        @for (group of groups; track group.label) {
+            <div class="sidebar__group">
+                <span class="sidebar__label">{{ group.label }}</span>
+                <ul class="sidebar__list">
+                    @for (link of group.links; track link.path) {
+                        <li>
+                            <a
+                                class="sidebar__link"
+                                [routerLink]="link.path"
+                                routerLinkActive="sidebar__link--active"
+                                [routerLinkActiveOptions]="{ exact: true }"
+                                (click)="closeMenu()"
+                                >{{ link.label }}</a
+                            >
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    </nav>
+
+    @if (menuOpen()) {
+        <div class="shell__scrim" (click)="closeMenu()"></div>
+    }
+
+    <main class="content">
+        <gc-breadcrumb rootLabel="DevKit" rootLink="/" />
+        <router-outlet />
+    </main>
+</div>

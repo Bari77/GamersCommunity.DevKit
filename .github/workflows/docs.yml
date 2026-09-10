@@ -1,0 +1,64 @@
+name: Docs
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/docs/**"
+      - "packages/ui/**"
+      - "packages/theme/**"
+      - "packages/widgets/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# A superseded deployment has nothing worth finishing.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      # The gc-* packages are workspace links here, so no registry auth is needed.
+      - name: Install workspaces
+        run: npm ci
+
+      - name: Build site
+        working-directory: apps/docs
+        run: npx ng build --base-href "/${{ github.event.repository.name }}/"
+
+      # Pages serves static files with no rewrite, so deep links need their own entry point.
+      - name: Add SPA fallback
+        run: cp apps/docs/dist/browser/index.html apps/docs/dist/browser/404.html
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/docs/dist/browser
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

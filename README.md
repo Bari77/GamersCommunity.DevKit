@@ -2,6 +2,17 @@
 
 Local kit for game teams: DevGateway, npm packages (`@bari77/gc-*`), game scaffold CLI.
 
+## Component gallery
+
+**https://bari77.github.io/GamersCommunity.DevKit/** — live demos, integration snippets and API tables
+for `gc-ui`, `gc-theme` and `gc-widgets`. Deployed from `main` by
+[`.github/workflows/docs.yml`](.github/workflows/docs.yml).
+
+```bash
+npm install
+npm run docs         # serves the gallery on http://localhost:4300
+```
+
 ## Create a new game
 
 ```bash

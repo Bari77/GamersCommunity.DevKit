@@ -1,0 +1,108 @@
+:host {
+    display: block;
+    margin: 0 0 1rem;
+}
+
+.code {
+    border: 1px solid var(--gcd-border);
+    border-radius: 0.5rem;
+    background: #060a12;
+    overflow: hidden;
+}
+
+.code__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.4rem 0.4rem 0.4rem 0.85rem;
+    border-bottom: 1px solid var(--gcd-border);
+    background: var(--gc-surface-1);
+}
+
+.code__label {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gcd-text-dim);
+}
+
+.code__copy {
+    padding: 0.25rem 0.6rem;
+    border: 1px solid var(--gcd-border);
+    border-radius: 0.3rem;
+    background: transparent;
+    color: var(--gcd-text-dim);
+    font: inherit;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition:
+        color 0.15s ease-out,
+        border-color 0.15s ease-out;
+
+    &:hover {
+        color: var(--gc-accent);
+        border-color: var(--gc-accent);
+    }
+}
+
+.code__body {
+    margin: 0;
+    padding: 0.9rem 1rem;
+    overflow-x: auto;
+    font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: #d7e0f4;
+    tab-size: 4;
+}
+
+/* Syntax colours tuned to the GamersCommunity palette. */
+.code__body ::ng-deep {
+    .hljs-comment {
+        color: #5d6b87;
+        font-style: italic;
+    }
+
+    .hljs-keyword,
+    .hljs-literal,
+    .hljs-selector-tag {
+        color: #ff7ab6;
+    }
+
+    .hljs-string,
+    .hljs-meta .hljs-string {
+        color: var(--gc-accent);
+    }
+
+    .hljs-title,
+    .hljs-title.class_,
+    .hljs-title.function_,
+    .hljs-name {
+        color: var(--gc-accent-2);
+    }
+
+    .hljs-attr,
+    .hljs-attribute,
+    .hljs-property {
+        color: #ffcf6b;
+    }
+
+    .hljs-number,
+    .hljs-symbol {
+        color: #c792ea;
+    }
+
+    .hljs-built_in,
+    .hljs-type {
+        color: #7fd4ff;
+    }
+
+    .hljs-tag {
+        color: #8fa0bd;
+    }
+
+    .hljs-meta {
+        color: #6f7f9d;
+    }
+}
