@@ -16,8 +16,6 @@ interface Swatch {
     imports: [PageComponent, ApiTableComponent, CodeBlockComponent],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-theme"
-            heading="Tokens"
             lead="Les variables CSS posées sur :root par le thème. Tout le reste du DevKit s'y réfère, ce qui rend l'habillage modifiable sans recompiler le SCSS."
         >
             <h2>Couleurs</h2>

@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { GRIDSTER_RANGE, PACKAGES } from '../../docs.config';
 import { CodeBlockComponent } from '../../shared/code-block.component';
 import { PageComponent } from '../../shared/page.component';
+import { installSnippet, themeStylesSnippet } from '../../shared/snippets';
 
 @Component({
     selector: 'gcd-installation',
@@ -9,8 +11,6 @@ import { PageComponent } from '../../shared/page.component';
     imports: [PageComponent, CodeBlockComponent],
     template: `
         <gcd-page
-            eyebrow="Démarrer"
-            heading="Installation"
             lead="Les packages sont publiés sur GitHub Packages en accès restreint : le registre doit être déclaré et authentifié avant le premier install."
         >
             <h2>1. Déclarer le registre</h2>
@@ -60,7 +60,7 @@ import { PageComponent } from '../../shared/page.component';
             <h2>Cas particulier des widgets</h2>
 
             <p>
-                <code>&#64;bari77/gc-widgets</code> s'appuie sur <code>angular-gridster2</code>, déclaré en
+                <code>{{ packages.widgets }}</code> s'appuie sur <code>angular-gridster2</code>, déclaré en
                 <code>peerDependency</code>. Il faut donc l'installer explicitement dans l'application, faute de quoi
                 la grille ne se résoudra pas au build.
             </p>
@@ -70,19 +70,17 @@ import { PageComponent } from '../../shared/page.component';
     `,
 })
 export class InstallationComponent {
-    protected readonly npmrcSnippet = `@bari77:registry=https://npm.pkg.github.com
+    protected readonly packages = PACKAGES;
+
+    protected readonly npmrcSnippet = `${PACKAGES.ui.split('/')[0]}:registry=https://npm.pkg.github.com
 # //npm.pkg.github.com/:_authToken=YOUR_GITHUB_PAT`;
 
-    protected readonly installSnippet = `npm install @bari77/gc-ui @bari77/gc-theme @bari77/gc-widgets`;
+    protected readonly installSnippet = installSnippet();
 
-    protected readonly themeSnippet = `"styles": [
-  "node_modules/@nebular/theme/styles/prebuilt/cosmic.css",
-  "node_modules/@bari77/gc-theme/src/global.scss",
-  "src/styles.scss"
-]`;
+    protected readonly themeSnippet = themeStylesSnippet(['node_modules/@nebular/theme/styles/prebuilt/cosmic.css']);
 
     protected readonly usageSnippet = `import { Component } from '@angular/core';
-import { SkeletonTextComponent } from '@bari77/gc-ui';
+import { SkeletonTextComponent } from '${PACKAGES.ui}';
 
 @Component({
     selector: 'app-player-card',
@@ -98,5 +96,5 @@ import { SkeletonTextComponent } from '@bari77/gc-ui';
 })
 export class PlayerCardComponent {}`;
 
-    protected readonly gridsterSnippet = `npm install angular-gridster2`;
+    protected readonly gridsterSnippet = `npm install "angular-gridster2@${GRIDSTER_RANGE}"`;
 }

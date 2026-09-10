@@ -10,8 +10,6 @@ import { PageComponent } from '../../shared/page.component';
     imports: [PageComponent, ApiTableComponent, CodeBlockComponent],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-widgets"
-            heading="Persistance"
             lead="Un workspace est une structure sérialisable, que l'application stocke où elle veut. Le package fournit de quoi le relire sans jamais se casser sur une donnée abîmée."
         >
             <h2>Écrire</h2>

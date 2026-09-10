@@ -29,11 +29,7 @@ import { PageComponent } from '../../shared/page.component';
     ],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-widgets"
-            heading="Workspace"
-            selector="gc-widget-workspace"
             lead="Le tableau de bord complet : rail de pages, grille redimensionnable, catalogue et panneau de réglages, assemblés autour d'un brouillon local."
-            [importSnippet]="importSnippet"
         >
             <p>
                 Passez en mode édition pour déplacer un widget par son en-tête, le redimensionner par son coin, en
@@ -251,13 +247,6 @@ export class WorkspacePageComponent {
         const value = settings['links'];
         return Array.isArray(value) ? (value as GcLink[]) : [];
     }
-
-    protected readonly importSnippet = `import {
-    WidgetDefDirective,
-    WidgetWorkspaceComponent,
-} from '@bari77/gc-widgets';
-
-import type { WidgetCatalog, WidgetWorkspace } from '@bari77/gc-widgets';`;
 
     protected readonly demoHtml = `<gc-widget-workspace
     [workspace]="workspace()"

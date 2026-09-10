@@ -6,9 +6,8 @@ on:
       - main
     paths:
       - "apps/docs/**"
-      - "packages/ui/**"
-      - "packages/theme/**"
-      - "packages/widgets/**"
+      # The site reads its version and API surface from the packages themselves.
+      - "packages/**"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/docs.yml"

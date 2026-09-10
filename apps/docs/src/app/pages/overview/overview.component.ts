@@ -1,33 +1,21 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ANGULAR_RANGE, packageCards } from '../../docs.config';
+import { CardGridComponent } from '../../shared/card-grid.component';
 import { CodeBlockComponent } from '../../shared/code-block.component';
 import { PageComponent } from '../../shared/page.component';
+import { lockstepSnippet } from '../../shared/snippets';
 
 @Component({
     selector: 'gcd-overview',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [PageComponent, CodeBlockComponent, RouterLink],
+    imports: [PageComponent, CodeBlockComponent, CardGridComponent, RouterLink],
     template: `
         <gcd-page
-            eyebrow="GamersCommunity"
-            heading="DevKit"
             lead="Les briques partagées par la coquille Platform et par les modules de jeu : primitives d'interface, thème et tableau de bord de widgets."
         >
-            <div class="gcd-cards">
-                <a class="gcd-card" routerLink="/ui/breadcrumb">
-                    <h3>&#64;bari77/gc-ui</h3>
-                    <p>Six primitives sans logique métier : fil d'Ariane, squelettes de chargement, modale, invite de décision et mur d'incitation.</p>
-                </a>
-                <a class="gcd-card" routerLink="/theme/tokens">
-                    <h3>&#64;bari77/gc-theme</h3>
-                    <p>Design tokens, typographie, animations et utilitaires en SCSS pur, sans aucune dépendance.</p>
-                </a>
-                <a class="gcd-card" routerLink="/widgets">
-                    <h3>&#64;bari77/gc-widgets</h3>
-                    <p>Le tableau de bord personnalisable : pages, grille redimensionnable, catalogue et panneau de réglages.</p>
-                </a>
-            </div>
+            <gcd-card-grid [cards]="cards" />
 
             <h2>Ce qu'il faut savoir avant d'intégrer</h2>
 
@@ -43,7 +31,7 @@ import { PageComponent } from '../../shared/page.component';
             <ul>
                 <li>
                     la version d'Angular de l'application doit satisfaire les <code>peerDependencies</code> des
-                    packages, aujourd'hui <code>^21.0.0</code> ;
+                    packages, aujourd'hui <code>{{ angularRange }}</code> ;
                 </li>
                 <li>
                     les options strictes du <code>tsconfig</code> de l'application s'appliquent aussi au code des
@@ -82,11 +70,9 @@ import { PageComponent } from '../../shared/page.component';
     `,
 })
 export class OverviewComponent {
-    protected readonly lockstepSnippet = `{
-  "dependencies": {
-    "@bari77/gc-theme": "0.8.2",
-    "@bari77/gc-ui": "0.8.2",
-    "@bari77/gc-widgets": "0.8.2"
-  }
-}`;
+    protected readonly cards = packageCards;
+
+    protected readonly angularRange = ANGULAR_RANGE;
+
+    protected readonly lockstepSnippet = lockstepSnippet();
 }

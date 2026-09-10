@@ -12,11 +12,7 @@ import { PageComponent } from '../../shared/page.component';
     imports: [PageComponent, DemoComponent, ApiTableComponent, CodeBlockComponent, BreadcrumbComponent],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-ui"
-            heading="Breadcrumb"
-            selector="gc-breadcrumb"
             lead="Fil d'Ariane qui se construit tout seul en parcourant l'arbre de routes actif, sans que la page courante ait à s'en occuper."
-            [importSnippet]="importSnippet"
         >
             <p>
                 Le composant lit <code>data.breadcrumb</code> sur chaque route traversée et empile un maillon pour
@@ -85,8 +81,6 @@ import { PageComponent } from '../../shared/page.component';
     `,
 })
 export class BreadcrumbPageComponent {
-    protected readonly importSnippet = `import { BreadcrumbComponent } from '@bari77/gc-ui';`;
-
     protected readonly demoHtml = `<gc-breadcrumb rootLabel="DevKit" rootLink="/" />`;
 
     protected readonly routesSnippet = `export const appRoutes: Routes = [

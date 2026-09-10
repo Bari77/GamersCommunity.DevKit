@@ -11,8 +11,6 @@ import { PageComponent } from '../../shared/page.component';
     imports: [PageComponent, DemoComponent, ApiTableComponent, CodeBlockComponent],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-theme"
-            heading="Utilitaires"
             lead="Un lot volontairement minuscule de classes d'appoint, plus l'habillage des barres de défilement et de la coquille Nebular."
         >
             <p>

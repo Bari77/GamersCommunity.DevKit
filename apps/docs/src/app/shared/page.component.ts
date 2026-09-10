@@ -1,7 +1,12 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { DocsPageData } from '../app.routes';
 import { CodeBlockComponent } from './code-block.component';
 
-/** Common page frame: eyebrow, title, lead sentence and optional import snippet. */
+/**
+ * Common page frame. The eyebrow, title and documented selector come from the route so they stay in
+ * step with the sidebar and the breadcrumb; only the prose belongs to the page itself.
+ */
 @Component({
     selector: 'gcd-page',
     standalone: true,
@@ -11,13 +16,7 @@ import { CodeBlockComponent } from './code-block.component';
     styleUrl: './page.component.scss',
 })
 export class PageComponent {
-    public readonly eyebrow = input('');
-
-    public readonly heading = input.required<string>();
-
     public readonly lead = input('');
 
-    public readonly selector = input('');
-
-    public readonly importSnippet = input('');
+    protected readonly head: DocsPageData = inject(ActivatedRoute).snapshot.data['docs'];
 }

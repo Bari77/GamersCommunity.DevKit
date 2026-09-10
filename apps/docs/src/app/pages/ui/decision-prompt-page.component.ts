@@ -12,11 +12,7 @@ import { PageComponent } from '../../shared/page.component';
     imports: [PageComponent, DemoComponent, ApiTableComponent, CodeBlockComponent, DecisionPromptComponent],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-ui"
-            heading="Decision prompt"
-            selector="gc-decision-prompt"
             lead="Modale de choix entre un engagement principal et la poursuite sans lui, avec une case « ne plus demander » que l'application est chargée de mémoriser."
-            [importSnippet]="importSnippet"
         >
             <p>
                 Le composant s'appuie sur <code>gc-modal</code> et lui ajoute l'ossature d'une décision : un titre, un
@@ -117,8 +113,6 @@ export class DecisionPromptPageComponent {
     protected readonly optOut = signal(false);
     protected readonly busyOpen = signal(false);
     protected readonly busy = signal(false);
-
-    protected readonly importSnippet = `import { DecisionPromptComponent } from '@bari77/gc-ui';`;
 
     protected startBusy(): void {
         this.busy.set(false);

@@ -12,11 +12,7 @@ import { PageComponent } from '../../shared/page.component';
     imports: [PageComponent, DemoComponent, ApiTableComponent, CodeBlockComponent, CreateWallComponent],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-ui"
-            heading="Create wall"
-            selector="gc-create-wall"
             lead="Substitut d'une interaction que le visiteur ne peut pas encore atteindre, qui l'invite à franchir l'étape qui la débloque."
-            [importSnippet]="importSnippet"
         >
             <p>
                 Plutôt que de masquer une fonctionnalité indisponible ou d'afficher un message d'erreur, ce bloc
@@ -82,8 +78,6 @@ import { PageComponent } from '../../shared/page.component';
 })
 export class CreateWallPageComponent {
     protected readonly busy = signal(false);
-
-    protected readonly importSnippet = `import { CreateWallComponent } from '@bari77/gc-ui';`;
 
     protected run(): void {
         this.busy.set(true);

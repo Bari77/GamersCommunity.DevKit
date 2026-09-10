@@ -10,8 +10,6 @@ import { PageComponent } from '../../shared/page.component';
     imports: [PageComponent, ApiTableComponent, CodeBlockComponent],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-widgets"
-            heading="Catalogue"
             lead="La déclaration des types de widgets disponibles : ce que propose le sélecteur, la taille de départ et les champs de réglage générés automatiquement."
         >
             <p>

@@ -13,6 +13,11 @@ npm install
 npm run docs         # serves the gallery on http://localhost:4300
 ```
 
+`apps/docs/src/app/docs.config.ts` is the single source of truth: routes, sidebar, breadcrumb
+labels, page headers and landing-page cards are all derived from the tree it declares, and the
+version and peer ranges are read from the package manifests. Adding a page means one entry there
+plus a component holding its prose.
+
 ## Create a new game
 
 ```bash

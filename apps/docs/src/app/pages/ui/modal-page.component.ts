@@ -11,11 +11,7 @@ import { PageComponent } from '../../shared/page.component';
     imports: [PageComponent, DemoComponent, ApiTableComponent, ModalComponent],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-ui"
-            heading="Modal"
-            selector="gc-modal"
             lead="Panneau centré en surimpression qui accueille un contenu projeté et laisse à l'appelant la maîtrise de son ouverture."
-            [importSnippet]="importSnippet"
         >
             <p>
                 Le composant ne décide jamais seul de se fermer : il signale une intention de fermeture par
@@ -116,8 +112,6 @@ import { PageComponent } from '../../shared/page.component';
 export class ModalPageComponent {
     protected readonly open = signal(false);
     protected readonly blocking = signal(false);
-
-    protected readonly importSnippet = `import { ModalComponent } from '@bari77/gc-ui';`;
 
     protected readonly basicHtml = `<button type="button" (click)="open.set(true)">Ouvrir la modale</button>
 

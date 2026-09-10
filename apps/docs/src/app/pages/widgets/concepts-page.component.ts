@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { pageCards } from '../../docs.config';
+import { CardGridComponent } from '../../shared/card-grid.component';
 import { CodeBlockComponent } from '../../shared/code-block.component';
 import { PageComponent } from '../../shared/page.component';
 
@@ -7,11 +9,9 @@ import { PageComponent } from '../../shared/page.component';
     selector: 'gcd-concepts-page',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [PageComponent, CodeBlockComponent, RouterLink],
+    imports: [PageComponent, CodeBlockComponent, CardGridComponent, RouterLink],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-widgets"
-            heading="Concepts"
             lead="Le tableau de bord personnalisable : une pile de pages, chacune portant des widgets placés sur une grille, décrits par un catalogue et rendus par des gabarits fournis par l'application."
         >
             <h2>Le modèle de données</h2>
@@ -99,28 +99,13 @@ import { PageComponent } from '../../shared/page.component';
 
             <h2>Aller plus loin</h2>
 
-            <div class="gcd-cards">
-                <a class="gcd-card" routerLink="/widgets/workspace">
-                    <h3>Workspace</h3>
-                    <p>Le composant assemblé, sa démonstration et ses entrées.</p>
-                </a>
-                <a class="gcd-card" routerLink="/widgets/catalog">
-                    <h3>Catalogue</h3>
-                    <p>Déclarer les types disponibles et leurs champs de réglage.</p>
-                </a>
-                <a class="gcd-card" routerLink="/widgets/built-in">
-                    <h3>Widgets fournis</h3>
-                    <p>Liste de liens, galerie et lecteur Twitch prêts à brancher.</p>
-                </a>
-                <a class="gcd-card" routerLink="/widgets/persistence">
-                    <h3>Persistance</h3>
-                    <p>Lire, écrire et réparer un workspace stocké.</p>
-                </a>
-            </div>
+            <gcd-card-grid [cards]="cards" />
         </gcd-page>
     `,
 })
 export class ConceptsPageComponent {
+    protected readonly cards = pageCards('widgets');
+
     protected readonly modelSnippet = `interface WidgetWorkspace {
     version: number;
     pages: WidgetPage[];

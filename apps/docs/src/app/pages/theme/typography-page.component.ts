@@ -10,8 +10,6 @@ import { PageComponent } from '../../shared/page.component';
     imports: [PageComponent, DemoComponent, CodeBlockComponent],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-theme"
-            heading="Typographie"
             lead="Une base minimale : la page occupe toute la hauteur, le texte courant prend la police de corps et les titres passent en police d'affichage."
         >
             <p>

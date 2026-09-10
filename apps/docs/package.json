@@ -1,6 +1,5 @@
 {
   "name": "@bari77/gc-docs",
-  "version": "0.8.2",
   "private": true,
   "description": "Component gallery and integration guide for the GamersCommunity DevKit",
   "scripts": {

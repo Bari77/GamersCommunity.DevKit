@@ -12,11 +12,7 @@ import { PageComponent } from '../../shared/page.component';
     imports: [PageComponent, DemoComponent, ApiTableComponent, CodeBlockComponent, SkeletonComponent],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-ui"
-            heading="Skeleton"
-            selector="gc-skeleton"
             lead="Bloc scintillant qui occupe la place d'un contenu encore en cours de chargement, pour éviter que la page ne saute quand la donnée arrive."
-            [importSnippet]="importSnippet"
         >
             <p>
                 Le composant ne fait que dessiner une forme : c'est à l'appelant de lui donner les dimensions du
@@ -58,8 +54,6 @@ import { PageComponent } from '../../shared/page.component';
     `,
 })
 export class SkeletonPageComponent {
-    protected readonly importSnippet = `import { SkeletonComponent } from '@bari77/gc-ui';`;
-
     protected readonly basicHtml = `<gc-skeleton width="18rem" height="1.25rem" />
 <gc-skeleton width="12rem" height="1.25rem" />
 <gc-skeleton width="18rem" height="6rem" radius="0.6rem" />`;

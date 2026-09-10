@@ -1,37 +1,20 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { pageCards } from '../../docs.config';
+import { CardGridComponent } from '../../shared/card-grid.component';
 import { CodeBlockComponent } from '../../shared/code-block.component';
 import { PageComponent } from '../../shared/page.component';
+import { themePartialsSnippet, themeStylesSnippet } from '../../shared/snippets';
 
 @Component({
     selector: 'gcd-theme-index',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [PageComponent, CodeBlockComponent, RouterLink],
+    imports: [PageComponent, CodeBlockComponent, CardGridComponent],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-theme"
-            heading="Thème"
             lead="Du SCSS pur, sans aucune dépendance : des tokens en variables CSS, une base typographique, des animations et quelques utilitaires."
         >
-            <div class="gcd-cards">
-                <a class="gcd-card" routerLink="/theme/tokens">
-                    <h3>Tokens</h3>
-                    <p>Les variables CSS de couleur, de police et d'espacement, redéfinissables par jeu.</p>
-                </a>
-                <a class="gcd-card" routerLink="/theme/typography">
-                    <h3>Typographie</h3>
-                    <p>La base html/body et le traitement des titres.</p>
-                </a>
-                <a class="gcd-card" routerLink="/theme/motion">
-                    <h3>Animations</h3>
-                    <p>Les keyframes d'entrée et de pulsation, et les classes qui les appliquent.</p>
-                </a>
-                <a class="gcd-card" routerLink="/theme/utilities">
-                    <h3>Utilitaires</h3>
-                    <p>Le petit lot de classes d'espacement et d'alignement.</p>
-                </a>
-            </div>
+            <gcd-card-grid [cards]="cards" />
 
             <h2>Importer le thème</h2>
 
@@ -70,12 +53,9 @@ import { PageComponent } from '../../shared/page.component';
     `,
 })
 export class ThemeIndexComponent {
-    protected readonly globalSnippet = `"styles": [
-  "node_modules/@bari77/gc-theme/src/global.scss",
-  "src/styles.scss"
-]`;
+    protected readonly cards = pageCards('theme');
 
-    protected readonly partialSnippet = `@use "../../node_modules/@bari77/gc-theme/src/tokens";
-@use "../../node_modules/@bari77/gc-theme/src/typography";
-@use "../../node_modules/@bari77/gc-theme/src/motion";`;
+    protected readonly globalSnippet = themeStylesSnippet();
+
+    protected readonly partialSnippet = themePartialsSnippet(['tokens', 'typography', 'motion']);
 }

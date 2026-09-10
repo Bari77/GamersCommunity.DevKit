@@ -12,11 +12,7 @@ import { PageComponent } from '../../shared/page.component';
     imports: [PageComponent, DemoComponent, ApiTableComponent, CodeBlockComponent, SkeletonTextComponent],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-ui"
-            heading="Skeleton text"
-            selector="gc-skeleton-text"
             lead="Empilement de lignes de squelette imitant un paragraphe, avec une dernière ligne plus courte pour que le bloc se lise comme du texte."
-            [importSnippet]="importSnippet"
         >
             <p>
                 C'est un assemblage de <code>gc-skeleton</code>, pensé pour le cas très fréquent du bloc de texte.
@@ -49,8 +45,6 @@ import { PageComponent } from '../../shared/page.component';
     `,
 })
 export class SkeletonTextPageComponent {
-    protected readonly importSnippet = `import { SkeletonTextComponent } from '@bari77/gc-ui';`;
-
     protected readonly basicHtml = `<gc-skeleton-text />`;
 
     protected readonly denseHtml = `<gc-skeleton-text [lines]="6" lineHeight="0.7rem" gap="0.35rem" lastLineWidth="40%" />`;

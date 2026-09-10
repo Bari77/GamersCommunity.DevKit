@@ -1,126 +1,51 @@
-import { Routes } from '@angular/router';
+import { Route, Routes } from '@angular/router';
+import { DocsPage, DocsSection, docsSections, sectionHeading } from './docs.config';
+import { importSnippet } from './shared/snippets';
+
+/** Header metadata carried by every page route and read back by `gcd-page`. */
+export interface DocsPageData {
+    eyebrow: string;
+    heading: string;
+    selector: string;
+    importSnippet: string;
+}
+
+function pageRoute(section: DocsSection, page: DocsPage): Route {
+    const docs: DocsPageData = {
+        eyebrow: page.eyebrow ?? sectionHeading(section),
+        heading: page.heading ?? page.label,
+        selector: page.selector ?? '',
+        importSnippet: page.symbols
+            ? importSnippet(section.package ?? '', page.symbols, page.typeSymbols)
+            : '',
+    };
+
+    return {
+        path: page.path,
+        // A landing page takes its breadcrumb step from the section route above it.
+        data: page.path ? { breadcrumb: page.label, docs } : { docs },
+        loadComponent: page.load,
+    };
+}
+
+function sectionRoutes(section: DocsSection): Routes {
+    if (!section.path) {
+        return section.pages.map((page) => ({
+            ...pageRoute(section, page),
+            ...(page.path ? {} : { pathMatch: 'full' as const }),
+        }));
+    }
+
+    return [
+        {
+            path: section.path,
+            data: { breadcrumb: section.breadcrumb ?? section.label },
+            children: section.pages.map((page) => pageRoute(section, page)),
+        },
+    ];
+}
 
 export const docsRoutes: Routes = [
-    {
-        path: '',
-        pathMatch: 'full',
-        loadComponent: () => import('./pages/overview/overview.component').then((m) => m.OverviewComponent),
-    },
-    {
-        path: 'installation',
-        data: { breadcrumb: 'Installation' },
-        loadComponent: () => import('./pages/installation/installation.component').then((m) => m.InstallationComponent),
-    },
-    {
-        path: 'ui',
-        data: { breadcrumb: 'Composants UI' },
-        children: [
-            {
-                path: '',
-                loadComponent: () => import('./pages/ui/ui-index.component').then((m) => m.UiIndexComponent),
-            },
-            {
-                path: 'breadcrumb',
-                data: { breadcrumb: 'Breadcrumb' },
-                loadComponent: () =>
-                    import('./pages/ui/breadcrumb-page.component').then((m) => m.BreadcrumbPageComponent),
-            },
-            {
-                path: 'skeleton',
-                data: { breadcrumb: 'Skeleton' },
-                loadComponent: () => import('./pages/ui/skeleton-page.component').then((m) => m.SkeletonPageComponent),
-            },
-            {
-                path: 'skeleton-text',
-                data: { breadcrumb: 'Skeleton text' },
-                loadComponent: () =>
-                    import('./pages/ui/skeleton-text-page.component').then((m) => m.SkeletonTextPageComponent),
-            },
-            {
-                path: 'modal',
-                data: { breadcrumb: 'Modal' },
-                loadComponent: () => import('./pages/ui/modal-page.component').then((m) => m.ModalPageComponent),
-            },
-            {
-                path: 'decision-prompt',
-                data: { breadcrumb: 'Decision prompt' },
-                loadComponent: () =>
-                    import('./pages/ui/decision-prompt-page.component').then((m) => m.DecisionPromptPageComponent),
-            },
-            {
-                path: 'create-wall',
-                data: { breadcrumb: 'Create wall' },
-                loadComponent: () =>
-                    import('./pages/ui/create-wall-page.component').then((m) => m.CreateWallPageComponent),
-            },
-        ],
-    },
-    {
-        path: 'theme',
-        data: { breadcrumb: 'Thème' },
-        children: [
-            {
-                path: '',
-                loadComponent: () => import('./pages/theme/theme-index.component').then((m) => m.ThemeIndexComponent),
-            },
-            {
-                path: 'tokens',
-                data: { breadcrumb: 'Tokens' },
-                loadComponent: () => import('./pages/theme/tokens-page.component').then((m) => m.TokensPageComponent),
-            },
-            {
-                path: 'typography',
-                data: { breadcrumb: 'Typographie' },
-                loadComponent: () =>
-                    import('./pages/theme/typography-page.component').then((m) => m.TypographyPageComponent),
-            },
-            {
-                path: 'motion',
-                data: { breadcrumb: 'Animations' },
-                loadComponent: () => import('./pages/theme/motion-page.component').then((m) => m.MotionPageComponent),
-            },
-            {
-                path: 'utilities',
-                data: { breadcrumb: 'Utilitaires' },
-                loadComponent: () =>
-                    import('./pages/theme/utilities-page.component').then((m) => m.UtilitiesPageComponent),
-            },
-        ],
-    },
-    {
-        path: 'widgets',
-        data: { breadcrumb: 'Widgets' },
-        children: [
-            {
-                path: '',
-                loadComponent: () =>
-                    import('./pages/widgets/concepts-page.component').then((m) => m.ConceptsPageComponent),
-            },
-            {
-                path: 'workspace',
-                data: { breadcrumb: 'Workspace' },
-                loadComponent: () =>
-                    import('./pages/widgets/workspace-page.component').then((m) => m.WorkspacePageComponent),
-            },
-            {
-                path: 'catalog',
-                data: { breadcrumb: 'Catalogue' },
-                loadComponent: () =>
-                    import('./pages/widgets/catalog-page.component').then((m) => m.CatalogPageComponent),
-            },
-            {
-                path: 'built-in',
-                data: { breadcrumb: 'Widgets fournis' },
-                loadComponent: () =>
-                    import('./pages/widgets/built-in-page.component').then((m) => m.BuiltInPageComponent),
-            },
-            {
-                path: 'persistence',
-                data: { breadcrumb: 'Persistance' },
-                loadComponent: () =>
-                    import('./pages/widgets/persistence-page.component').then((m) => m.PersistencePageComponent),
-            },
-        ],
-    },
+    ...docsSections.flatMap(sectionRoutes),
     { path: '**', redirectTo: '' },
 ];

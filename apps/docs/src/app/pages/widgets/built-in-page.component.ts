@@ -20,10 +20,7 @@ import { PageComponent } from '../../shared/page.component';
     ],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-widgets"
-            heading="Widgets fournis"
             lead="Trois contenus prêts à brancher dans un gabarit gcWidget, utilisables aussi bien en dehors du tableau de bord."
-            [importSnippet]="importSnippet"
         >
             <p>
                 Ce sont des composants indépendants : ils ne connaissent ni le workspace ni le catalogue, et se
@@ -126,14 +123,6 @@ export class BuiltInPageComponent {
         { url: 'https://picsum.photos/seed/gc-guild/640/360', title: 'Photo de guilde' },
         { url: 'https://picsum.photos/seed/gc-arena/640/360', title: 'Arène' },
     ];
-
-    protected readonly importSnippet = `import {
-    LinkListComponent,
-    MediaGalleryComponent,
-    TwitchEmbedComponent,
-} from '@bari77/gc-widgets';
-
-import type { GcGalleryItem, GcLink } from '@bari77/gc-widgets';`;
 
     protected readonly linksHtml = `<gc-link-list [links]="links" emptyLabel="Aucun lien pour l'instant." />`;
 

@@ -11,8 +11,6 @@ import { PageComponent } from '../../shared/page.component';
     imports: [PageComponent, DemoComponent, ApiTableComponent, CodeBlockComponent],
     template: `
         <gcd-page
-            eyebrow="&#64;bari77/gc-theme"
-            heading="Animations"
             lead="Deux keyframes et les classes qui les appliquent : une entrée en fondu montant, et une pulsation pour signaler une nouveauté."
         >
             <p>
