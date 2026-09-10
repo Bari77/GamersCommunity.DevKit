@@ -1,3 +1,5 @@
+export { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+export type { Breadcrumb } from './breadcrumb/breadcrumb.component';
 export { CreateWallComponent } from './create-wall/create-wall.component';
 export { DecisionPromptComponent } from './decision-prompt/decision-prompt.component';
 export { ModalComponent } from './modal/modal.component';

@@ -1,0 +1,14 @@
+<nav [attr.aria-label]="ariaLabel()">
+    <ol class="gc-breadcrumb__list">
+        @for (crumb of crumbs(); track $index) {
+            <li class="gc-breadcrumb__item">
+                @if ($last) {
+                    <span class="gc-breadcrumb__current" aria-current="page">{{ crumb.label }}</span>
+                } @else {
+                    <a class="gc-breadcrumb__link" [routerLink]="crumb.url">{{ crumb.label }}</a>
+                    <span class="gc-breadcrumb__separator" aria-hidden="true">{{ separator() }}</span>
+                }
+            </li>
+        }
+    </ol>
+</nav>

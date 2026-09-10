@@ -1,0 +1,50 @@
+:host {
+    display: block;
+    padding: var(--gc-breadcrumb-padding, 0.85rem 0 0.35rem);
+    font-size: 0.8125rem;
+}
+
+:host(.gc-breadcrumb--empty) {
+    display: none;
+}
+
+.gc-breadcrumb__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.gc-breadcrumb__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: 0;
+}
+
+.gc-breadcrumb__link {
+    color: var(--gc-breadcrumb-link-color, var(--text-hint-color, #8f9bb3));
+    text-decoration: none;
+    transition: color 0.15s ease-out;
+}
+
+.gc-breadcrumb__link:hover,
+.gc-breadcrumb__link:focus-visible {
+    color: var(--gc-breadcrumb-link-hover-color, var(--color-primary-500, #3366ff));
+}
+
+.gc-breadcrumb__separator {
+    color: var(--gc-breadcrumb-separator-color, var(--text-hint-color, #8f9bb3));
+    opacity: 0.55;
+}
+
+.gc-breadcrumb__current {
+    overflow: hidden;
+    color: var(--gc-breadcrumb-current-color, var(--text-basic-color, #ffffff));
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
