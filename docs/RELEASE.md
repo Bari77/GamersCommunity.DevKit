@@ -62,9 +62,9 @@ npm install
 ```json
 {
   "dependencies": {
-    "@bari77/gc-sdk": "0.8.1",
-    "@bari77/gc-msw": "0.8.1",
-    "@bari77/gc-playground": "0.8.1"
+    "@bari77/gc-sdk": "0.8.2",
+    "@bari77/gc-msw": "0.8.2",
+    "@bari77/gc-playground": "0.8.2"
   }
 }
 ```
