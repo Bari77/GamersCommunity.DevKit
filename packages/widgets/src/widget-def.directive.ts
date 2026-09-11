@@ -1,10 +1,6 @@
 import { Directive, TemplateRef, inject, input } from '@angular/core';
-import { WidgetInstance, WidgetSettings } from './workspace';
-
-export interface WidgetTemplateContext {
-    $implicit: WidgetSettings;
-    instance: WidgetInstance;
-}
+import { registerWidgetTemplateDef } from './widget-def.registry';
+import { WidgetTemplateContext } from './widget-template';
 
 /**
  * Declares how one widget *type* renders. The grid instantiates it once per placed
@@ -18,6 +14,10 @@ export class WidgetDefDirective {
     public readonly type = input.required<string>({ alias: 'gcWidget' });
 
     public readonly template = inject<TemplateRef<WidgetTemplateContext>>(TemplateRef);
+
+    public constructor() {
+        registerWidgetTemplateDef(this, 'widget');
+    }
 
     public static ngTemplateContextGuard(
         _directive: WidgetDefDirective,

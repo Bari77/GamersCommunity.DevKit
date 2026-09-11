@@ -28,7 +28,8 @@ import {
 import { findCatalogEntry, WidgetCatalog } from '../catalog';
 import { GcLink, LinkListComponent } from '../components/link-list/link-list.component';
 import { TwitchEmbedComponent } from '../components/twitch-embed/twitch-embed.component';
-import { WidgetDefDirective, WidgetTemplateContext } from '../widget-def.directive';
+import { WidgetDefDirective } from '../widget-def.directive';
+import { WidgetTemplateContext, WidgetTemplateDef } from '../widget-template';
 import { WidgetInstance, WidgetSettings } from '../workspace';
 
 export const WIDGET_DRAG_HANDLE_CLASS = 'gc-widget__handle';
@@ -64,7 +65,7 @@ export class WidgetGridComponent {
     public readonly catalog = input<WidgetCatalog>([]);
 
     /** Set by `gc-widget-workspace`, which owns the `gcWidget` templates of the host. */
-    public readonly defs = input<readonly WidgetDefDirective[] | null>(null);
+    public readonly defs = input<readonly WidgetTemplateDef[] | null>(null);
 
     public readonly editing = input(false);
 
@@ -173,7 +174,7 @@ export class WidgetGridComponent {
     }
 
     protected templateFor(type: string): TemplateRef<WidgetTemplateContext> | null {
-        const defs = this.defs() ?? this.ownDefs();
+        const defs: readonly WidgetTemplateDef[] = this.defs() ?? this.ownDefs();
         return defs.find((def) => def.type() === type)?.template ?? null;
     }
 

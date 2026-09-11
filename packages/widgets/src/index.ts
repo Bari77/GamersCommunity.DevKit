@@ -9,7 +9,8 @@ export { MediaGalleryComponent } from './components/media-gallery/media-gallery.
 export { TwitchEmbedComponent } from './components/twitch-embed/twitch-embed.component';
 
 export { WidgetDefDirective } from './widget-def.directive';
-export type { WidgetTemplateContext } from './widget-def.directive';
+export { WidgetDefRegistry } from './widget-def.registry';
+export type { WidgetTemplateContext, WidgetTemplateDef } from './widget-template';
 export { WidgetEditBarComponent } from './widget-edit-bar/widget-edit-bar.component';
 export {
     GC_LINKS_WIDGET,

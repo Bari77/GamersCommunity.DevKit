@@ -1,5 +1,6 @@
 import { Directive, TemplateRef, inject, input } from '@angular/core';
-import { WidgetTemplateContext } from './widget-def.directive';
+import { registerWidgetTemplateDef } from './widget-def.registry';
+import { WidgetTemplateContext } from './widget-template';
 
 /**
  * Extra settings UI for one widget *type*, rendered inside the gear panel below the
@@ -14,6 +15,10 @@ export class WidgetSettingsDefDirective {
     public readonly type = input.required<string>({ alias: 'gcWidgetSettings' });
 
     public readonly template = inject<TemplateRef<WidgetTemplateContext>>(TemplateRef);
+
+    public constructor() {
+        registerWidgetTemplateDef(this, 'settings');
+    }
 
     public static ngTemplateContextGuard(
         _directive: WidgetSettingsDefDirective,

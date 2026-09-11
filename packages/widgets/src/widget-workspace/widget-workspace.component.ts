@@ -1,12 +1,12 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, contentChildren, effect, input, model, output, signal, TemplateRef, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model, output, signal, TemplateRef, untracked } from '@angular/core';
 import { findCatalogEntry, WidgetCatalog, WidgetCatalogEntry } from '../catalog';
-import { WidgetDefDirective, WidgetTemplateContext } from '../widget-def.directive';
+import { WidgetDefRegistry } from '../widget-def.registry';
+import { WidgetTemplateContext } from '../widget-template';
 import { WidgetEditBarComponent } from '../widget-edit-bar/widget-edit-bar.component';
 import { WidgetGridComponent, WidgetPosition } from '../widget-grid/widget-grid.component';
 import { WidgetNavComponent, WidgetPageMove, WidgetPageRename } from '../widget-nav/widget-nav.component';
 import { WidgetPickerComponent } from '../widget-picker/widget-picker.component';
-import { WidgetSettingsDefDirective } from '../widget-settings-def.directive';
 import { WidgetSettingsComponent } from '../widget-settings/widget-settings.component';
 import {
     addPage,
@@ -46,6 +46,7 @@ import {
     ],
     templateUrl: './widget-workspace.component.html',
     styleUrl: './widget-workspace.component.scss',
+    providers: [WidgetDefRegistry],
 })
 export class WidgetWorkspaceComponent {
     /** Committed workspace. Never bind the value emitted by `save` back before it persists. */
@@ -104,8 +105,11 @@ export class WidgetWorkspaceComponent {
     protected readonly pickerOpen = signal(false);
     protected readonly configuringId = signal<string | null>(null);
     protected readonly activePageId = signal<string | null>(null);
-    protected readonly defs = contentChildren(WidgetDefDirective, { descendants: true });
-    protected readonly settingsDefs = contentChildren(WidgetSettingsDefDirective, { descendants: true });
+
+    private readonly registry = inject(WidgetDefRegistry);
+
+    protected readonly defs = this.registry.widgetDefs;
+    protected readonly settingsDefs = this.registry.settingsDefs;
 
     private readonly draft = signal<WidgetWorkspace | null>(null);
 
