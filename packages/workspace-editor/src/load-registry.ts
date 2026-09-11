@@ -1,19 +1,25 @@
 import { buildSync } from 'esbuild';
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { loadGcWorkspaceConfig } from './config.js';
 import type { GameWorkspaceRegistry } from './types.js';
 
-const LOCALIZE_SHIM = `
-globalThis.$localize = (strings, ...values) => {
-  if (typeof strings === 'string') {
-    return strings;
-  }
-  return String.raw({ raw: strings }, ...values);
-};
-`;
+/**
+ * Catalog labels are `$localize` tagged templates. Installing the game's own Angular runtime
+ * strips the metadata blocks exactly like a browser build would, instead of leaking `:@@id:`.
+ */
+async function installLocalize(gameRoot: string): Promise<void> {
+    const requireFromGame = createRequire(join(gameRoot, 'package.json'));
+
+    try {
+        await import(pathToFileURL(requireFromGame.resolve('@angular/localize/init')).href);
+    } catch {
+        // A game front that never calls $localize does not need the global.
+    }
+}
 
 function readTsconfigPaths(gameRoot: string): Record<string, string> {
     const tsconfigPath = resolve(gameRoot, 'tsconfig.json');
@@ -63,7 +69,6 @@ function bundleCatalogModule(gameRoot: string, moduleRel: string): Promise<GameW
             logLevel: 'silent',
             packages: 'external',
             alias: readTsconfigPaths(gameRoot),
-            banner: { js: LOCALIZE_SHIM },
             external: ['@angular/*', '@nebular/*', '@bari77/*', 'rxjs', 'rxjs/*', 'zone.js'],
         });
 
@@ -75,6 +80,7 @@ function bundleCatalogModule(gameRoot: string, moduleRel: string): Promise<GameW
 
 /** Bundles and evaluates the game's widget catalog module in Node. */
 export async function loadGameRegistry(gameRoot: string, catalogRel: string): Promise<GameWorkspaceRegistry> {
+    await installLocalize(gameRoot);
     return bundleCatalogModule(gameRoot, catalogRel);
 }
 
