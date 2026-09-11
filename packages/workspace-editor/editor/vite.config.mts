@@ -41,11 +41,14 @@ export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '');
     const gameRoot = upperCaseDrive(env.GC_GAME_ROOT ?? process.env.GC_GAME_ROOT ?? '');
     const registryPath = upperCaseDrive(env.GC_REGISTRY ?? process.env.GC_REGISTRY ?? '');
+    const editorRoot = upperCaseDrive(env.GC_EDITOR_ROOT ?? process.env.GC_EDITOR_ROOT ?? '');
     const vendorRoot = upperCaseDrive(env.GC_VENDOR_ROOT ?? process.env.GC_VENDOR_ROOT ?? '');
     const apiUrl = env.GC_API_URL ?? process.env.GC_API_URL ?? 'http://127.0.0.1:4311';
 
-    if (!gameRoot || !registryPath || !vendorRoot) {
-        throw new Error('GC_GAME_ROOT, GC_REGISTRY and GC_VENDOR_ROOT must be set by the gc-workspace edit command.');
+    if (!gameRoot || !registryPath || !editorRoot || !vendorRoot) {
+        throw new Error(
+            'GC_GAME_ROOT, GC_REGISTRY, GC_EDITOR_ROOT and GC_VENDOR_ROOT must be set by the gc-workspace edit command.',
+        );
     }
 
     const gameAliases = readGameAliases(gameRoot);
@@ -53,11 +56,12 @@ export default defineConfig(({ mode }) => {
     const widgetsRoot = resolve(vendorRoot, 'gc-widgets');
 
     return {
-        root: resolve(__dirname),
+        root: editorRoot,
+        cacheDir: resolve(editorRoot, '..', '.vite'),
         publicDir: false,
         plugins: [
             angular({
-                tsconfig: resolve(__dirname, 'tsconfig.app.json'),
+                tsconfig: resolve(editorRoot, 'tsconfig.app.json'),
                 workspaceRoot: gameRoot,
                 include: [
                     workspaceGlob(gameRoot, widgetsRoot, '/src/**/*.ts'),
@@ -84,7 +88,7 @@ export default defineConfig(({ mode }) => {
         server: {
             port: 4310,
             fs: {
-                allow: [resolve(__dirname, '..'), gameRoot],
+                allow: [gameRoot],
             },
             proxy: {
                 '/api': apiUrl,

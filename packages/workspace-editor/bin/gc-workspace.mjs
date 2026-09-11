@@ -20,18 +20,15 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const packageRoot = resolve(__dirname, '..');
 
 /**
- * The Angular Vite plugin skips every path containing `node_modules`, so DevKit packages
- * shipped as raw TypeScript must be staged outside of it before the editor can compile them.
+ * The Angular Vite plugin skips every path containing `node_modules`, so the editor app and the
+ * DevKit packages shipped as raw TypeScript must be staged outside of it before being compiled.
  */
-function stageGameVendorPackage(vendorRoot, gameRoot, packageFolder) {
-    const target = resolve(vendorRoot, packageFolder);
-    const source = resolve(gameRoot, 'node_modules', '@bari77', packageFolder);
-
+function stageSources(source, target) {
     if (existsSync(target)) {
         rmSync(target, { recursive: true, force: true });
     }
 
-    mkdirSync(vendorRoot, { recursive: true });
+    mkdirSync(dirname(target), { recursive: true });
     cpSync(source, target, {
         recursive: true,
         filter: (from) => !relative(source, from).split(sep).includes('node_modules'),
@@ -207,9 +204,12 @@ async function runEdit(root, target) {
 
     const api = await startSaveApi(root, layoutRel, apiPort, config.target);
 
-    const editorDir = resolve(packageRoot, 'editor');
-    const vendorRoot = resolve(root, '.gc-workspace', 'vendor');
-    stageGameVendorPackage(vendorRoot, root, 'gc-widgets');
+    const stageRoot = resolve(root, '.gc-workspace');
+    const editorRoot = resolve(stageRoot, 'editor');
+    const vendorRoot = resolve(stageRoot, 'vendor');
+
+    stageSources(resolve(packageRoot, 'editor'), editorRoot);
+    stageSources(resolve(root, 'node_modules', '@bari77', 'gc-widgets'), resolve(vendorRoot, 'gc-widgets'));
 
     const requireFromPkg = createRequire(resolve(packageRoot, 'package.json'));
     const vitePkgDir = dirname(requireFromPkg.resolve('vite/package.json'));
@@ -217,11 +217,12 @@ async function runEdit(root, target) {
     const viteConfig = resolve(packageRoot, 'editor', 'vite.config.mts');
 
     const child = spawn(process.execPath, [viteBin, 'dev', '--config', viteConfig, '--port', String(editorPort)], {
-        cwd: editorDir,
+        cwd: editorRoot,
         env: {
             ...process.env,
             GC_GAME_ROOT: root,
             GC_REGISTRY: registryPath,
+            GC_EDITOR_ROOT: editorRoot,
             GC_VENDOR_ROOT: vendorRoot,
             GC_API_URL: `http://127.0.0.1:${apiPort}`,
         },

@@ -99,6 +99,10 @@ gc-workspace edit --target player
 | `validate --all` | Validates every configured target |
 | `edit` | Validates one target, starts save API on `:4311`, Vite editor on `:4310`, writes JSON on Save |
 
+`edit` copies the editor app and the raw-TypeScript DevKit widget sources into `.gc-workspace/`
+at the root of the game front, because the Angular compiler plugin ignores anything under
+`node_modules`. Add `/.gc-workspace` to the game `.gitignore`.
+
 ## Non-goals
 
 - No dev route in the game front router

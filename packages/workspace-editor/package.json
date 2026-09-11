@@ -1,6 +1,6 @@
 {
   "name": "@bari77/gc-workspace-editor",
-  "version": "0.8.9",
+  "version": "0.8.10",
   "description": "CLI and standalone editor for default player workspace layouts in GamersCommunity game fronts",
   "type": "module",
   "bin": {
