@@ -1,26 +1,55 @@
-import { readFileSync } from 'node:fs';
-import { relative, resolve } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { isAbsolute, relative, resolve } from 'node:path';
 import angular from '@analogjs/vite-plugin-angular';
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig, loadEnv, type Plugin } from 'vite';
 
-function readGameAliases(gameRoot: string): Record<string, string> {
-    const tsconfigPath = resolve(gameRoot, 'tsconfig.json');
-    const raw = JSON.parse(readFileSync(tsconfigPath, 'utf8')) as {
-        compilerOptions?: { paths?: Record<string, string[]>; baseUrl?: string };
+function readGamePaths(gameRoot: string): { baseUrl: string; aliases: Record<string, string> } {
+    const raw = JSON.parse(readFileSync(resolve(gameRoot, 'tsconfig.json'), 'utf8')) as {
+        compilerOptions?: { baseUrl?: string; paths?: Record<string, string[]> };
     };
     const baseUrl = resolve(gameRoot, raw.compilerOptions?.baseUrl ?? 'src');
-    const paths = raw.compilerOptions?.paths ?? {};
-    const alias: Record<string, string> = {};
+    const aliases: Record<string, string> = {};
 
-    for (const [key, targets] of Object.entries(paths)) {
+    for (const [key, targets] of Object.entries(raw.compilerOptions?.paths ?? {})) {
         const target = targets[0];
         if (!target) {
             continue;
         }
-        alias[key.replace(/\/\*$/, '')] = resolve(baseUrl, target.replace(/\/\*$/, ''));
+        aliases[key.replace(/\/\*$/, '')] = resolve(baseUrl, target.replace(/\/\*$/, ''));
     }
 
-    return alias;
+    return { baseUrl, aliases };
+}
+
+/** The editor must render with the same global stylesheets as the game front itself. */
+function readGameStyles(gameRoot: string): string[] {
+    type Target = { options?: { styles?: (string | { input: string })[] } };
+    const raw = JSON.parse(readFileSync(resolve(gameRoot, 'angular.json'), 'utf8')) as {
+        projects?: Record<string, { architect?: Record<string, Target> }>;
+    };
+    const project = Object.values(raw.projects ?? {})[0];
+    const target = Object.values(project?.architect ?? {}).find((it) => Array.isArray(it.options?.styles));
+
+    return (target?.options?.styles ?? []).map((entry) =>
+        resolve(gameRoot, typeof entry === 'string' ? entry : entry.input),
+    );
+}
+
+/** Game sources rely on tsconfig `baseUrl`, so a bare specifier can point at the game's own files. */
+function baseUrlResolver(baseUrl: string): Plugin {
+    const suffixes = ['.ts', '.js', '.json', '/index.ts'];
+
+    return {
+        name: 'gc-game-base-url',
+        enforce: 'pre',
+        resolveId(id) {
+            if (id.startsWith('.') || id.startsWith('\0') || isAbsolute(id)) {
+                return;
+            }
+
+            return suffixes.map((suffix) => resolve(baseUrl, `${id}${suffix}`)).find((path) => existsSync(path));
+        },
+    };
 }
 
 /** Analog include globs are appended to workspaceRoot, so they must be root-relative and POSIX. */
@@ -51,34 +80,35 @@ export default defineConfig(({ mode }) => {
         );
     }
 
-    const gameAliases = readGameAliases(gameRoot);
+    const { baseUrl: gameBaseUrl, aliases: gameAliases } = readGamePaths(gameRoot);
     const gameNodeModules = resolve(gameRoot, 'node_modules');
     const widgetsRoot = resolve(vendorRoot, 'gc-widgets');
+
+    const virtualModules: Record<string, string> = {
+        'virtual:game-editor-registry': `export { gameWorkspaceEditorRegistry as gameWorkspaceRegistry } from ${JSON.stringify(registryPath)};`,
+        'virtual:game-global-styles': readGameStyles(gameRoot)
+            .map((path) => `import ${JSON.stringify(path)};`)
+            .join('\n'),
+    };
 
     return {
         root: editorRoot,
         cacheDir: resolve(editorRoot, '..', '.vite'),
         publicDir: false,
         plugins: [
+            baseUrlResolver(gameBaseUrl),
             angular({
                 tsconfig: resolve(editorRoot, 'tsconfig.app.json'),
                 workspaceRoot: gameRoot,
-                include: [
-                    workspaceGlob(gameRoot, widgetsRoot, '/src/**/*.ts'),
-                    '/src/app/features/**/workspace/**/*.ts',
-                ],
+                include: [workspaceGlob(gameRoot, widgetsRoot, '/src/**/*.ts'), '/src/**/*.ts'],
             }),
             {
-                name: 'gc-game-registry',
+                name: 'gc-game-sources',
                 resolveId(id) {
-                    if (id === 'virtual:game-editor-registry') {
-                        return id;
-                    }
+                    return id in virtualModules ? id : undefined;
                 },
                 load(id) {
-                    if (id === 'virtual:game-editor-registry') {
-                        return `export { gameWorkspaceEditorRegistry as gameWorkspaceRegistry } from ${JSON.stringify(registryPath)};`;
-                    }
+                    return virtualModules[id];
                 },
             },
         ],

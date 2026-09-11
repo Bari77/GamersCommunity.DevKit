@@ -3,3 +3,5 @@ declare module 'virtual:game-editor-registry' {
 
     export const gameWorkspaceRegistry: GameWorkspaceRegistry;
 }
+
+declare module 'virtual:game-global-styles';

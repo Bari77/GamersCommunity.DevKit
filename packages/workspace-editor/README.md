@@ -103,6 +103,10 @@ gc-workspace edit --target player
 at the root of the game front, because the Angular compiler plugin ignores anything under
 `node_modules`. Add `/.gc-workspace` to the game `.gitignore`.
 
+The editor mirrors the game front: it compiles `src/**/*.ts`, honours the `paths` and `baseUrl`
+of `tsconfig.json`, and loads the global stylesheets declared on the Angular build target of
+`angular.json`. Widgets therefore render exactly as they do in the game.
+
 ## Non-goals
 
 - No dev route in the game front router
