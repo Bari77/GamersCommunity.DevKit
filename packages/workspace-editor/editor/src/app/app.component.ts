@@ -3,6 +3,7 @@ import { Component, OnInit, signal, Type } from '@angular/core';
 import {
     serializeWorkspace,
     WidgetCatalog,
+    WidgetPageVisibilityOption,
     WidgetWorkspace,
     WidgetWorkspaceComponent,
 } from '@bari77/gc-widgets';
@@ -27,6 +28,9 @@ export class AppComponent implements OnInit {
     public readonly error = signal<string | null>(null);
     public readonly templateHost = signal<Type<unknown> | null>(null);
 
+    /** Declared by the game registry, so the editor offers the same audiences as the live page. */
+    public readonly pageVisibilityOptions = signal<WidgetPageVisibilityOption[]>([]);
+
     private readonly apiUrl = import.meta.env.GC_API_URL as string;
 
     public async ngOnInit(): Promise<void> {
@@ -43,6 +47,7 @@ export class AppComponent implements OnInit {
             this.rowHeight.set(config.rowHeight);
             this.workspace.set(config.layout);
             this.layoutPath.set(config.layoutPath);
+            this.pageVisibilityOptions.set(gameWorkspaceRegistry.pageVisibilityOptions ?? []);
 
             if (gameWorkspaceRegistry.loadTemplateHost) {
                 const host = await gameWorkspaceRegistry.loadTemplateHost();

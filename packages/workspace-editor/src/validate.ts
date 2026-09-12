@@ -2,6 +2,7 @@ import {
     findCatalogEntry,
     type WidgetCatalog,
     type WidgetCatalogEntry,
+    type WidgetPageVisibilityOption,
     type WidgetSettingsField,
 } from './widget-contract.js';
 import type { ValidationIssue, ValidationSeverity } from './types.js';
@@ -117,6 +118,7 @@ function validatePage(
     catalog: WidgetCatalog,
     columns: number,
     typeCounts: Map<string, number>,
+    visibilityOptions: WidgetPageVisibilityOption[],
 ): ValidationIssue[] {
     const issues: ValidationIssue[] = [];
     const pagePath = `pages[${index}]`;
@@ -127,6 +129,21 @@ function validatePage(
 
     if (typeof page['title'] !== 'string' || page['title'].trim().length === 0) {
         issues.push(issue(`${pagePath}.title`, 'Page title must be a non-empty string.'));
+    }
+
+    const visibility = page['visibility'];
+    if (visibility !== undefined) {
+        if (typeof visibility !== 'string') {
+            issues.push(issue(`${pagePath}.visibility`, 'Page visibility must be a string when present.'));
+        } else if (!visibilityOptions.some((option) => option.value === visibility)) {
+            const known = visibilityOptions.map((option) => option.value).join(', ');
+            issues.push(
+                issue(
+                    `${pagePath}.visibility`,
+                    `Unknown page visibility "${visibility}". Registry offers: ${known || '(none)'}.`,
+                ),
+            );
+        }
     }
 
     const widgets = page['widgets'];
@@ -168,6 +185,7 @@ export function validateWorkspaceLayout(
     layout: unknown,
     catalog: WidgetCatalog,
     columns: number,
+    visibilityOptions: WidgetPageVisibilityOption[] = [],
 ): ValidationIssue[] {
     const issues: ValidationIssue[] = [];
 
@@ -187,7 +205,7 @@ export function validateWorkspaceLayout(
 
     const typeCounts = new Map<string, number>();
     pages.forEach((page, index) => {
-        issues.push(...validatePage(page, index, catalog, columns, typeCounts));
+        issues.push(...validatePage(page, index, catalog, columns, typeCounts, visibilityOptions));
     });
 
     for (const entry of catalog) {

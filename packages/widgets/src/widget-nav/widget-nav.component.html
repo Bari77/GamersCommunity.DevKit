@@ -17,6 +17,9 @@
                         />
                     } @else {
                         <span class="gc-nav__label">{{ page.title }}</span>
+                        @if (restrictedLabel(page); as audience) {
+                            <span class="gc-nav__badge" [title]="audience" [attr.aria-label]="audience">&#128274;</span>
+                        }
                     }
                 </button>
 
@@ -53,6 +56,21 @@
                             &#10005;
                         </button>
                     </span>
+                }
+
+                @if (editing() && visibilityOptions().length > 0) {
+                    <select
+                        class="gc-nav__visibility"
+                        [value]="currentVisibility(page)"
+                        [attr.aria-label]="visibilityLabel()"
+                        [title]="visibilityLabel()"
+                        (click)="$event.stopPropagation()"
+                        (change)="onVisibility(page.id, $event)"
+                    >
+                        @for (option of visibilityOptions(); track option.value) {
+                            <option [value]="option.value">{{ option.label }}</option>
+                        }
+                    </select>
                 }
             </li>
         }

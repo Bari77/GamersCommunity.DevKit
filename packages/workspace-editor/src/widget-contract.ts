@@ -48,7 +48,14 @@ export interface WidgetPage {
     title: string;
     icon?: string;
     locked?: boolean;
+    visibility?: string;
     widgets: WidgetInstance[];
+}
+
+/** One audience a game lets a page be restricted to. The first option is the open one. */
+export interface WidgetPageVisibilityOption {
+    value: string;
+    label: string;
 }
 
 export interface WidgetWorkspace {

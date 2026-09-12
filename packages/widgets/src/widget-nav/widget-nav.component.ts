@@ -11,6 +11,17 @@ export interface WidgetPageMove {
     offset: number;
 }
 
+/** One audience the host lets the owner pick from. The first option is the open one. */
+export interface WidgetPageVisibilityOption {
+    value: string;
+    label: string;
+}
+
+export interface WidgetPageVisibilityChange {
+    id: string;
+    visibility: string;
+}
+
 /** Left rail listing the workspace pages, editable in place by the owner. */
 @Component({
     selector: 'gc-widget-nav',
@@ -36,6 +47,11 @@ export class WidgetNavComponent {
 
     public readonly moveDownLabel = input('Move down');
 
+    /** Left empty to drop the audience picker entirely. */
+    public readonly visibilityOptions = input<WidgetPageVisibilityOption[]>([]);
+
+    public readonly visibilityLabel = input('Who can see this page');
+
     public readonly select = output<string>();
 
     public readonly add = output<void>();
@@ -46,10 +62,30 @@ export class WidgetNavComponent {
 
     public readonly move = output<WidgetPageMove>();
 
+    public readonly visibility = output<WidgetPageVisibilityChange>();
+
     protected onRename(id: string, event: Event): void {
         const title = (event.target as HTMLInputElement).value.trim();
         if (title) {
             this.rename.emit({ id, title });
         }
+    }
+
+    protected onVisibility(id: string, event: Event): void {
+        this.visibility.emit({ id, visibility: (event.target as HTMLSelectElement).value });
+    }
+
+    protected currentVisibility(page: WidgetPage): string {
+        return page.visibility ?? this.visibilityOptions()[0]?.value ?? '';
+    }
+
+    /** Read mode only flags the pages that are not open to everyone. */
+    protected restrictedLabel(page: WidgetPage): string | null {
+        const options = this.visibilityOptions();
+        if (!page.visibility || page.visibility === options[0]?.value) {
+            return null;
+        }
+
+        return options.find((option) => option.value === page.visibility)?.label ?? null;
     }
 }

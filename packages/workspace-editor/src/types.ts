@@ -1,4 +1,4 @@
-import type { WidgetCatalog, WidgetWorkspace } from './widget-contract.js';
+import type { WidgetCatalog, WidgetPageVisibilityOption, WidgetWorkspace } from './widget-contract.js';
 
 /** Per-target overrides in the game front `package.json` under `gcWorkspace.targets`. */
 export interface GcWorkspaceTargetConfig {
@@ -30,10 +30,12 @@ export interface GameWorkspaceRegistry {
     catalog: WidgetCatalog;
     columns: number;
     rowHeight?: number;
+    /** Audiences a page may be restricted to. Omitted leaves every page open to everyone. */
+    pageVisibilityOptions?: WidgetPageVisibilityOption[];
     loadTemplateHost?: () => Promise<new (...args: unknown[]) => unknown>;
 }
 
-export type { WidgetCatalog, WidgetWorkspace };
+export type { WidgetCatalog, WidgetPageVisibilityOption, WidgetWorkspace };
 
 export type ValidationSeverity = 'error' | 'warning';
 

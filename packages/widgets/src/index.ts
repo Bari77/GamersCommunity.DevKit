@@ -20,7 +20,12 @@ export {
 } from './widget-grid/widget-grid.component';
 export type { WidgetPosition } from './widget-grid/widget-grid.component';
 export { WidgetNavComponent } from './widget-nav/widget-nav.component';
-export type { WidgetPageMove, WidgetPageRename } from './widget-nav/widget-nav.component';
+export type {
+    WidgetPageMove,
+    WidgetPageRename,
+    WidgetPageVisibilityChange,
+    WidgetPageVisibilityOption,
+} from './widget-nav/widget-nav.component';
 export { WidgetPickerComponent } from './widget-picker/widget-picker.component';
 export { WidgetSettingsDefDirective } from './widget-settings-def.directive';
 export { WIDGET_TITLE_KEY, WidgetSettingsComponent } from './widget-settings/widget-settings.component';

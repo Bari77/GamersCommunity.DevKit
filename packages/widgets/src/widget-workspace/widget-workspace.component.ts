@@ -5,7 +5,13 @@ import { WidgetDefRegistry } from '../widget-def.registry';
 import { WidgetTemplateContext } from '../widget-template';
 import { WidgetEditBarComponent } from '../widget-edit-bar/widget-edit-bar.component';
 import { WidgetGridComponent, WidgetPosition } from '../widget-grid/widget-grid.component';
-import { WidgetNavComponent, WidgetPageMove, WidgetPageRename } from '../widget-nav/widget-nav.component';
+import {
+    WidgetNavComponent,
+    WidgetPageMove,
+    WidgetPageRename,
+    WidgetPageVisibilityChange,
+    WidgetPageVisibilityOption,
+} from '../widget-nav/widget-nav.component';
 import { WidgetPickerComponent } from '../widget-picker/widget-picker.component';
 import { WidgetSettingsComponent } from '../widget-settings/widget-settings.component';
 import {
@@ -20,6 +26,7 @@ import {
     removeWidget,
     renamePage,
     serializeWorkspace,
+    setPageVisibility,
     updateWidgetSettings,
     WidgetInstance,
     WidgetPage,
@@ -73,6 +80,14 @@ export class WidgetWorkspaceComponent {
     public readonly moveUpLabel = input('Move up');
 
     public readonly moveDownLabel = input('Move down');
+
+    /**
+     * Audiences the owner may pick for a page. The host names them and enforces them; left empty
+     * the rail shows no picker at all.
+     */
+    public readonly pageVisibilityOptions = input<WidgetPageVisibilityOption[]>([]);
+
+    public readonly pageVisibilityLabel = input('Who can see this page');
 
     public readonly addWidgetLabel = input('Add a widget');
 
@@ -206,6 +221,10 @@ export class WidgetWorkspaceComponent {
 
     protected onMovePage(event: WidgetPageMove): void {
         this.mutate((current) => movePage(current, event.id, event.offset));
+    }
+
+    protected onPageVisibility(event: WidgetPageVisibilityChange): void {
+        this.mutate((current) => setPageVisibility(current, event.id, event.visibility));
     }
 
     protected onPickWidget(type: string): void {

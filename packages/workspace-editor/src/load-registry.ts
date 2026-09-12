@@ -107,6 +107,11 @@ export async function loadWorkspaceContext(gameRoot: string, target?: string) {
 export async function validateGameWorkspace(gameRoot: string, target?: string) {
     const context = await loadWorkspaceContext(gameRoot, target);
     const { validateWorkspaceLayout } = await import('./validate.js');
-    const issues = validateWorkspaceLayout(context.layout, context.registry.catalog, context.registry.columns);
+    const issues = validateWorkspaceLayout(
+        context.layout,
+        context.registry.catalog,
+        context.registry.columns,
+        context.registry.pageVisibilityOptions ?? [],
+    );
     return { context, issues };
 }

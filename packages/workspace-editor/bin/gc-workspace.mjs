@@ -161,6 +161,7 @@ function startSaveApi(root, layoutRel, port, target) {
                             body,
                             context.registry.catalog,
                             context.registry.columns,
+                            context.registry.pageVisibilityOptions ?? [],
                         );
                         if (hasErrors(layoutIssues)) {
                             res.writeHead(400, { 'Content-Type': 'application/json' });

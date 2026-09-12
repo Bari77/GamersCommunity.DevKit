@@ -19,6 +19,7 @@
 
 .gc-nav__row {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.25rem;
     border-radius: var(--gc-widget-radius, 0.5rem);
@@ -60,6 +61,26 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.gc-nav__badge {
+    flex: none;
+    margin-left: auto;
+    font-size: 0.7rem;
+    opacity: 0.6;
+}
+
+/* The picker takes a line of its own: page names already fill the rail. */
+.gc-nav__visibility {
+    flex: 1 0 100%;
+    min-width: 0;
+    padding: 0.2rem 0.3rem;
+    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.14));
+    border-radius: 0.35rem;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 0.75rem;
 }
 
 .gc-nav__input {

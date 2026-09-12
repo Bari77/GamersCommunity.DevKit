@@ -17,6 +17,12 @@ export interface WidgetPage {
     icon?: string;
     /** Locked pages cannot be renamed nor removed by the owner. */
     locked?: boolean;
+    /**
+     * Audience allowed to open the page. The codes are the host's own, declared through
+     * `pageVisibilityOptions`; undefined means the page is open to everyone. Hiding a page is the
+     * host's job, on the server side: this only carries the owner's choice.
+     */
+    visibility?: string;
     widgets: WidgetInstance[];
 }
 
@@ -128,6 +134,10 @@ export function renamePage(workspace: WidgetWorkspace, pageId: string, title: st
     return mapPages(workspace, (page) => (page.id === pageId && !page.locked ? { ...page, title } : page));
 }
 
+export function setPageVisibility(workspace: WidgetWorkspace, pageId: string, visibility: string): WidgetWorkspace {
+    return mapPages(workspace, (page) => (page.id === pageId ? { ...page, visibility } : page));
+}
+
 export function removePage(workspace: WidgetWorkspace, pageId: string): WidgetWorkspace {
     const target = findPage(workspace, pageId);
     if (!target || target.locked || workspace.pages.length <= 1) {
@@ -237,6 +247,7 @@ function readPages(parsed: unknown): WidgetPage[] {
         title: typeof page['title'] === 'string' ? page['title'] : '',
         icon: typeof page['icon'] === 'string' ? page['icon'] : undefined,
         locked: page['locked'] === true,
+        visibility: typeof page['visibility'] === 'string' ? page['visibility'] : undefined,
         widgets: Array.isArray(page['widgets']) ? page['widgets'].filter(isRecord).map(readWidget) : [],
     }));
 }
