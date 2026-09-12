@@ -11,7 +11,12 @@ import { WidgetTemplateContext } from './widget-template';
     standalone: true,
 })
 export class WidgetDefDirective {
-    public readonly type = input.required<string>({ alias: 'gcWidget' });
+    /**
+     * Left optional on purpose: a template registers itself the moment it is created, which is
+     * one render pass before Angular evaluates a `[gcWidget]` expression. A def still waiting
+     * for its type matches no widget instead of throwing while the grid looks through the list.
+     */
+    public readonly type = input('', { alias: 'gcWidget' });
 
     public readonly template = inject<TemplateRef<WidgetTemplateContext>>(TemplateRef);
 

@@ -12,7 +12,8 @@ import { WidgetTemplateContext } from './widget-template';
     standalone: true,
 })
 export class WidgetSettingsDefDirective {
-    public readonly type = input.required<string>({ alias: 'gcWidgetSettings' });
+    /** Optional for the same reason as `gcWidget`: registration happens before the binding lands. */
+    public readonly type = input('', { alias: 'gcWidgetSettings' });
 
     public readonly template = inject<TemplateRef<WidgetTemplateContext>>(TemplateRef);
 
