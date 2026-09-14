@@ -1,0 +1,155 @@
+/// Every control the kit draws goes through these mixins: the browser chrome
+/// (native focus ring, number spinners, select caret) never shows through.
+
+@mixin surface {
+    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.18));
+    border-radius: var(--gc-widget-radius, 0.5rem);
+    background: var(--gc-widget-control, rgba(255, 255, 255, 0.04));
+    color: inherit;
+    font: inherit;
+    transition:
+        border-color 0.15s ease,
+        background-color 0.15s ease,
+        box-shadow 0.15s ease,
+        color 0.15s ease;
+}
+
+@mixin focus-ring {
+    &:focus-visible {
+        outline: none;
+        border-color: var(--gc-widget-accent, #3366ff);
+        box-shadow: 0 0 0 3px var(--gc-widget-accent-soft, rgba(51, 102, 255, 0.28));
+    }
+}
+
+@mixin field {
+    @include surface;
+    @include focus-ring;
+
+    appearance: none;
+    width: 100%;
+    padding: 0.45rem 0.6rem;
+
+    &::placeholder {
+        color: inherit;
+        opacity: 0.4;
+    }
+
+    &:hover:not(:disabled):not(:read-only) {
+        border-color: var(--gc-widget-accent, #3366ff);
+    }
+
+    &:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        appearance: none;
+        margin: 0;
+    }
+}
+
+/// Complements `field` on a textarea: the platform resizer only gets one axis.
+@mixin textarea {
+    resize: vertical;
+    min-height: 4.5rem;
+    line-height: 1.45;
+}
+
+@mixin pressable {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    user-select: none;
+
+    &:disabled {
+        opacity: 0.35;
+        cursor: default;
+    }
+
+    &:not(:disabled):active {
+        transform: translateY(1px);
+    }
+}
+
+@mixin ghost-button {
+    @include surface;
+    @include focus-ring;
+    @include pressable;
+
+    padding: 0.42rem 0.9rem;
+
+    &:not(:disabled):hover {
+        border-color: var(--gc-widget-accent, #3366ff);
+        background: var(--gc-widget-hover, rgba(255, 255, 255, 0.08));
+    }
+}
+
+@mixin icon-button($size: 1.6rem) {
+    @include surface;
+    @include focus-ring;
+    @include pressable;
+
+    flex: none;
+    width: $size;
+    height: $size;
+    padding: 0;
+    font-size: 0.6rem;
+    line-height: 1;
+
+    &:not(:disabled):hover {
+        border-color: var(--gc-widget-accent, #3366ff);
+        background: var(--gc-widget-hover, rgba(255, 255, 255, 0.08));
+    }
+}
+
+@mixin danger-button {
+    &:not(:disabled):hover {
+        border-color: var(--gc-widget-danger, #ff3d71);
+        background: var(--gc-widget-danger-soft, rgba(255, 61, 113, 0.12));
+        color: var(--gc-widget-danger, #ff3d71);
+    }
+}
+
+@mixin primary-button {
+    @include focus-ring;
+    @include pressable;
+
+    padding: 0.42rem 1rem;
+    border: 1px solid transparent;
+    border-radius: var(--gc-widget-radius, 0.5rem);
+    background: var(--gc-widget-accent, #3366ff);
+    color: #fff;
+    font: inherit;
+    transition:
+        filter 0.15s ease,
+        box-shadow 0.15s ease;
+
+    &:not(:disabled):hover {
+        filter: brightness(1.12);
+    }
+}
+
+@mixin dashed-button {
+    @include focus-ring;
+    @include pressable;
+
+    padding: 0.42rem 0.9rem;
+    border: 1px dashed var(--gc-widget-border, rgba(255, 255, 255, 0.22));
+    border-radius: var(--gc-widget-radius, 0.5rem);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    transition:
+        border-color 0.15s ease,
+        background-color 0.15s ease;
+
+    &:not(:disabled):hover {
+        border-color: var(--gc-widget-accent, #3366ff);
+        background: var(--gc-widget-hover, rgba(255, 255, 255, 0.06));
+    }
+}

@@ -1,0 +1,47 @@
+<button
+    type="button"
+    class="gc-select__trigger"
+    role="combobox"
+    aria-haspopup="listbox"
+    [id]="id + '-trigger'"
+    [disabled]="disabled()"
+    [attr.aria-label]="ariaLabel() || null"
+    [attr.aria-expanded]="open()"
+    [attr.aria-controls]="id + '-list'"
+    [attr.aria-activedescendant]="open() && activeIndex() >= 0 ? id + '-option-' + activeIndex() : null"
+    (click)="toggle()"
+>
+    <span class="gc-select__current">
+        @if (selected(); as current) {
+            <span class="gc-select__label">{{ current.label }}</span>
+            @if (current.hint) {
+                <span class="gc-select__hint">{{ current.hint }}</span>
+            }
+        } @else {
+            <span class="gc-select__label gc-select__label--empty">{{ placeholder() }}</span>
+        }
+    </span>
+    <span class="gc-select__caret" aria-hidden="true"></span>
+</button>
+
+@if (open()) {
+    <ul class="gc-select__panel" role="listbox" [id]="id + '-list'" [attr.aria-label]="ariaLabel() || null">
+        @for (option of options(); track option.value; let index = $index) {
+            <li
+                class="gc-select__option"
+                role="option"
+                [id]="id + '-option-' + index"
+                [class.gc-select__option--active]="index === activeIndex()"
+                [class.gc-select__option--selected]="option.value === value()"
+                [attr.aria-selected]="option.value === value()"
+                (mouseenter)="activeIndex.set(index)"
+                (click)="pick(option)"
+            >
+                <span class="gc-select__label">{{ option.label }}</span>
+                @if (option.hint) {
+                    <span class="gc-select__hint">{{ option.hint }}</span>
+                }
+            </li>
+        }
+    </ul>
+}

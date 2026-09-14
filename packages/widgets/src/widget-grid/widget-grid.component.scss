@@ -1,3 +1,5 @@
+@use '../styles/controls';
+
 :host {
     display: block;
     width: 100%;
@@ -87,23 +89,9 @@ gridster-item {
 }
 
 .gc-widget__action {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.4rem;
-    height: 1.4rem;
-    padding: 0;
-    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.14));
-    border-radius: 0.35rem;
-    background: transparent;
-    color: inherit;
-    font-size: 0.7rem;
-    line-height: 1;
-    cursor: pointer;
-}
+    @include controls.icon-button(1.4rem);
 
-.gc-widget__action:hover {
-    border-color: var(--gc-widget-accent, #3366ff);
+    font-size: 0.7rem;
 }
 
 /* Outside edit mode the widget must read like a visitor sees it, so the gear only
@@ -118,9 +106,8 @@ gridster-item {
     opacity: 1;
 }
 
-.gc-widget__action--danger:hover {
-    border-color: var(--gc-widget-danger, #ff3d71);
-    color: var(--gc-widget-danger, #ff3d71);
+.gc-widget__action--danger {
+    @include controls.danger-button;
 }
 
 .gc-widget__grip {

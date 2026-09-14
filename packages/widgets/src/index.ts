@@ -27,6 +27,8 @@ export type {
     WidgetPageVisibilityOption,
 } from './widget-nav/widget-nav.component';
 export { WidgetPickerComponent } from './widget-picker/widget-picker.component';
+export { WidgetSelectComponent } from './widget-select/widget-select.component';
+export type { WidgetSelectOption } from './widget-select/widget-select.component';
 export { WidgetSettingsDefDirective } from './widget-settings-def.directive';
 export { WIDGET_TITLE_KEY, WidgetSettingsComponent } from './widget-settings/widget-settings.component';
 export { WidgetWorkspaceComponent } from './widget-workspace/widget-workspace.component';

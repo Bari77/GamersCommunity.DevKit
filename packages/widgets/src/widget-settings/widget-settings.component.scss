@@ -1,3 +1,5 @@
+@use '../styles/controls';
+
 :host {
     display: block;
 }
@@ -28,14 +30,8 @@
 }
 
 .gc-settings__close {
-    width: 1.5rem;
-    height: 1.5rem;
-    padding: 0;
-    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.14));
-    border-radius: 0.35rem;
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
+    @include controls.icon-button(1.5rem);
+    @include controls.danger-button;
 }
 
 .gc-settings__field {
@@ -58,13 +54,11 @@
 }
 
 .gc-settings__input {
-    width: 100%;
-    padding: 0.45rem 0.6rem;
-    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.18));
-    border-radius: 0.4rem;
-    background: transparent;
-    color: inherit;
-    font: inherit;
+    @include controls.field;
+}
+
+textarea.gc-settings__input {
+    @include controls.textarea;
 }
 
 .gc-settings__list {
@@ -92,36 +86,18 @@
 }
 
 .gc-settings__tool {
-    flex: none;
-    width: 1.7rem;
-    height: 1.7rem;
-    padding: 0;
-    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.14));
-    border-radius: 0.35rem;
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
+    @include controls.icon-button(1.7rem);
 }
 
-.gc-settings__tool--danger:hover {
-    border-color: var(--gc-widget-danger, #ff3d71);
-    color: var(--gc-widget-danger, #ff3d71);
-}
-
-.gc-settings__tool:disabled {
-    opacity: 0.3;
-    cursor: default;
+.gc-settings__tool--danger {
+    @include controls.danger-button;
 }
 
 .gc-settings__add {
+    @include controls.dashed-button;
+
     align-self: flex-start;
-    padding: 0.35rem 0.7rem;
-    border: 1px dashed var(--gc-widget-border, rgba(255, 255, 255, 0.22));
-    border-radius: 0.4rem;
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    cursor: pointer;
+    font-size: 0.85rem;
 }
 
 .gc-settings__foot {
@@ -132,11 +108,5 @@
 }
 
 .gc-settings__done {
-    padding: 0.4rem 0.9rem;
-    border: 1px solid transparent;
-    border-radius: 0.4rem;
-    background: var(--gc-widget-accent, #3366ff);
-    color: #fff;
-    font: inherit;
-    cursor: pointer;
+    @include controls.primary-button;
 }

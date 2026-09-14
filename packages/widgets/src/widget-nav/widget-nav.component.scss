@@ -1,3 +1,5 @@
+@use '../styles/controls';
+
 :host {
     display: block;
 }
@@ -26,9 +28,11 @@
 }
 
 .gc-nav__page {
+    @include controls.focus-ring;
+    @include controls.pressable;
+
     flex: 1;
-    display: flex;
-    align-items: center;
+    justify-content: flex-start;
     gap: 0.5rem;
     min-width: 0;
     padding: 0.55rem 0.7rem;
@@ -38,7 +42,9 @@
     color: inherit;
     font: inherit;
     text-align: left;
-    cursor: pointer;
+    transition:
+        border-color 0.15s ease,
+        background-color 0.15s ease;
 }
 
 .gc-nav__page:hover {
@@ -74,24 +80,13 @@
 .gc-nav__visibility {
     flex: 1 0 100%;
     min-width: 0;
-    padding: 0.2rem 0.3rem;
-    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.14));
-    border-radius: 0.35rem;
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    font-size: 0.75rem;
 }
 
 .gc-nav__input {
-    width: 100%;
-    min-width: 0;
-    padding: 0.15rem 0.3rem;
-    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.18));
-    border-radius: 0.35rem;
-    background: transparent;
-    color: inherit;
-    font: inherit;
+    @include controls.field;
+
+    padding: 0.2rem 0.4rem;
+    font-size: 0.85rem;
 }
 
 .gc-nav__tools {
@@ -100,41 +95,19 @@
 }
 
 .gc-nav__tool {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.3rem;
-    height: 1.3rem;
-    padding: 0;
-    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.14));
-    border-radius: 0.3rem;
-    background: transparent;
-    color: inherit;
+    @include controls.icon-button(1.35rem);
+
     font-size: 0.55rem;
-    cursor: pointer;
 }
 
-.gc-nav__tool:disabled {
-    opacity: 0.3;
-    cursor: default;
-}
-
-.gc-nav__tool--danger:not(:disabled):hover {
-    border-color: var(--gc-widget-danger, #ff3d71);
-    color: var(--gc-widget-danger, #ff3d71);
+.gc-nav__tool--danger {
+    @include controls.danger-button;
 }
 
 .gc-nav__add {
-    margin-top: 0.35rem;
-    padding: 0.5rem 0.7rem;
-    border: 1px dashed var(--gc-widget-border, rgba(255, 255, 255, 0.22));
-    border-radius: var(--gc-widget-radius, 0.5rem);
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    cursor: pointer;
-}
+    @include controls.dashed-button;
 
-.gc-nav__add:hover {
-    border-color: var(--gc-widget-accent, #3366ff);
+    margin-top: 0.35rem;
+    width: 100%;
+    font-size: 0.85rem;
 }

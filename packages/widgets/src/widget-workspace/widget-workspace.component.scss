@@ -1,3 +1,5 @@
+@use '../styles/controls';
+
 :host {
     display: block;
     width: 100%;
@@ -49,17 +51,7 @@
 }
 
 .gc-workspace__button {
-    padding: 0.4rem 0.9rem;
-    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.18));
-    border-radius: var(--gc-widget-radius, 0.5rem);
-    background: transparent;
-    color: inherit;
-    font: inherit;
-    cursor: pointer;
-}
-
-.gc-workspace__button:hover {
-    border-color: var(--gc-widget-accent, #3366ff);
+    @include controls.ghost-button;
 }
 
 .gc-workspace__hint {

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { WidgetSelectComponent } from '../widget-select/widget-select.component';
 import { WidgetPage } from '../workspace';
 
 export interface WidgetPageRename {
@@ -27,6 +28,7 @@ export interface WidgetPageVisibilityChange {
     selector: 'gc-widget-nav',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [WidgetSelectComponent],
     templateUrl: './widget-nav.component.html',
     styleUrl: './widget-nav.component.scss',
 })
@@ -69,10 +71,6 @@ export class WidgetNavComponent {
         if (title) {
             this.rename.emit({ id, title });
         }
-    }
-
-    protected onVisibility(id: string, event: Event): void {
-        this.visibility.emit({ id, visibility: (event.target as HTMLSelectElement).value });
     }
 
     protected currentVisibility(page: WidgetPage): string {

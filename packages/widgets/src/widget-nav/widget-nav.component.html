@@ -59,18 +59,16 @@
                 }
 
                 @if (editing() && visibilityOptions().length > 0) {
-                    <select
+                    <gc-widget-select
                         class="gc-nav__visibility"
+                        compact
+                        [options]="visibilityOptions()"
                         [value]="currentVisibility(page)"
-                        [attr.aria-label]="visibilityLabel()"
+                        [ariaLabel]="visibilityLabel()"
                         [title]="visibilityLabel()"
                         (click)="$event.stopPropagation()"
-                        (change)="onVisibility(page.id, $event)"
-                    >
-                        @for (option of visibilityOptions(); track option.value) {
-                            <option [value]="option.value">{{ option.label }}</option>
-                        }
-                    </select>
+                        (valueChange)="visibility.emit({ id: page.id, visibility: $event })"
+                    />
                 }
             </li>
         }

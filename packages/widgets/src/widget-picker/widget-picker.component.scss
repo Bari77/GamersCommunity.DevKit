@@ -1,3 +1,5 @@
+@use '../styles/controls';
+
 :host {
     display: block;
 }
@@ -28,14 +30,8 @@
 }
 
 .gc-picker__close {
-    width: 1.5rem;
-    height: 1.5rem;
-    padding: 0;
-    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.14));
-    border-radius: 0.35rem;
-    background: transparent;
-    color: inherit;
-    cursor: pointer;
+    @include controls.icon-button(1.5rem);
+    @include controls.danger-button;
 }
 
 .gc-picker__list {
@@ -48,28 +44,26 @@
 }
 
 .gc-picker__item {
-    display: flex;
+    @include controls.surface;
+    @include controls.focus-ring;
+    @include controls.pressable;
+
     flex-direction: column;
+    align-items: flex-start;
     gap: 0.2rem;
     width: 100%;
     height: 100%;
     padding: 0.6rem 0.75rem;
-    border: 1px solid var(--gc-widget-border, rgba(255, 255, 255, 0.14));
-    border-radius: 0.5rem;
-    background: transparent;
-    color: inherit;
-    font: inherit;
     text-align: left;
-    cursor: pointer;
 }
 
 .gc-picker__item:not(:disabled):hover {
     border-color: var(--gc-widget-accent, #3366ff);
+    background: var(--gc-widget-hover, rgba(255, 255, 255, 0.08));
 }
 
 .gc-picker__item:disabled {
     opacity: 0.4;
-    cursor: default;
 }
 
 .gc-picker__label {
