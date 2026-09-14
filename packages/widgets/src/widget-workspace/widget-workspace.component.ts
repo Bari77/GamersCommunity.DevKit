@@ -63,6 +63,9 @@ export class WidgetWorkspaceComponent {
 
     public readonly canEdit = input(false);
 
+    /** Sample data mode for the standalone layout editor. */
+    public readonly preview = input(false);
+
     public readonly saving = input(false);
 
     public readonly columns = input(12);

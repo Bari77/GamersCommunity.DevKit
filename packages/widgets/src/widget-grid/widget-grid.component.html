@@ -58,9 +58,15 @@
                         @if (templateFor(item.type); as tpl) {
                             <ng-container [ngTemplateOutlet]="tpl" [ngTemplateOutletContext]="item.context" />
                         } @else if (item.type === twitchType) {
-                            <gc-twitch-embed [channel]="asText(item.settings['channel'])" />
+                            @if (showTwitchPreview(item.settings)) {
+                                <div class="gc-twitch__preview" aria-hidden="true">
+                                    <span>Twitch</span>
+                                </div>
+                            } @else {
+                                <gc-twitch-embed [channel]="twitchChannel(item.settings)" />
+                            }
                         } @else if (item.type === linksType) {
-                            <gc-link-list [links]="asLinks(item.settings['links'])" />
+                            <gc-link-list [links]="linkItems(item.settings)" />
                         } @else {
                             <p class="gc-widget__missing">{{ unknownLabel() }}</p>
                         }

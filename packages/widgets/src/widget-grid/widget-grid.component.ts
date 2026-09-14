@@ -69,6 +69,9 @@ export class WidgetGridComponent {
 
     public readonly editing = input(false);
 
+    /** Sample-data mode for the standalone layout editor. */
+    public readonly preview = input(false);
+
     /** Shows the gear outside edit mode, so the owner tweaks a widget without moving anything. */
     public readonly canConfigure = input(false);
 
@@ -184,6 +187,36 @@ export class WidgetGridComponent {
 
     protected asLinks(value: unknown): GcLink[] {
         return Array.isArray(value) ? (value as GcLink[]) : [];
+    }
+
+    protected twitchChannel(settings: WidgetSettings): string {
+        const channel = this.asText(settings['channel']);
+        if (channel) {
+            return channel;
+        }
+
+        return this.preview() ? 'shroud' : '';
+    }
+
+    protected linkItems(settings: WidgetSettings): GcLink[] {
+        const links = this.asLinks(settings['links']);
+        if (links.length > 0) {
+            return links;
+        }
+
+        if (!this.preview()) {
+            return [];
+        }
+
+        return [
+            { url: 'https://discord.gg/example', label: 'Discord' },
+            { url: 'https://www.youtube.com/@gamerscommunity', label: 'YouTube' },
+            { url: 'https://www.twitch.tv/shroud', label: 'Twitch' },
+        ];
+    }
+
+    protected showTwitchPreview(settings: WidgetSettings): boolean {
+        return this.preview() && !this.asText(settings['channel']);
     }
 
     private toGridWidget(widget: WidgetInstance, catalog: WidgetCatalog, columns: number): GridWidget {
