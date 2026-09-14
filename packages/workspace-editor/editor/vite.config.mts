@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { isAbsolute, relative, resolve } from 'node:path';
 import angular from '@analogjs/vite-plugin-angular';
 import { defineConfig, loadEnv, type Plugin } from 'vite';
@@ -28,14 +28,31 @@ function posix(path: string): string {
     return path.replace(/\\/g, '/');
 }
 
+/** The staged copies of the `@bari77` packages the game front depends on, by package name. */
+function vendorPackages(vendorRoot: string): Record<string, string> {
+    const entries = readdirSync(vendorRoot, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory() && existsSync(resolve(vendorRoot, entry.name, 'src/index.ts')))
+        .map((entry) => [`@bari77/${entry.name}`, posix(resolve(vendorRoot, entry.name, 'src'))] as const);
+
+    return Object.fromEntries(entries);
+}
+
 /**
  * The Angular compiler resolves specifiers through the tsconfig, not through the Vite aliases, so
  * it needs the very same mappings: an unresolved widget import makes it drop the component from
  * the compilation without a word, and the browser then falls back to the absent JIT compiler.
  */
-function writeEditorTsConfig(editorRoot: string, gameRoot: string, widgetsRoot: string, game: GamePaths): string {
+function writeEditorTsConfig(
+    editorRoot: string,
+    gameRoot: string,
+    vendor: Record<string, string>,
+    game: GamePaths,
+): string {
     const tsconfigPath = resolve(editorRoot, 'tsconfig.app.json');
-    const widgetsSrc = posix(resolve(widgetsRoot, 'src'));
+    const vendorPaths = Object.entries(vendor).flatMap(([name, src]) => [
+        [name, [`${src}/index.ts`]] as const,
+        [`${name}/*`, [`${src}/*`]] as const,
+    ]);
 
     writeFileSync(
         tsconfigPath,
@@ -46,8 +63,7 @@ function writeEditorTsConfig(editorRoot: string, gameRoot: string, widgetsRoot: 
                     baseUrl: posix(game.baseUrl),
                     paths: {
                         ...game.paths,
-                        '@bari77/gc-widgets': [`${widgetsSrc}/index.ts`],
-                        '@bari77/gc-widgets/*': [`${widgetsSrc}/*`],
+                        ...Object.fromEntries(vendorPaths),
                     },
                     outDir: './dist/out-tsc',
                 },
@@ -60,7 +76,7 @@ function writeEditorTsConfig(editorRoot: string, gameRoot: string, widgetsRoot: 
                 include: [
                     `${posix(resolve(editorRoot, 'src'))}/**/*.ts`,
                     `${posix(gameRoot)}/src/**/*.ts`,
-                    `${widgetsSrc}/**/*.ts`,
+                    ...Object.values(vendor).map((src) => `${src}/**/*.ts`),
                 ],
             },
             null,
@@ -160,8 +176,8 @@ export default defineConfig(({ mode }) => {
 
     const game = readGamePaths(gameRoot);
     const gameNodeModules = resolve(gameRoot, 'node_modules');
-    const widgetsRoot = resolve(vendorRoot, 'gc-widgets');
-    const tsconfig = writeEditorTsConfig(editorRoot, gameRoot, widgetsRoot, game);
+    const vendor = vendorPackages(vendorRoot);
+    const tsconfig = writeEditorTsConfig(editorRoot, gameRoot, vendor, game);
 
     // One entry per target, imported on demand so switching layouts never reloads the page.
     const registryLoaders = registries
@@ -187,7 +203,10 @@ export default defineConfig(({ mode }) => {
             angular({
                 tsconfig,
                 workspaceRoot: gameRoot,
-                include: [workspaceGlob(gameRoot, widgetsRoot, '/src/**/*.ts'), '/src/**/*.ts'],
+                include: [
+                    ...Object.values(vendor).map((src) => workspaceGlob(gameRoot, src, '/**/*.ts')),
+                    '/src/**/*.ts',
+                ],
             }),
             aotGuard(),
             {
@@ -217,8 +236,10 @@ export default defineConfig(({ mode }) => {
         resolve: {
             alias: [
                 ...Object.entries(game.aliases).map(([find, replacement]) => ({ find, replacement })),
-                { find: /^@bari77\/gc-widgets$/, replacement: resolve(widgetsRoot, 'src/index.ts') },
-                { find: /^@bari77\/gc-widgets\/(.*)$/, replacement: `${resolve(widgetsRoot, 'src')}/$1` },
+                ...Object.entries(vendor).flatMap(([name, src]) => [
+                    { find: new RegExp(`^${name}$`), replacement: `${src}/index.ts` },
+                    { find: new RegExp(`^${name}/(.*)$`), replacement: `${src}/$1` },
+                ]),
                 { find: '@bari77/gc-theme', replacement: resolve(gameNodeModules, '@bari77/gc-theme/src/global.scss') },
             ],
         },
@@ -231,7 +252,7 @@ export default defineConfig(({ mode }) => {
         },
         optimizeDeps: {
             include: ['@angular/core', '@angular/common', '@angular/localize/init', 'rxjs', 'zone.js'],
-            exclude: ['@bari77/gc-widgets'],
+            exclude: Object.keys(vendor),
         },
     };
 });

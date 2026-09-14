@@ -2,7 +2,7 @@
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { createServer } from 'node:http';
-import { mkdirSync, writeFileSync, existsSync, rmSync, cpSync } from 'node:fs';
+import { mkdirSync, writeFileSync, existsSync, readdirSync, rmSync, cpSync } from 'node:fs';
 import { dirname, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -33,6 +33,22 @@ function stageSources(source, target) {
         recursive: true,
         filter: (from) => !relative(source, from).split(sep).includes('node_modules'),
     });
+}
+
+/** Anything shipped as raw TypeScript needs staging; the editor itself is already staged apart. */
+function stageVendorPackages(scopeRoot, vendorRoot) {
+    rmSync(vendorRoot, { recursive: true, force: true });
+
+    for (const entry of readdirSync(scopeRoot, { withFileTypes: true })) {
+        const source = resolve(scopeRoot, entry.name);
+
+        if (!entry.isDirectory() || entry.name === 'gc-workspace-editor') {
+            continue;
+        }
+        if (existsSync(resolve(source, 'src', 'index.ts'))) {
+            stageSources(source, resolve(vendorRoot, entry.name));
+        }
+    }
 }
 
 function usage() {
@@ -288,7 +304,7 @@ async function runEdit(root, target, layout, editorPort) {
     const vendorRoot = resolve(stageRoot, 'vendor');
 
     stageSources(resolve(packageRoot, 'editor'), editorRoot);
-    stageSources(resolve(root, 'node_modules', '@bari77', 'gc-widgets'), resolve(vendorRoot, 'gc-widgets'));
+    stageVendorPackages(resolve(root, 'node_modules', '@bari77'), vendorRoot);
 
     const requireFromPkg = createRequire(resolve(packageRoot, 'package.json'));
     const vitePkgDir = dirname(requireFromPkg.resolve('vite/package.json'));

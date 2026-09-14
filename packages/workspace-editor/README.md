@@ -106,7 +106,7 @@ gc-workspace edit --port 4320
 `--target` and `--layout` only pick what the editor opens first; the picker still lists everything
 the scan found.
 
-`edit` copies the editor app and the raw-TypeScript DevKit widget sources into
+`edit` copies the editor app and every `@bari77` package shipped as raw TypeScript into
 `.gc-workspace/{port}/` at the root of the game front, because the Angular compiler plugin ignores
 anything under `node_modules`. Add `/.gc-workspace` to the game `.gitignore`.
 
