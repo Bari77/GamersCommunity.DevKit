@@ -8,10 +8,10 @@ import { fileURLToPath } from 'node:url';
 import {
     formatIssues,
     hasErrors,
-    listWorkspaceTargets,
+    listWorkspaceLayouts,
     loadGcWorkspaceConfig,
-    loadGcWorkspacePackageConfig,
     resolveRegistryPath,
+    UnknownWorkspaceError,
     validateGameWorkspace,
     validateWorkspaceLayout,
 } from '../dist/index.js';
@@ -39,13 +39,15 @@ function usage() {
     console.error(`Usage: gc-workspace <validate|edit> [options]
 
 Commands:
-  validate   Check config/{target}/workspace.default.json against the widget registry
+  validate   Check the layout JSONs found under config/ against the widget registries
   edit       Validate, then open the standalone layout editor (local SPA + save API)
 
 Options:
   --root     Game front directory (default: current working directory)
   --target   Workspace target id (player, guild, team, … — default: gcWorkspace.defaultTarget)
-  --all      Validate every target declared in gcWorkspace.targets
+  --layout   Layout JSON to open, relative to the game root (default: the target's default)
+  --port     Editor port (default: 4310); the save API takes the next one
+  --all      Validate every layout of every target
 `);
     process.exit(1);
 }
@@ -55,6 +57,8 @@ function parseArgs(argv) {
     const command = positional[0];
     let root = process.cwd();
     let target;
+    let layout;
+    let port = 4310;
     let all = false;
 
     const rootFlag = argv.indexOf('--root');
@@ -67,19 +71,33 @@ function parseArgs(argv) {
         target = argv[targetFlag + 1];
     }
 
+    const layoutFlag = argv.indexOf('--layout');
+    if (layoutFlag >= 0 && argv[layoutFlag + 1]) {
+        layout = argv[layoutFlag + 1];
+    }
+
+    const portFlag = argv.indexOf('--port');
+    if (portFlag >= 0 && argv[portFlag + 1]) {
+        port = Number(argv[portFlag + 1]);
+
+        if (!Number.isInteger(port) || port < 1 || port > 65534) {
+            throw new Error(`Invalid --port "${argv[portFlag + 1]}".`);
+        }
+    }
+
     if (argv.includes('--all')) {
         all = true;
     }
 
-    if (all && target) {
-        throw new Error('Use either --target or --all, not both.');
+    if (all && (target || layout)) {
+        throw new Error('Use either --target/--layout or --all, not both.');
     }
 
-    return { command, root, target, all };
+    return { command, root, target, layout, port, all };
 }
 
-async function runValidateTarget(root, target) {
-    const { context, issues } = await validateGameWorkspace(root, target);
+async function runValidateLayout(root, target, layout) {
+    const { context, issues } = await validateGameWorkspace(root, target, layout);
     console.log(`Target: ${context.config.target}`);
     console.log(`Layout: ${context.config.defaultLayout}`);
     console.log(`Catalog: ${context.config.catalog}`);
@@ -87,18 +105,23 @@ async function runValidateTarget(root, target) {
     return hasErrors(issues) ? 1 : 0;
 }
 
-async function runValidate(root, target, all) {
+async function runValidate(root, target, layout, all) {
     try {
         if (all) {
-            const packageConfig = loadGcWorkspacePackageConfig(root);
-            const targets = listWorkspaceTargets(packageConfig);
+            const entries = listWorkspaceLayouts(root);
+
+            if (entries.length === 0) {
+                console.error('No layout JSON found under config/.');
+                return 1;
+            }
+
             let exitCode = 0;
 
-            for (const targetId of targets) {
-                if (targets.length > 1) {
-                    console.log(`\n=== ${targetId} ===`);
+            for (const entry of entries) {
+                if (entries.length > 1) {
+                    console.log(`\n=== ${entry.target} - ${entry.file} ===`);
                 }
-                const code = await runValidateTarget(root, targetId);
+                const code = await runValidateLayout(root, entry.target, entry.layout);
                 if (code !== 0) {
                     exitCode = code;
                 }
@@ -107,16 +130,38 @@ async function runValidate(root, target, all) {
             return exitCode;
         }
 
-        return await runValidateTarget(root, target);
+        return await runValidateLayout(root, target, layout);
     } catch (error) {
         console.error(error instanceof Error ? error.message : error);
         return 1;
     }
 }
 
-function startSaveApi(root, layoutRel, port, target) {
-    const layoutPath = resolve(root, layoutRel);
+function sendJson(res, status, body) {
+    res.writeHead(status, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(body));
+}
 
+function sendError(res, error) {
+    const status = error instanceof UnknownWorkspaceError ? 400 : 500;
+    sendJson(res, status, { error: error instanceof Error ? error.message : String(error) });
+}
+
+function readBody(req) {
+    return new Promise((resolvePromise, reject) => {
+        const chunks = [];
+        req.on('data', (chunk) => chunks.push(chunk));
+        req.on('error', reject);
+        req.on('end', () => resolvePromise(Buffer.concat(chunks).toString('utf8')));
+    });
+}
+
+/**
+ * Serves the layouts found on disk and writes the one the editor picked. Both the target and
+ * the file come from the browser, so every request goes back through the scan before touching
+ * the filesystem.
+ */
+function startSaveApi(root, port, editableTargets) {
     return new Promise((resolvePromise, reject) => {
         const server = createServer(async (req, res) => {
             res.setHeader('Access-Control-Allow-Origin', '*');
@@ -129,55 +174,66 @@ function startSaveApi(root, layoutRel, port, target) {
                 return;
             }
 
-            if (req.method === 'GET' && req.url === '/api/config') {
+            const url = new URL(req.url, 'http://127.0.0.1');
+            const target = url.searchParams.get('target') ?? undefined;
+            const layout = url.searchParams.get('layout') ?? undefined;
+
+            if (req.method === 'GET' && url.pathname === '/api/layouts') {
                 try {
-                    const { context } = await validateGameWorkspace(root, target);
-                    res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(
-                        JSON.stringify({
-                            layout: context.layout,
-                            catalog: context.registry.catalog,
-                            columns: context.registry.columns,
-                            rowHeight: context.registry.rowHeight ?? 90,
-                            layoutPath: context.config.defaultLayout,
-                            target: context.config.target,
-                        }),
+                    const entries = listWorkspaceLayouts(root).filter((entry) =>
+                        editableTargets.includes(entry.target),
                     );
+                    sendJson(res, 200, { entries });
                 } catch (error) {
-                    res.writeHead(500, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: error instanceof Error ? error.message : String(error) }));
+                    sendError(res, error);
                 }
                 return;
             }
 
-            if (req.method === 'PUT' && req.url === '/api/layout') {
-                const chunks = [];
-                req.on('data', (chunk) => chunks.push(chunk));
-                req.on('end', async () => {
-                    try {
-                        const body = JSON.parse(Buffer.concat(chunks).toString('utf8'));
-                        const { context } = await validateGameWorkspace(root, target);
-                        const layoutIssues = validateWorkspaceLayout(
-                            body,
-                            context.registry.catalog,
-                            context.registry.columns,
-                            context.registry.pageVisibilityOptions ?? [],
-                        );
-                        if (hasErrors(layoutIssues)) {
-                            res.writeHead(400, { 'Content-Type': 'application/json' });
-                            res.end(JSON.stringify({ issues: layoutIssues }));
-                            return;
-                        }
+            if (req.method === 'GET' && url.pathname === '/api/config') {
+                try {
+                    const { context } = await validateGameWorkspace(root, target, layout);
+                    sendJson(res, 200, {
+                        layout: context.layout,
+                        catalog: context.registry.catalog,
+                        columns: context.registry.columns,
+                        rowHeight: context.registry.rowHeight ?? 90,
+                        layoutPath: context.config.defaultLayout,
+                        target: context.config.target,
+                    });
+                } catch (error) {
+                    sendError(res, error);
+                }
+                return;
+            }
 
-                        mkdirSync(dirname(layoutPath), { recursive: true });
-                        writeFileSync(layoutPath, `${JSON.stringify(body, null, 2)}\n`, 'utf8');
-                        res.writeHead(200, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ ok: true, path: layoutRel, target: context.config.target }));
-                    } catch (error) {
-                        res.writeHead(500, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ error: error instanceof Error ? error.message : String(error) }));
+            if (req.method === 'PUT' && url.pathname === '/api/layout') {
+                try {
+                    const body = JSON.parse(await readBody(req));
+                    const { context } = await validateGameWorkspace(root, target, layout);
+                    const layoutIssues = validateWorkspaceLayout(
+                        body,
+                        context.registry.catalog,
+                        context.registry.columns,
+                        context.registry.pageVisibilityOptions ?? [],
+                    );
+
+                    if (hasErrors(layoutIssues)) {
+                        sendJson(res, 400, { issues: layoutIssues });
+                        return;
                     }
-                });
+
+                    const layoutPath = resolve(root, context.config.defaultLayout);
+                    mkdirSync(dirname(layoutPath), { recursive: true });
+                    writeFileSync(layoutPath, `${JSON.stringify(body, null, 2)}\n`, 'utf8');
+                    sendJson(res, 200, {
+                        ok: true,
+                        path: context.config.defaultLayout,
+                        target: context.config.target,
+                    });
+                } catch (error) {
+                    sendError(res, error);
+                }
                 return;
             }
 
@@ -190,22 +246,44 @@ function startSaveApi(root, layoutRel, port, target) {
     });
 }
 
-async function runEdit(root, target) {
-    const code = await runValidate(root, target, false);
+/** Every target the editor may switch to needs its registry compiled into the SPA. */
+function registryPaths(root) {
+    const entries = {};
+
+    for (const entry of listWorkspaceLayouts(root)) {
+        if (entries[entry.target]) {
+            continue;
+        }
+
+        const config = loadGcWorkspaceConfig(root, entry.target);
+        const registry = resolve(root, resolveRegistryPath(config));
+
+        if (existsSync(registry)) {
+            entries[entry.target] = registry;
+        } else {
+            console.warn(`No editor registry for target "${entry.target}" (${registry}), skipping it.`);
+        }
+    }
+
+    return entries;
+}
+
+async function runEdit(root, target, layout, editorPort) {
+    const code = await runValidate(root, target, layout, false);
     if (code !== 0) {
         console.error('Fix validation errors before opening the editor.');
         return code;
     }
 
-    const config = loadGcWorkspaceConfig(root, target);
-    const registryPath = resolve(root, resolveRegistryPath(config));
-    const layoutRel = config.defaultLayout;
-    const apiPort = 4311;
-    const editorPort = 4310;
+    const config = loadGcWorkspaceConfig(root, target, layout);
+    const registries = registryPaths(root);
+    const layouts = listWorkspaceLayouts(root).filter((entry) => entry.target in registries);
+    const apiPort = editorPort + 1;
 
-    const api = await startSaveApi(root, layoutRel, apiPort, config.target);
+    const api = await startSaveApi(root, apiPort, Object.keys(registries));
 
-    const stageRoot = resolve(root, '.gc-workspace');
+    // Staged per port so a second instance never pulls the rug from under the first one.
+    const stageRoot = resolve(root, '.gc-workspace', String(editorPort));
     const editorRoot = resolve(stageRoot, 'editor');
     const vendorRoot = resolve(stageRoot, 'vendor');
 
@@ -222,7 +300,9 @@ async function runEdit(root, target) {
         env: {
             ...process.env,
             GC_GAME_ROOT: root,
-            GC_REGISTRY: registryPath,
+            GC_REGISTRIES: JSON.stringify(registries),
+            GC_START_TARGET: config.target,
+            GC_START_LAYOUT: config.defaultLayout,
             GC_EDITOR_ROOT: editorRoot,
             GC_VENDOR_ROOT: vendorRoot,
             GC_API_URL: `http://127.0.0.1:${apiPort}`,
@@ -230,9 +310,9 @@ async function runEdit(root, target) {
         stdio: 'inherit',
     });
 
-    console.log(`\nTarget: ${config.target}`);
-    console.log(`Editor: http://127.0.0.1:${editorPort}`);
-    console.log(`Saving to: ${layoutRel}`);
+    console.log(`\nEditor: http://127.0.0.1:${editorPort}`);
+    console.log(`Opening: ${config.target} - ${config.defaultLayout}`);
+    console.log(`Layouts found: ${layouts.map((entry) => entry.layout).join(', ')}`);
     console.log('Press Ctrl+C to stop.\n');
 
     const shutdown = () => {
@@ -260,18 +340,18 @@ try {
     usage();
 }
 
-const { command, root, target, all } = parsed;
+const { command, root, target, layout, port, all } = parsed;
 
 if (command === 'validate') {
-    process.exit(await runValidate(root, target, all));
+    process.exit(await runValidate(root, target, layout, all));
 }
 
 if (command === 'edit') {
     if (all) {
-        console.error('The edit command requires a single target. Use --target or rely on defaultTarget.');
+        console.error('The edit command opens one layout at a time; switch targets from the editor itself.');
         process.exit(1);
     }
-    process.exit(await runEdit(root, target));
+    process.exit(await runEdit(root, target, layout, port));
 }
 
 usage();

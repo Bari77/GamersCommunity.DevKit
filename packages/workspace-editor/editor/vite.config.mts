@@ -69,23 +69,37 @@ function upperCaseDrive(path: string): string {
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '');
     const gameRoot = upperCaseDrive(env.GC_GAME_ROOT ?? process.env.GC_GAME_ROOT ?? '');
-    const registryPath = upperCaseDrive(env.GC_REGISTRY ?? process.env.GC_REGISTRY ?? '');
+    const registriesJson = env.GC_REGISTRIES ?? process.env.GC_REGISTRIES ?? '';
     const editorRoot = upperCaseDrive(env.GC_EDITOR_ROOT ?? process.env.GC_EDITOR_ROOT ?? '');
     const vendorRoot = upperCaseDrive(env.GC_VENDOR_ROOT ?? process.env.GC_VENDOR_ROOT ?? '');
     const apiUrl = env.GC_API_URL ?? process.env.GC_API_URL ?? 'http://127.0.0.1:4311';
+    const startTarget = env.GC_START_TARGET ?? process.env.GC_START_TARGET ?? '';
+    const startLayout = env.GC_START_LAYOUT ?? process.env.GC_START_LAYOUT ?? '';
 
-    if (!gameRoot || !registryPath || !editorRoot || !vendorRoot) {
+    if (!gameRoot || !registriesJson || !editorRoot || !vendorRoot) {
         throw new Error(
-            'GC_GAME_ROOT, GC_REGISTRY, GC_EDITOR_ROOT and GC_VENDOR_ROOT must be set by the gc-workspace edit command.',
+            'GC_GAME_ROOT, GC_REGISTRIES, GC_EDITOR_ROOT and GC_VENDOR_ROOT must be set by the gc-workspace edit command.',
         );
     }
+
+    const registries = Object.entries(JSON.parse(registriesJson) as Record<string, string>).map(
+        ([target, path]) => [target, upperCaseDrive(path)] as const,
+    );
 
     const { baseUrl: gameBaseUrl, aliases: gameAliases } = readGamePaths(gameRoot);
     const gameNodeModules = resolve(gameRoot, 'node_modules');
     const widgetsRoot = resolve(vendorRoot, 'gc-widgets');
 
+    // One entry per target, imported on demand so switching layouts never reloads the page.
+    const registryLoaders = registries
+        .map(
+            ([target, path]) =>
+                `    ${JSON.stringify(target)}: () => import(${JSON.stringify(path)}).then((m) => m.gameWorkspaceEditorRegistry),`,
+        )
+        .join('\n');
+
     const virtualModules: Record<string, string> = {
-        'virtual:game-editor-registry': `export { gameWorkspaceEditorRegistry as gameWorkspaceRegistry } from ${JSON.stringify(registryPath)};`,
+        'virtual:game-editor-registry': `export const gameWorkspaceRegistries = {\n${registryLoaders}\n};\n`,
         'virtual:game-global-styles': readGameStyles(gameRoot)
             .map((path) => `import ${JSON.stringify(path)};`)
             .join('\n'),
@@ -114,6 +128,8 @@ export default defineConfig(({ mode }) => {
         ],
         define: {
             'import.meta.env.GC_API_URL': JSON.stringify(apiUrl),
+            'import.meta.env.GC_START_TARGET': JSON.stringify(startTarget),
+            'import.meta.env.GC_START_LAYOUT': JSON.stringify(startLayout),
         },
         server: {
             port: 4310,

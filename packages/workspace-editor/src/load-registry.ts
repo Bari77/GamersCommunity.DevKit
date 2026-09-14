@@ -89,8 +89,8 @@ export function loadLayoutJson(gameRoot: string, layoutRel: string): unknown {
     return JSON.parse(readFileSync(layoutPath, 'utf8')) as unknown;
 }
 
-export async function loadWorkspaceContext(gameRoot: string, target?: string) {
-    const config = loadGcWorkspaceConfig(gameRoot, target);
+export async function loadWorkspaceContext(gameRoot: string, target?: string, layoutRel?: string) {
+    const config = loadGcWorkspaceConfig(gameRoot, target, layoutRel);
     const registry = await loadGameRegistry(gameRoot, config.catalog);
     const layoutPath = resolve(gameRoot, config.defaultLayout);
     const layout = loadLayoutJson(gameRoot, config.defaultLayout);
@@ -104,8 +104,8 @@ export async function loadWorkspaceContext(gameRoot: string, target?: string) {
     };
 }
 
-export async function validateGameWorkspace(gameRoot: string, target?: string) {
-    const context = await loadWorkspaceContext(gameRoot, target);
+export async function validateGameWorkspace(gameRoot: string, target?: string, layoutRel?: string) {
+    const context = await loadWorkspaceContext(gameRoot, target, layoutRel);
     const { validateWorkspaceLayout } = await import('./validate.js');
     const issues = validateWorkspaceLayout(
         context.layout,

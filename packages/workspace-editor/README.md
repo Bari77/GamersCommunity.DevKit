@@ -4,6 +4,8 @@ Standalone CLI and local SPA to validate and edit a game's **default workspace**
 
 Games declare widget catalogs under `src/app/features/{scope}/workspace/` and default layouts under `config/{target}/`. The tool runs from the game front directory — nothing is added to the production bundle or routes.
 
+Layouts are **scanned**, not enumerated: every `*.json` sitting next to a target's default layout is offered in the editor's header picker, and switching swaps the catalog, the registry and the audiences of that target without reloading the page. A folder under `config/` that is not declared in `gcWorkspace.targets` still shows up when the matching `widget-catalog.ts` exists.
+
 ## Folder convention
 
 Each workspace **target** (`player`, `guild`, `team`, …) maps to a feature scope:
@@ -91,17 +93,22 @@ npm run workspace:validate
 npm run workspace:edit
 gc-workspace validate --target guild
 gc-workspace edit --target player
+gc-workspace edit --layout config/player/workspace.newbie.json
+gc-workspace edit --port 4320
 ```
 
 | Command | Behaviour |
 |---------|-----------|
 | `validate` | Bundles the catalog module in Node, validates JSON, exit code 1 on errors |
-| `validate --all` | Validates every configured target |
-| `edit` | Validates one target, starts save API on `:4311`, Vite editor on `:4310`, writes JSON on Save |
+| `validate --all` | Validates every layout of every target |
+| `edit` | Validates the opened layout, starts the save API on `port + 1`, the Vite editor on `port` (4310 by default), writes JSON on Save |
 
-`edit` copies the editor app and the raw-TypeScript DevKit widget sources into `.gc-workspace/`
-at the root of the game front, because the Angular compiler plugin ignores anything under
-`node_modules`. Add `/.gc-workspace` to the game `.gitignore`.
+`--target` and `--layout` only pick what the editor opens first; the picker still lists everything
+the scan found.
+
+`edit` copies the editor app and the raw-TypeScript DevKit widget sources into
+`.gc-workspace/{port}/` at the root of the game front, because the Angular compiler plugin ignores
+anything under `node_modules`. Add `/.gc-workspace` to the game `.gitignore`.
 
 The editor mirrors the game front: it compiles `src/**/*.ts`, honours the `paths` and `baseUrl`
 of `tsconfig.json`, and loads the global stylesheets declared on the Angular build target of

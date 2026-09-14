@@ -1,4 +1,14 @@
-export { listWorkspaceTargets, loadGcWorkspaceConfig, loadGcWorkspacePackageConfig, resolveRegistryPath, resolveTargetConfig } from './config.js';
+export {
+    discoverWorkspaceTargets,
+    listTargetLayouts,
+    listWorkspaceLayouts,
+    listWorkspaceTargets,
+    loadGcWorkspaceConfig,
+    loadGcWorkspacePackageConfig,
+    resolveRegistryPath,
+    resolveTargetConfig,
+    UnknownWorkspaceError,
+} from './config.js';
 export { loadGameRegistry, loadLayoutJson, loadWorkspaceContext, validateGameWorkspace } from './load-registry.js';
 export type {
     GameWorkspaceRegistry,
@@ -8,5 +18,6 @@ export type {
     LoadedWorkspaceContext,
     ValidationIssue,
     ValidationSeverity,
+    WorkspaceLayoutEntry,
 } from './types.js';
 export { formatIssues, hasErrors, validateWorkspaceLayout } from './validate.js';

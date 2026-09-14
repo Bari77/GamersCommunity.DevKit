@@ -1,18 +1,29 @@
 <header class="shell">
-    <div>
-        <h1>Player workspace editor</h1>
-        @if (layoutPath()) {
-            <p class="shell__path">{{ layoutPath() }}</p>
-        }
+    <div class="shell__identity">
+        <h1>Workspace editor</h1>
+        <p class="shell__hint">Save writes the layout JSON in the game repo. Existing profiles are unchanged.</p>
     </div>
-    <p class="shell__hint">Save writes the default layout JSON in the game repo. Existing player profiles are unchanged.</p>
+
+    <div class="shell__picker">
+        <span class="shell__label">Layout</span>
+        <gc-widget-select
+            class="shell__select"
+            ariaLabel="Layout to edit"
+            [options]="options()"
+            [value]="currentId()"
+            [disabled]="loading() || saving()"
+            (valueChange)="open($event)"
+        />
+    </div>
 </header>
 
 @if (error()) {
     <p class="shell__error" role="alert">{{ error() }}</p>
 }
 
-@if (workspace(); as current) {
+@if (loading()) {
+    <p class="shell__loading">Loading workspace…</p>
+} @else if (workspace(); as current) {
     <gc-widget-workspace
         class="workspace"
         [workspace]="current"
@@ -30,6 +41,4 @@
             <ng-container *ngComponentOutlet="host; inputs: { preview: true }" />
         }
     </gc-widget-workspace>
-} @else if (!error()) {
-    <p class="shell__loading">Loading workspace…</p>
 }
