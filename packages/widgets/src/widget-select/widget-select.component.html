@@ -25,7 +25,15 @@
 </button>
 
 @if (open()) {
-    <ul class="gc-select__panel" role="listbox" [id]="id + '-list'" [attr.aria-label]="ariaLabel() || null">
+    <!-- Options are not focusable, so a default mousedown would blur the trigger and tear the panel
+         down before the click lands. Focus stays on the combobox, as the listbox pattern expects. -->
+    <ul
+        class="gc-select__panel"
+        role="listbox"
+        [id]="id + '-list'"
+        [attr.aria-label]="ariaLabel() || null"
+        (mousedown)="$event.preventDefault()"
+    >
         @for (option of options(); track option.value; let index = $index) {
             <li
                 class="gc-select__option"
