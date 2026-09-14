@@ -64,7 +64,7 @@ export class WidgetWorkspaceComponent {
     public readonly canEdit = input(false);
 
     /** Sample data mode for the standalone layout editor. */
-    public readonly preview = input(false);
+    public readonly sampleData = input(false, { alias: 'preview' });
 
     public readonly saving = input(false);
 
@@ -153,6 +153,8 @@ export class WidgetWorkspaceComponent {
         const entry = widget ? findCatalogEntry(this.catalog(), widget.type) : undefined;
         return widget && entry ? { widget, entry } : null;
     });
+
+    protected readonly previewActive = computed(() => this.sampleData());
 
     public constructor() {
         effect(() => {
