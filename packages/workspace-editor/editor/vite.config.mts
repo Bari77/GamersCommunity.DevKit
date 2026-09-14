@@ -1,16 +1,19 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { isAbsolute, relative, resolve } from 'node:path';
 import angular from '@analogjs/vite-plugin-angular';
 import { defineConfig, loadEnv, type Plugin } from 'vite';
 
-function readGamePaths(gameRoot: string): { baseUrl: string; aliases: Record<string, string> } {
+type GamePaths = { baseUrl: string; paths: Record<string, string[]>; aliases: Record<string, string> };
+
+function readGamePaths(gameRoot: string): GamePaths {
     const raw = JSON.parse(readFileSync(resolve(gameRoot, 'tsconfig.json'), 'utf8')) as {
         compilerOptions?: { baseUrl?: string; paths?: Record<string, string[]> };
     };
     const baseUrl = resolve(gameRoot, raw.compilerOptions?.baseUrl ?? 'src');
+    const paths = raw.compilerOptions?.paths ?? {};
     const aliases: Record<string, string> = {};
 
-    for (const [key, targets] of Object.entries(raw.compilerOptions?.paths ?? {})) {
+    for (const [key, targets] of Object.entries(paths)) {
         const target = targets[0];
         if (!target) {
             continue;
@@ -18,7 +21,76 @@ function readGamePaths(gameRoot: string): { baseUrl: string; aliases: Record<str
         aliases[key.replace(/\/\*$/, '')] = resolve(baseUrl, target.replace(/\/\*$/, ''));
     }
 
-    return { baseUrl, aliases };
+    return { baseUrl, paths, aliases };
+}
+
+function posix(path: string): string {
+    return path.replace(/\\/g, '/');
+}
+
+/**
+ * The Angular compiler resolves specifiers through the tsconfig, not through the Vite aliases, so
+ * it needs the very same mappings: an unresolved widget import makes it drop the component from
+ * the compilation without a word, and the browser then falls back to the absent JIT compiler.
+ */
+function writeEditorTsConfig(editorRoot: string, gameRoot: string, widgetsRoot: string, game: GamePaths): string {
+    const tsconfigPath = resolve(editorRoot, 'tsconfig.app.json');
+    const widgetsSrc = posix(resolve(widgetsRoot, 'src'));
+
+    writeFileSync(
+        tsconfigPath,
+        `${JSON.stringify(
+            {
+                extends: './tsconfig.json',
+                compilerOptions: {
+                    baseUrl: posix(game.baseUrl),
+                    paths: {
+                        ...game.paths,
+                        '@bari77/gc-widgets': [`${widgetsSrc}/index.ts`],
+                        '@bari77/gc-widgets/*': [`${widgetsSrc}/*`],
+                    },
+                    outDir: './dist/out-tsc',
+                },
+                angularCompilerOptions: {
+                    enableI18nLegacyMessageIdFormat: false,
+                    strictInjectionParameters: true,
+                    strictInputAccessModifiers: true,
+                    strictTemplates: true,
+                },
+                include: [
+                    `${posix(resolve(editorRoot, 'src'))}/**/*.ts`,
+                    `${posix(gameRoot)}/src/**/*.ts`,
+                    `${widgetsSrc}/**/*.ts`,
+                ],
+            },
+            null,
+            4,
+        )}\n`,
+        'utf8',
+    );
+
+    return tsconfigPath;
+}
+
+/**
+ * Last line of defence against the silent skip described above: a component served with its
+ * decorator untouched would only fail once Angular bootstraps it in the browser.
+ */
+function aotGuard(): Plugin {
+    return {
+        name: 'gc-aot-guard',
+        enforce: 'post',
+        transform(code, id) {
+            if (!id.endsWith('.ts') || /ɵcmp|ɵdir|ɵpipe/.test(code)) {
+                return;
+            }
+            if (/__decorate\(\[\s*(Component|Directive|Pipe)\(/.test(code)) {
+                this.error(
+                    `${id} was not compiled ahead of time. Check that every specifier it imports resolves through the tsconfig paths of the game front.`,
+                );
+            }
+        },
+    };
 }
 
 /** The editor must render with the same global stylesheets as the game front itself. */
@@ -86,9 +158,10 @@ export default defineConfig(({ mode }) => {
         ([target, path]) => [target, upperCaseDrive(path)] as const,
     );
 
-    const { baseUrl: gameBaseUrl, aliases: gameAliases } = readGamePaths(gameRoot);
+    const game = readGamePaths(gameRoot);
     const gameNodeModules = resolve(gameRoot, 'node_modules');
     const widgetsRoot = resolve(vendorRoot, 'gc-widgets');
+    const tsconfig = writeEditorTsConfig(editorRoot, gameRoot, widgetsRoot, game);
 
     // One entry per target, imported on demand so switching layouts never reloads the page.
     const registryLoaders = registries
@@ -110,12 +183,13 @@ export default defineConfig(({ mode }) => {
         cacheDir: resolve(editorRoot, '..', '.vite'),
         publicDir: false,
         plugins: [
-            baseUrlResolver(gameBaseUrl),
+            baseUrlResolver(game.baseUrl),
             angular({
-                tsconfig: resolve(editorRoot, 'tsconfig.app.json'),
+                tsconfig,
                 workspaceRoot: gameRoot,
                 include: [workspaceGlob(gameRoot, widgetsRoot, '/src/**/*.ts'), '/src/**/*.ts'],
             }),
+            aotGuard(),
             {
                 name: 'gc-game-sources',
                 resolveId(id) {
@@ -142,7 +216,7 @@ export default defineConfig(({ mode }) => {
         },
         resolve: {
             alias: [
-                ...Object.entries(gameAliases).map(([find, replacement]) => ({ find, replacement })),
+                ...Object.entries(game.aliases).map(([find, replacement]) => ({ find, replacement })),
                 { find: /^@bari77\/gc-widgets$/, replacement: resolve(widgetsRoot, 'src/index.ts') },
                 { find: /^@bari77\/gc-widgets\/(.*)$/, replacement: `${resolve(widgetsRoot, 'src')}/$1` },
                 { find: '@bari77/gc-theme', replacement: resolve(gameNodeModules, '@bari77/gc-theme/src/global.scss') },
