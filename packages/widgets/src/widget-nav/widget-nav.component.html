@@ -10,7 +10,7 @@
                     (click)="select.emit(page.id)"
                 ></button>
 
-                <span class="gc-nav__title">
+                <span class="gc-nav__title" (focusin)="select.emit(page.id)">
                     @if (page.icon) {
                         <span class="gc-nav__icon" aria-hidden="true">{{ page.icon }}</span>
                     }
@@ -40,6 +40,7 @@
                                 [value]="currentVisibility(page)"
                                 [ariaLabel]="visibilityLabel()"
                                 [title]="visibilityLabel()"
+                                (focusin)="select.emit(page.id)"
                                 (valueChange)="visibility.emit({ id: page.id, visibility: $event })"
                             />
                         }

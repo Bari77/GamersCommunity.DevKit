@@ -38,6 +38,11 @@
     background: var(--gc-widget-hover, rgba(255, 255, 255, 0.05));
 }
 
+/* Without this, the open audience panel is painted over by the cards below it. */
+.gc-nav__card:focus-within {
+    z-index: 3;
+}
+
 .gc-nav__card--active {
     border-color: var(--gc-widget-accent, #3366ff);
     background: var(--gc-widget-hover, rgba(255, 255, 255, 0.08));
