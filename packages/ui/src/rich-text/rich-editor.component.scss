@@ -1,11 +1,14 @@
 :host {
     display: block;
+    color: var(--text-basic-color, inherit);
 }
 
+/* Nebular cosmic + gc-theme: dark fallbacks instead of light nb-defaults */
 .gc-rich-editor {
-    border: 1px solid var(--border-basic-color-3, #edf1f7);
+    border: 1px solid var(--border-basic-color-4, var(--gc-surface-2, #162033));
     border-radius: var(--border-radius, 0.25rem);
-    background: var(--input-basic-background-color, #f7f9fc);
+    background-color: var(--input-basic-background-color, var(--gc-surface-1, #0e1524));
+    color: var(--input-basic-text-color, var(--text-basic-color, inherit));
     overflow: hidden;
 }
 
@@ -20,8 +23,8 @@
     align-items: center;
     gap: 0.25rem;
     padding: 0.35rem 0.5rem;
-    border-bottom: 1px solid var(--border-basic-color-3, #edf1f7);
-    background: var(--background-basic-color-2, #fff);
+    border-bottom: 1px solid var(--border-basic-color-4, var(--gc-surface-2, #162033));
+    background-color: var(--background-basic-color-2, var(--gc-surface-2, #162033));
 }
 
 .gc-rich-editor__toolbar button {
@@ -31,16 +34,16 @@
     padding: 0.2rem 0.45rem;
     font-size: 0.85rem;
     cursor: pointer;
-    color: var(--text-basic-color, #222b45);
+    color: inherit;
 }
 
-.gc-rich-editor__toolbar button:hover {
-    background: var(--background-basic-color-3, #edf1f7);
+.gc-rich-editor__toolbar button:hover:not(:disabled) {
+    background: var(--background-basic-color-3, var(--gc-surface-2, #162033));
 }
 
 .gc-rich-editor__toolbar button.is-active {
-    background: var(--color-primary-transparent-200, rgba(51, 102, 255, 0.16));
-    color: var(--color-primary-default, #3366ff);
+    background: var(--color-primary-transparent-200, rgba(51, 102, 255, 0.2));
+    color: var(--color-primary-default, var(--gc-accent-2, #3dd6ff));
 }
 
 .gc-rich-editor__toolbar button:disabled {
@@ -50,6 +53,7 @@
 
 .gc-rich-editor__colors {
     display: inline-flex;
+    align-items: center;
     gap: 0.15rem;
     margin-left: 0.15rem;
 }
@@ -59,35 +63,53 @@
     height: 1.1rem;
     padding: 0;
     border-radius: 50%;
-    border: 1px solid rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--border-basic-color-5, rgba(255, 255, 255, 0.2));
+    box-sizing: border-box;
 }
 
 .gc-rich-editor__surface {
     min-height: 5.5rem;
-    padding: 0.5rem 0.65rem;
+    padding: 0.65rem 0.75rem;
     outline: none;
+    background-color: transparent;
 }
 
 .gc-rich-editor--compact .gc-rich-editor__surface {
     min-height: 2.75rem;
+    padding: 0.45rem 0.6rem;
 }
 
 .gc-rich-editor__surface :global(.ProseMirror) {
     outline: none;
     min-height: inherit;
+    color: inherit;
+    background: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: 1.5;
+}
+
+.gc-rich-editor__surface :global(.ProseMirror p) {
+    margin: 0 0 0.35rem;
+}
+
+.gc-rich-editor__surface :global(.ProseMirror p:last-child) {
+    margin-bottom: 0;
 }
 
 .gc-rich-editor__surface :global(.ProseMirror p.is-editor-empty:first-child::before) {
     content: attr(data-placeholder);
     float: left;
-    color: var(--text-hint-color, #8f9bb3);
+    color: var(--text-hint-color, rgba(255, 255, 255, 0.45));
     pointer-events: none;
     height: 0;
 }
 
 .gc-rich-editor__counter {
-    padding: 0.2rem 0.55rem 0.35rem;
+    padding: 0.25rem 0.75rem 0.45rem;
     font-size: 0.75rem;
     text-align: right;
-    color: var(--text-hint-color, #8f9bb3);
+    color: var(--text-hint-color, rgba(255, 255, 255, 0.45));
+    border-top: 1px solid var(--border-basic-color-4, var(--gc-surface-2, #162033));
+    background-color: var(--background-basic-color-2, var(--gc-surface-2, #162033));
 }

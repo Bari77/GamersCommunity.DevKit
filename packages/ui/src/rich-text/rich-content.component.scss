@@ -1,10 +1,12 @@
 :host {
     display: block;
+    color: var(--text-basic-color, inherit);
 }
 
 .gc-rich-content {
     line-height: 1.5;
     overflow-wrap: anywhere;
+    color: inherit;
 
     :where(p) {
         margin: 0 0 0.5rem;
@@ -20,7 +22,7 @@
     }
 
     :where(a) {
-        color: var(--link-text-color, var(--color-primary-default, #598bff));
+        color: var(--link-text-color, var(--color-primary-default, var(--gc-accent-2, #3dd6ff)));
         text-decoration: underline;
     }
 
