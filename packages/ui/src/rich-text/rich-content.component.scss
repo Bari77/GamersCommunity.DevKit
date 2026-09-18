@@ -9,11 +9,7 @@
     color: inherit;
 
     :where(p) {
-        margin: 0 0 0.5rem;
-    }
-
-    :where(p:last-child) {
-        margin-bottom: 0;
+        margin: 0;
     }
 
     :where(ul, ol) {

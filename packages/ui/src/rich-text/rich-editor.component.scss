@@ -1,6 +1,12 @@
 :host {
     display: block;
     color: var(--text-basic-color, inherit);
+    outline: none;
+}
+
+:host(:focus-within) {
+    outline: none;
+    box-shadow: none;
 }
 
 /* Nebular cosmic + gc-theme: dark fallbacks instead of light nb-defaults */
@@ -10,6 +16,12 @@
     background-color: var(--input-basic-background-color, var(--gc-surface-1, #0e1524));
     color: var(--input-basic-text-color, var(--text-basic-color, inherit));
     overflow: hidden;
+
+    &:focus-within {
+        outline: none;
+        box-shadow: none;
+        border-color: var(--border-basic-color-4, var(--gc-surface-2, #162033));
+    }
 }
 
 .gc-rich-editor--compact .gc-rich-editor__toolbar {
@@ -71,6 +83,7 @@
     min-height: 5.5rem;
     padding: 0.65rem 0.75rem;
     outline: none;
+    box-shadow: none;
     background-color: transparent;
 }
 
@@ -79,8 +92,11 @@
     padding: 0.45rem 0.6rem;
 }
 
-.gc-rich-editor__surface :global(.ProseMirror) {
+.gc-rich-editor__surface :global(.ProseMirror),
+.gc-rich-editor__surface :global(.ProseMirror:focus),
+.gc-rich-editor__surface :global(.ProseMirror-focused) {
     outline: none;
+    box-shadow: none;
     min-height: inherit;
     color: inherit;
     background: transparent;
@@ -89,12 +105,9 @@
     line-height: 1.5;
 }
 
+/* TipTap wraps each line in <p>; default margins blow up line spacing */
 .gc-rich-editor__surface :global(.ProseMirror p) {
-    margin: 0 0 0.35rem;
-}
-
-.gc-rich-editor__surface :global(.ProseMirror p:last-child) {
-    margin-bottom: 0;
+    margin: 0;
 }
 
 .gc-rich-editor__surface :global(.ProseMirror p.is-editor-empty:first-child::before) {
