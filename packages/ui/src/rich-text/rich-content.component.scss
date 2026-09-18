@@ -1,0 +1,32 @@
+:host {
+    display: block;
+}
+
+.gc-rich-content {
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+
+    :where(p) {
+        margin: 0 0 0.5rem;
+    }
+
+    :where(p:last-child) {
+        margin-bottom: 0;
+    }
+
+    :where(ul, ol) {
+        margin: 0.25rem 0 0.5rem;
+        padding-left: 1.25rem;
+    }
+
+    :where(a) {
+        color: var(--link-text-color, var(--color-primary-default, #598bff));
+        text-decoration: underline;
+    }
+
+    :where(h2, h3) {
+        margin: 0.5rem 0 0.35rem;
+        font-size: inherit;
+        font-weight: 600;
+    }
+}

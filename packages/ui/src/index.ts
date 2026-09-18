@@ -5,3 +5,6 @@ export { DecisionPromptComponent } from './decision-prompt/decision-prompt.compo
 export { ModalComponent } from './modal/modal.component';
 export { SkeletonComponent } from './skeleton/skeleton.component';
 export { SkeletonTextComponent } from './skeleton-text/skeleton-text.component';
+export { RichContentComponent } from './rich-text/rich-content.component';
+export { RichEditorComponent } from './rich-text/rich-editor.component';
+export { isRichHtmlBlank, stripRichHtmlPlainText } from './rich-text/rich-html.utils';

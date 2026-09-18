@@ -1,0 +1,55 @@
+<div class="gc-rich-editor" [class.gc-rich-editor--compact]="compact()">
+    <div class="gc-rich-editor__toolbar" role="toolbar" aria-label="Formatting">
+        <button type="button" [class.is-active]="isActive('bold')" [disabled]="disabled()" (click)="toggleBold()">
+            <strong>B</strong>
+        </button>
+        <button type="button" [class.is-active]="isActive('italic')" [disabled]="disabled()" (click)="toggleItalic()">
+            <em>I</em>
+        </button>
+        <button
+            type="button"
+            [class.is-active]="isActive('underline')"
+            [disabled]="disabled()"
+            (click)="toggleUnderline()"
+        >
+            <span style="text-decoration: underline">U</span>
+        </button>
+        @if (!compact()) {
+            <button
+                type="button"
+                [class.is-active]="isActive('bulletList')"
+                [disabled]="disabled()"
+                (click)="toggleBulletList()"
+            >
+                •
+            </button>
+            <button
+                type="button"
+                [class.is-active]="isActive('orderedList')"
+                [disabled]="disabled()"
+                (click)="toggleOrderedList()"
+            >
+                1.
+            </button>
+            <button type="button" [class.is-active]="isActive('link')" [disabled]="disabled()" (click)="setLink()">
+                Link
+            </button>
+        }
+        <span class="gc-rich-editor__colors" aria-label="Text color">
+            @for (color of swatchColors; track color) {
+                <button
+                    type="button"
+                    [style.background]="color"
+                    [disabled]="disabled()"
+                    [attr.aria-label]="color"
+                    (click)="setColor(color)"
+                ></button>
+            }
+            <button type="button" [disabled]="disabled()" (click)="unsetColor()">✕</button>
+        </span>
+    </div>
+    <div #surface class="gc-rich-editor__surface"></div>
+    @if (showCounter()) {
+        <div class="gc-rich-editor__counter">{{ counterLabel() }}</div>
+    }
+</div>
