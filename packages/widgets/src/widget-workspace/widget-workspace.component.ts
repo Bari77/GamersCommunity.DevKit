@@ -108,6 +108,8 @@ export class WidgetWorkspaceComponent {
 
     public readonly settingsLabel = input('Widget settings');
 
+    public readonly editDataLabel = input('Edit data');
+
     public readonly removeWidgetLabel = input('Remove widget');
 
     public readonly widgetTitleLabel = input('Widget title');

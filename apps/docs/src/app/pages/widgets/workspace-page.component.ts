@@ -58,6 +58,7 @@ import { PageComponent } from '../../shared/page.component';
                         hintLabel="Glissez un widget par son en-tête pour le déplacer, ou par son coin pour le redimensionner."
                         newPageTitle="Nouvelle page"
                         settingsLabel="Réglages du widget"
+                        editDataLabel="Éditer les données"
                         removeWidgetLabel="Retirer le widget"
                         widgetTitleLabel="Titre du widget"
                         widgetTitleHint="Laissez vide pour masquer l'en-tête."
@@ -324,7 +325,8 @@ export class WorkspacePageComponent {
             name: 'canEdit',
             type: 'boolean',
             default: 'false',
-            description: "Affiche la barre d'édition et la roue crantée. À false, le tableau est en lecture seule.",
+            description:
+                "Affiche la barre d'édition, le crayon au survol et la roue crantée. À false, le tableau est en lecture seule.",
         },
         {
             name: 'saving',
@@ -389,6 +391,12 @@ export class WorkspacePageComponent {
             type: 'string',
             default: "'Widget settings'",
             description: 'Étiquette de la roue crantée.',
+        },
+        {
+            name: 'editDataLabel',
+            type: 'string',
+            default: "'Edit data'",
+            description: 'Infobulle du crayon affiché au survol, hors mode mise en page.',
         },
         {
             name: 'removeWidgetLabel',

@@ -1,4 +1,4 @@
-import { Directive, TemplateRef, inject, input } from '@angular/core';
+import { booleanAttribute, Directive, TemplateRef, inject, input } from '@angular/core';
 import { registerWidgetTemplateDef } from './widget-def.registry';
 import { WidgetTemplateContext } from './widget-template';
 
@@ -17,6 +17,12 @@ export class WidgetDefDirective {
      * for its type matches no widget instead of throwing while the grid looks through the list.
      */
     public readonly type = input('', { alias: 'gcWidget' });
+
+    /**
+     * The hover pencil then starts in-place data editing (via `editingData` / `stopDataEdit` on
+     * the template context) instead of opening the settings panel.
+     */
+    public readonly editable = input(false, { alias: 'gcWidgetEditable', transform: booleanAttribute });
 
     public readonly template = inject<TemplateRef<WidgetTemplateContext>>(TemplateRef);
 

@@ -2,7 +2,11 @@
     <gridster [options]="options()">
         @for (item of items(); track item.id) {
             <gridster-item [item]="item">
-                <section class="gc-widget" [class.gc-widget--editing]="editing()">
+                <section
+                    class="gc-widget"
+                    [class.gc-widget--editing]="editing()"
+                    [class.gc-widget--data-editing]="isEditingData(item)"
+                >
                     <!-- Leaving the title blank is how an owner asks for a bare widget. Edit mode
                          keeps the bar anyway: it is what the widget is dragged and removed by. -->
                     @if (editing() || item.title) {
@@ -16,13 +20,16 @@
                                     (mousedown)="$event.stopPropagation()"
                                     (touchstart)="$event.stopPropagation()"
                                 >
+                                    @if (!editing() && canConfigure()) {
+                                        <ng-container [ngTemplateOutlet]="dataEditButton" [ngTemplateOutletContext]="{ $implicit: item }" />
+                                    }
                                     <button
                                         type="button"
                                         class="gc-widget__action"
                                         [class.gc-widget__action--quiet]="!editing()"
                                         [attr.aria-label]="settingsLabel()"
                                         [title]="settingsLabel()"
-                                        (click)="configure.emit(item.id)"
+                                        (click)="onConfigure(item)"
                                     >
                                         &#9881;
                                     </button>
@@ -42,13 +49,18 @@
                             }
                         </header>
                     } @else if (canConfigure()) {
-                        <span class="gc-widget__actions gc-widget__actions--floating">
+                        <span
+                            class="gc-widget__actions gc-widget__actions--floating"
+                            (mousedown)="$event.stopPropagation()"
+                            (touchstart)="$event.stopPropagation()"
+                        >
+                            <ng-container [ngTemplateOutlet]="dataEditButton" [ngTemplateOutletContext]="{ $implicit: item }" />
                             <button
                                 type="button"
                                 class="gc-widget__action gc-widget__action--quiet"
                                 [attr.aria-label]="settingsLabel()"
                                 [title]="settingsLabel()"
-                                (click)="configure.emit(item.id)"
+                                (click)="onConfigure(item)"
                             >
                                 &#9881;
                             </button>
@@ -56,7 +68,7 @@
                     }
                     <div class="gc-widget__body">
                         @if (templateFor(item.type); as tpl) {
-                            <ng-container [ngTemplateOutlet]="tpl" [ngTemplateOutletContext]="item.context" />
+                            <ng-container [ngTemplateOutlet]="tpl" [ngTemplateOutletContext]="templateContext(item)" />
                         } @else if (item.type === twitchType) {
                             @if (showTwitchPreview(item.settings)) {
                                 <div class="gc-twitch__preview" aria-hidden="true">
@@ -80,3 +92,16 @@
         <p class="gc-widget-grid__empty">{{ emptyLabel() }}</p>
     }
 </div>
+
+<ng-template #dataEditButton let-item>
+    <button
+        type="button"
+        class="gc-widget__action gc-widget__action--quiet"
+        [class.gc-widget__action--current]="isEditingData(item)"
+        [attr.aria-label]="editDataLabel()"
+        [title]="editDataLabel()"
+        (click)="onEditData(item)"
+    >
+        &#9998;
+    </button>
+</ng-template>

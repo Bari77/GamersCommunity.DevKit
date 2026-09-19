@@ -46,7 +46,7 @@ type GridWidget = GridsterItemConfig & {
     /** Catalog name, shown only in edit mode to tell an untitled widget apart. */
     label: string;
     settings: WidgetSettings;
-    context: WidgetTemplateContext;
+    instance: WidgetInstance;
 };
 
 export type WidgetPosition = Pick<WidgetInstance, 'id' | 'x' | 'y' | 'cols' | 'rows'>;
@@ -72,7 +72,7 @@ export class WidgetGridComponent {
     /** Sample-data mode for the standalone layout editor. */
     public readonly preview = input(false);
 
-    /** Shows the gear outside edit mode, so the owner tweaks a widget without moving anything. */
+    /** Shows the data-edit pencil outside layout edit, so the owner tweaks a widget without moving anything. */
     public readonly canConfigure = input(false);
 
     public readonly columns = input(12);
@@ -87,6 +87,8 @@ export class WidgetGridComponent {
 
     public readonly settingsLabel = input('Widget settings');
 
+    public readonly editDataLabel = input('Edit data');
+
     public readonly unknownLabel = input('This widget is not available.');
 
     /** Emitted on every move or resize; positions only, never settings. */
@@ -99,6 +101,7 @@ export class WidgetGridComponent {
     protected readonly twitchType = GC_TWITCH_WIDGET;
     protected readonly linksType = GC_LINKS_WIDGET;
     protected readonly items = signal<GridWidget[]>([]);
+    private readonly editingDataId = signal<string | null>(null);
 
     private readonly host = inject(ElementRef<HTMLElement>);
     private readonly destroyRef = inject(DestroyRef);
@@ -174,11 +177,45 @@ export class WidgetGridComponent {
                 this.syncGridDimensions();
             });
         });
+
+        effect(() => {
+            if (this.editing()) {
+                untracked(() => this.editingDataId.set(null));
+            }
+        });
     }
 
     protected templateFor(type: string): TemplateRef<WidgetTemplateContext> | null {
         const defs: readonly WidgetTemplateDef[] = this.defs() ?? this.ownDefs();
         return defs.find((def) => def.type() === type)?.template ?? null;
+    }
+
+    protected templateContext(item: GridWidget): WidgetTemplateContext {
+        return {
+            $implicit: item.settings,
+            instance: item.instance,
+            editingData: this.isEditingData(item),
+            stopDataEdit: () => this.stopDataEdit(item.id),
+        };
+    }
+
+    protected isEditingData(item: GridWidget): boolean {
+        return this.editingDataId() === item.id;
+    }
+
+    protected onEditData(item: GridWidget): void {
+        if (this.isInPlaceEditable(item.type)) {
+            this.editingDataId.set(item.id);
+            return;
+        }
+
+        this.editingDataId.set(null);
+        this.configure.emit(item.id);
+    }
+
+    protected onConfigure(item: GridWidget): void {
+        this.editingDataId.set(null);
+        this.configure.emit(item.id);
     }
 
     protected asText(value: unknown): string {
@@ -230,12 +267,23 @@ export class WidgetGridComponent {
             title: typeof custom === 'string' ? custom.trim() : '',
             label: entry?.label ?? widget.type,
             settings: widget.settings,
-            context: { $implicit: widget.settings, instance: widget },
+            instance: widget,
             x: Math.min(Math.max(0, widget.x), columns - cols),
             y: Math.max(0, widget.y),
             cols,
             rows: Math.max(1, widget.rows),
         };
+    }
+
+    private isInPlaceEditable(type: string): boolean {
+        const defs: readonly WidgetTemplateDef[] = this.defs() ?? this.ownDefs();
+        return defs.some((def) => def.type() === type && !!def.editable?.());
+    }
+
+    private stopDataEdit(id: string): void {
+        if (this.editingDataId() === id) {
+            this.editingDataId.set(null);
+        }
     }
 
     private validateItem(item: GridsterItemConfig): boolean {

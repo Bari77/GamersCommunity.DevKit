@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ApiRow, ApiTableComponent } from '../../shared/api-table.component';
 import { CodeBlockComponent } from '../../shared/code-block.component';
 import { PageComponent } from '../../shared/page.component';
@@ -7,7 +8,7 @@ import { PageComponent } from '../../shared/page.component';
     selector: 'gcd-catalog-page',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [PageComponent, ApiTableComponent, CodeBlockComponent],
+    imports: [PageComponent, ApiTableComponent, CodeBlockComponent, RouterLink],
     template: `
         <gcd-page
             lead="La déclaration des types de widgets disponibles : ce que propose le sélecteur, la taille de départ et les champs de réglage générés automatiquement."
@@ -52,7 +53,9 @@ import { PageComponent } from '../../shared/page.component';
                 Quand les champs générés ne suffisent pas, la directive <code>gcWidgetSettings</code> ajoute votre
                 propre interface <strong>sous</strong> les champs générés, pour un type donné. Elle reçoit le même
                 contexte que le gabarit de rendu. C'est là que se déclare, par exemple, la gestion d'un contenu qui
-                vit dans le backend de l'application plutôt que dans les réglages.
+                vit dans le backend de l'application plutôt que dans les réglages. Le crayon au survol ouvre ce
+                panneau, sauf si le gabarit de rendu est marqué <code>gcWidgetEditable</code> — auquel cas
+                l'édition se fait dans le widget, voir <a routerLink="/widgets">Concepts</a>.
             </p>
 
             <gcd-code language="html" [code]="customSnippet" />

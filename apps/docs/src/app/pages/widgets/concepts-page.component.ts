@@ -63,6 +63,18 @@ import { PageComponent } from '../../shared/page.component';
                 gabarits dans l'hôte n'a aucune importance.
             </p>
 
+            <h2>Éditer les données d'un widget</h2>
+
+            <p>
+                Hors mode mise en page, le propriétaire voit au survol un crayon
+                (<code>editDataLabel</code>, par défaut « Edit data ») à côté de la roue crantée. Le crayon ouvre le
+                panneau de réglages, sauf si le gabarit est marqué <code>gcWidgetEditable</code> : dans ce cas le
+                widget s'édite sur place, via <code>editingData</code> et <code>stopDataEdit</code> fournis au
+                gabarit.
+            </p>
+
+            <gcd-code language="html" label="Édition sur place" [code]="editableSnippet" />
+
             <h2>Brouillon et enregistrement</h2>
 
             <p>
@@ -135,4 +147,18 @@ interface WidgetInstance {
         <gc-link-list [links]="asLinks(settings['links'])" />
     </ng-template>
 </gc-widget-workspace>`;
+
+    protected readonly editableSnippet = `<ng-template
+    gcWidget="notes"
+    gcWidgetEditable
+    let-settings
+    let-editingData="editingData"
+    let-stopDataEdit="stopDataEdit"
+>
+    @if (editingData) {
+        <textarea [value]="settings['body']" (change)="save($event); stopDataEdit()"></textarea>
+    } @else {
+        <p>{{ settings['body'] }}</p>
+    }
+</ng-template>`;
 }

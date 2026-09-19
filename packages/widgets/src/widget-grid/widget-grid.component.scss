@@ -102,8 +102,13 @@ gridster-item {
 }
 
 .gc-widget:hover .gc-widget__action--quiet,
-.gc-widget__action--quiet:focus-visible {
+.gc-widget__action--quiet:focus-visible,
+.gc-widget--data-editing .gc-widget__action--quiet {
     opacity: 1;
+}
+
+.gc-widget__action--current {
+    border-color: var(--gc-widget-accent, #3366ff);
 }
 
 .gc-widget__action--danger {
@@ -160,4 +165,8 @@ gridster-item {
     pointer-events: none;
     user-select: none;
     opacity: 0.75;
+}
+
+.gc-widget--data-editing {
+    border-color: var(--gc-widget-editing-border, rgba(120, 170, 255, 0.55));
 }

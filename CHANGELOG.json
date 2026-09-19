@@ -1,5 +1,27 @@
 [
   {
+    "version": "0.8.29",
+    "date": "2026-09-19",
+    "summary": "Chaque widget s'édite au survol, avec un crayon à côté de la roue crantée.",
+    "changes": [
+      {
+        "package": "gc-widgets",
+        "kind": "added",
+        "text": "Crayon au survol hors mise en page : il ouvre les réglages, ou l'édition sur place si le gabarit est marqué gcWidgetEditable."
+      },
+      {
+        "package": "gc-widgets",
+        "kind": "added",
+        "text": "Contexte de gabarit editingData / stopDataEdit, et entrée editDataLabel (infobulle du crayon)."
+      },
+      {
+        "package": "docs",
+        "kind": "added",
+        "text": "Le crayon au survol et gcWidgetEditable sont documentés dans Concepts, Catalogue et Workspace."
+      }
+    ]
+  },
+  {
     "version": "0.8.28",
     "date": "2026-09-19",
     "summary": "Le texte riche rend la même chose partout, quelle que soit la page qui l'accueille.",
