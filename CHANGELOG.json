@@ -1,5 +1,37 @@
 [
   {
+    "version": "0.8.31",
+    "date": "2026-09-19",
+    "summary": "La modale de configuration d'un widget couvre tout le viewport, et le header de la doc affiche la version du CHANGELOG.",
+    "changes": [
+      {
+        "package": "gc-ui",
+        "kind": "fixed",
+        "text": "gc-modal s'attache à document.body à l'ouverture, pour que position:fixed ne soit plus coincé dans une fiche ou une animation .gc-enter."
+      },
+      {
+        "package": "gc-ui",
+        "kind": "changed",
+        "text": "Z-index par défaut de la modale porté à 2000, au-dessus du chrome de page."
+      },
+      {
+        "package": "gc-theme",
+        "kind": "fixed",
+        "text": "L'animation .gc-enter se termine sur transform: none. translateY(0) créait encore un containing block pour les overlays fixed."
+      },
+      {
+        "package": "gc-widgets",
+        "kind": "added",
+        "text": "Entrée canConfigure sur gc-widget-workspace : crayon et roue hors mise en page, sans donner le layout (officiers de guilde)."
+      },
+      {
+        "package": "docs",
+        "kind": "fixed",
+        "text": "Le badge de version du header lit CHANGELOG.json, plus le package.json de gc-ui laissé en retard après un tag."
+      }
+    ]
+  },
+  {
     "version": "0.8.30",
     "date": "2026-09-19",
     "summary": "La roue ouvre une modale de réglages, le crayon édite le contenu dans le widget, et le rich-text propose H2/H3.",

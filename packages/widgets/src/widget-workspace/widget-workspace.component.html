@@ -64,7 +64,7 @@
             [defs]="defs()"
             [editing]="editing()"
             [preview]="previewActive()"
-            [canConfigure]="canEdit()"
+            [canConfigure]="canConfigure() ?? canEdit()"
             [columns]="columns()"
             [rowHeight]="rowHeight()"
             [gap]="gap()"

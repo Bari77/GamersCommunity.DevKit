@@ -65,6 +65,12 @@ export class WidgetWorkspaceComponent {
 
     public readonly canEdit = input(false);
 
+    /**
+     * Gear and pencil outside layout edit. When omitted, follows `canEdit` so a single owner
+     * flag stays enough. A guild can pass officers here while keeping layout for the leader.
+     */
+    public readonly canConfigure = input<boolean | undefined>(undefined);
+
     /** Sample data mode for the standalone layout editor. */
     public readonly sampleData = input(false, { alias: 'preview' });
 

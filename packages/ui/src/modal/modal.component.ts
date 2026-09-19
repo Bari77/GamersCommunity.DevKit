@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, ElementRef, effect, input, output, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    ElementRef,
+    effect,
+    inject,
+    input,
+    output,
+    viewChild,
+} from '@angular/core';
 
 /** Centred overlay panel hosting arbitrary projected content. */
 @Component({
@@ -22,9 +32,27 @@ export class ModalComponent {
 
     public readonly dismissed = output<'backdrop' | 'escape'>();
 
+    private readonly host = inject(ElementRef<HTMLElement>);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
 
     public constructor() {
+        // A transformed or overflow-clipped ancestor (profile sheet, `.gc-enter`) would pin
+        // `position: fixed` to that box. The overlay belongs to the viewport.
+        effect(() => {
+            const element = this.host.nativeElement;
+            if (this.open() && element.parentElement !== document.body) {
+                document.body.appendChild(element);
+            }
+        });
+
+        this.destroyRef.onDestroy(() => {
+            const element = this.host.nativeElement;
+            if (element.parentElement === document.body) {
+                element.remove();
+            }
+        });
+
         effect(() => this.panel()?.nativeElement.focus());
     }
 

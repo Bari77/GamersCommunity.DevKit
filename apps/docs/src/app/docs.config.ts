@@ -1,4 +1,5 @@
 import { Type } from '@angular/core';
+import changelog from '../../../../CHANGELOG.json';
 import themePkg from '../../../../packages/theme/package.json';
 import uiPkg from '../../../../packages/ui/package.json';
 import widgetsPkg from '../../../../packages/widgets/package.json';
@@ -9,8 +10,11 @@ import widgetsPkg from '../../../../packages/widgets/package.json';
  * here plus the component that holds its prose.
  */
 
-/** The documented packages advance in lockstep, so any of them carries the version of the set. */
-export const DOCS_VERSION = uiPkg.version;
+/**
+ * Newest CHANGELOG entry. Package manifests are rewritten from the git tag at publish time and
+ * are often left behind locally, so they cannot be the number shown in the header.
+ */
+export const DOCS_VERSION = (changelog as { version: string }[])[0].version;
 
 export const REPOSITORY_URL = uiPkg.repository.url.replace(/\.git$/, '');
 
