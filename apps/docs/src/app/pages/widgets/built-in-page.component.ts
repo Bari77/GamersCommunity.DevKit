@@ -119,9 +119,9 @@ export class BuiltInPageComponent {
     ];
 
     protected readonly photos: GcGalleryItem[] = [
-        { url: 'https://picsum.photos/seed/gc-raid/640/360', title: 'Fin de raid' },
-        { url: 'https://picsum.photos/seed/gc-guild/640/360', title: 'Photo de guilde' },
-        { url: 'https://picsum.photos/seed/gc-arena/640/360', title: 'Arène' },
+        { url: 'https://picsum.photos/seed/gc-match/640/360', title: 'Fin de partie' },
+        { url: 'https://picsum.photos/seed/gc-team/640/360', title: "Photo d'équipe" },
+        { url: 'https://picsum.photos/seed/gc-tournament/640/360', title: 'Tournoi' },
     ];
 
     protected readonly linksHtml = `<gc-link-list [links]="links" emptyLabel="Aucun lien pour l'instant." />`;

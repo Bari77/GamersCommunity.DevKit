@@ -25,9 +25,9 @@ import { PageComponent } from '../../shared/page.component';
 
                 <gc-decision-prompt
                     [open]="open()"
-                    heading="Créer un personnage ?"
-                    message="Vous pourrez suivre votre progression et rejoindre une guilde."
-                    primaryLabel="Créer un personnage"
+                    heading="Créer votre profil ?"
+                    message="Vous pourrez suivre votre progression et rejoindre une équipe."
+                    primaryLabel="Créer mon profil"
                     secondaryLabel="Plus tard"
                     optOutLabel="Ne plus me le proposer"
                     [(optOut)]="optOut"
@@ -50,7 +50,7 @@ import { PageComponent } from '../../shared/page.component';
                 <gc-decision-prompt
                     [open]="busyOpen()"
                     [busy]="busy()"
-                    heading="Rejoindre le raid ?"
+                    heading="Rejoindre la session ?"
                     message="Votre place sera réservée pendant dix minutes."
                     primaryLabel="Réserver ma place"
                     busyLabel="Réservation…"
@@ -129,13 +129,13 @@ export class DecisionPromptPageComponent {
 
     protected readonly basicHtml = `<gc-decision-prompt
     [open]="open()"
-    heading="Créer un personnage ?"
-    message="Vous pourrez suivre votre progression et rejoindre une guilde."
-    primaryLabel="Créer un personnage"
+    heading="Créer votre profil ?"
+    message="Vous pourrez suivre votre progression et rejoindre une équipe."
+    primaryLabel="Créer mon profil"
     secondaryLabel="Plus tard"
     optOutLabel="Ne plus me le proposer"
     [(optOut)]="optOut"
-    (primary)="createCharacter()"
+    (primary)="createProfile()"
     (secondary)="dismiss()"
 />`;
 
@@ -145,7 +145,7 @@ export class DecisionPromptPageComponent {
 
     protected dismiss(): void {
         if (this.optOut()) {
-            this.preferences.rememberDecline('character-creation');
+            this.preferences.rememberDecline('profile-creation');
         }
         this.open.set(false);
     }
@@ -154,7 +154,7 @@ export class DecisionPromptPageComponent {
     protected readonly busyHtml = `<gc-decision-prompt
     [open]="open()"
     [busy]="saving()"
-    heading="Rejoindre le raid ?"
+    heading="Rejoindre la session ?"
     primaryLabel="Réserver ma place"
     busyLabel="Réservation…"
     secondaryLabel="Annuler"

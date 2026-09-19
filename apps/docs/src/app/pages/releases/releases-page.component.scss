@@ -1,0 +1,110 @@
+.releases {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.release {
+    padding: 1rem 0 0.35rem;
+    border-top: 1px solid var(--gcd-border);
+}
+
+.release:first-child {
+    border-top: 0;
+    padding-top: 0;
+}
+
+.release__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.4rem;
+}
+
+.release__version {
+    font-family: var(--gc-font-display);
+    font-size: 1.1rem;
+    color: var(--gc-accent);
+    text-decoration: none;
+}
+
+.release__version:hover {
+    text-decoration: underline;
+}
+
+.release__date {
+    font-size: 0.8125rem;
+    color: var(--gcd-text-dim);
+}
+
+.release__current {
+    padding: 0.1rem 0.4rem;
+    border: 1px solid var(--gc-accent-2);
+    border-radius: 0.25rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gc-accent-2);
+}
+
+.release__summary {
+    margin: 0 0 0.6rem;
+    max-width: 46rem;
+    color: #c9d4ea;
+}
+
+.release__changes {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.change {
+    display: grid;
+    grid-template-columns: 9rem 6.5rem 1fr;
+    gap: 0.5rem;
+    align-items: baseline;
+    padding: 0.3rem 0;
+    font-size: 0.875rem;
+    color: #c9d4ea;
+}
+
+/* Below the prose width the three columns would squeeze the text into a ribbon. */
+@media (width <= 45rem) {
+    .change {
+        grid-template-columns: 1fr;
+        gap: 0.2rem;
+    }
+}
+
+.change__scope {
+    font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+    font-size: 0.8125rem;
+    color: var(--gc-accent);
+}
+
+.change__kind {
+    justify-self: start;
+    padding: 0.05rem 0.4rem;
+    border: 1px solid var(--gcd-border);
+    border-radius: 0.25rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--gcd-text-dim);
+}
+
+.change__kind--added {
+    border-color: rgb(46 230 166 / 45%);
+    color: #2ee6a6;
+}
+
+.change__kind--fixed {
+    border-color: rgb(255 170 0 / 45%);
+    color: #ffaa00;
+}
+
+.change__text {
+    max-width: 42rem;
+}

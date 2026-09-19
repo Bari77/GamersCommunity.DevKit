@@ -23,7 +23,7 @@ import { PageComponent } from '../../shared/page.component';
                 <button type="button" class="gcd-demo-button" (click)="open.set(true)">Ouvrir la modale</button>
 
                 <gc-modal [open]="open()" ariaLabel="Exemple de modale" (dismissed)="open.set(false)">
-                    <h2 class="gcd-modal-title">Rejoindre la guilde</h2>
+                    <h2 class="gcd-modal-title">Rejoindre l'équipe</h2>
                     <p class="gcd-modal-text">
                         Cliquez en dehors du panneau ou appuyez sur Échap : le composant émet
                         <code>dismissed</code>, et c'est la page qui referme.
@@ -115,8 +115,8 @@ export class ModalPageComponent {
 
     protected readonly basicHtml = `<button type="button" (click)="open.set(true)">Ouvrir la modale</button>
 
-<gc-modal [open]="open()" ariaLabel="Rejoindre la guilde" (dismissed)="open.set(false)">
-    <h2>Rejoindre la guilde</h2>
+<gc-modal [open]="open()" ariaLabel="Rejoindre l'équipe" (dismissed)="open.set(false)">
+    <h2>Rejoindre l'équipe</h2>
     <p>Votre demande sera visible par les officiers.</p>
     <button type="button" (click)="open.set(false)">Fermer</button>
 </gc-modal>`;

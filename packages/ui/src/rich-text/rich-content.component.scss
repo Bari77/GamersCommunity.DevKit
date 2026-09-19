@@ -1,30 +1,13 @@
-:host {
+@use './rich-text' as rt;
+
+gc-rich-content {
     display: block;
     color: var(--text-basic-color, inherit);
 }
 
-.gc-rich-content {
-    line-height: 1.5;
-    overflow-wrap: anywhere;
-    color: inherit;
-
-    :where(p) {
-        margin: 0;
-    }
-
-    :where(ul, ol) {
-        margin: 0.25rem 0 0.5rem;
-        padding-left: 1.25rem;
-    }
-
-    :where(a) {
-        color: var(--link-text-color, var(--color-primary-default, var(--gc-accent-2, #3dd6ff)));
-        text-decoration: underline;
-    }
-
-    :where(h2, h3) {
-        margin: 0.5rem 0 0.35rem;
-        font-size: inherit;
-        font-weight: 600;
-    }
+/* Prefixed with the element name: the markup comes from innerHTML, so it carries no Angular scope,
+   and the extra compound lifts these rules above a host page's plain-tag typography. */
+gc-rich-content .gc-rich-content {
+    @include rt.content-root;
+    @include rt.content-typography;
 }

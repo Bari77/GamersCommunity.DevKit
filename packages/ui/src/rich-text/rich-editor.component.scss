@@ -1,35 +1,37 @@
-:host {
+@use './rich-text' as rt;
+
+/* Selectors are prefixed with the element name rather than relying on Angular's scope: ProseMirror
+   builds its contenteditable at runtime, so the component styles are not encapsulated. The extra
+   compound also lifts them above the typography a host page applies to plain tags. */
+gc-rich-editor {
     display: block;
     color: var(--text-basic-color, inherit);
-    outline: none;
+    @include rt.focus-ring-none;
 }
 
-:host(:focus-within) {
-    outline: none;
-    box-shadow: none;
+gc-rich-editor:focus,
+gc-rich-editor:focus-within,
+gc-rich-editor:focus-visible {
+    @include rt.focus-ring-none;
 }
 
 /* Nebular cosmic + gc-theme: dark fallbacks instead of light nb-defaults */
-.gc-rich-editor {
+gc-rich-editor .gc-rich-editor {
     border: 1px solid var(--border-basic-color-4, var(--gc-surface-2, #162033));
     border-radius: var(--border-radius, 0.25rem);
     background-color: var(--input-basic-background-color, var(--gc-surface-1, #0e1524));
     color: var(--input-basic-text-color, var(--text-basic-color, inherit));
     overflow: hidden;
 
-    &:focus-within {
-        outline: none;
-        box-shadow: none;
-        border-color: var(--border-basic-color-4, var(--gc-surface-2, #162033));
+    &:focus,
+    &:focus-within,
+    &:focus-visible {
+        @include rt.focus-ring-none;
+        border-color: var(--border-basic-color-4, var(--gc-surface-2, #162033)) !important;
     }
 }
 
-.gc-rich-editor--compact .gc-rich-editor__toolbar {
-    gap: 0.15rem;
-    padding: 0.2rem 0.35rem;
-}
-
-.gc-rich-editor__toolbar {
+gc-rich-editor .gc-rich-editor__toolbar {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -39,38 +41,47 @@
     background-color: var(--background-basic-color-2, var(--gc-surface-2, #162033));
 }
 
-.gc-rich-editor__toolbar button {
-    border: none;
-    background: transparent;
-    border-radius: 0.2rem;
-    padding: 0.2rem 0.45rem;
-    font-size: 0.85rem;
-    cursor: pointer;
-    color: inherit;
+gc-rich-editor .gc-rich-editor--compact .gc-rich-editor__toolbar {
+    gap: 0.15rem;
+    padding: 0.2rem 0.35rem;
 }
 
-.gc-rich-editor__toolbar button:hover:not(:disabled) {
+gc-rich-editor .gc-rich-editor__toolbar button {
+    margin: 0;
+    padding: 0.2rem 0.45rem;
+    border: none;
+    border-radius: 0.2rem;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 0.85rem;
+    line-height: 1.2;
+    cursor: pointer;
+    @include rt.focus-ring-none;
+}
+
+gc-rich-editor .gc-rich-editor__toolbar button:hover:not(:disabled) {
     background: var(--background-basic-color-3, var(--gc-surface-2, #162033));
 }
 
-.gc-rich-editor__toolbar button.is-active {
+gc-rich-editor .gc-rich-editor__toolbar button.is-active {
     background: var(--color-primary-transparent-200, rgba(51, 102, 255, 0.2));
     color: var(--color-primary-default, var(--gc-accent-2, #3dd6ff));
 }
 
-.gc-rich-editor__toolbar button:disabled {
+gc-rich-editor .gc-rich-editor__toolbar button:disabled {
     opacity: 0.45;
     cursor: not-allowed;
 }
 
-.gc-rich-editor__colors {
+gc-rich-editor .gc-rich-editor__colors {
     display: inline-flex;
     align-items: center;
     gap: 0.15rem;
     margin-left: 0.15rem;
 }
 
-.gc-rich-editor__colors button {
+gc-rich-editor .gc-rich-editor__colors button {
     width: 1.1rem;
     height: 1.1rem;
     padding: 0;
@@ -79,46 +90,48 @@
     box-sizing: border-box;
 }
 
-.gc-rich-editor__surface {
+gc-rich-editor .gc-rich-editor__surface {
     min-height: 5.5rem;
-    padding: 0.65rem 0.75rem;
-    outline: none;
-    box-shadow: none;
     background-color: transparent;
+    @include rt.focus-ring-none;
 }
 
-.gc-rich-editor--compact .gc-rich-editor__surface {
+gc-rich-editor .gc-rich-editor--compact .gc-rich-editor__surface {
     min-height: 2.75rem;
+}
+
+gc-rich-editor .gc-rich-editor__surface .ProseMirror {
+    @include rt.content-root;
+    @include rt.content-typography;
+    @include rt.focus-ring-none;
+
+    position: relative;
+    min-height: inherit;
+    padding: 0.65rem 0.75rem;
+    background: transparent;
+    /* Restated rather than left to the stylesheet prosemirror-view injects at runtime. */
+    white-space: pre-wrap;
+}
+
+gc-rich-editor .gc-rich-editor--compact .gc-rich-editor__surface .ProseMirror {
     padding: 0.45rem 0.6rem;
 }
 
-.gc-rich-editor__surface :global(.ProseMirror),
-.gc-rich-editor__surface :global(.ProseMirror:focus),
-.gc-rich-editor__surface :global(.ProseMirror-focused) {
-    outline: none;
-    box-shadow: none;
-    min-height: inherit;
-    color: inherit;
-    background: transparent;
-    font-family: inherit;
-    font-size: inherit;
-    line-height: 1.5;
+gc-rich-editor .gc-rich-editor__surface .ProseMirror:focus,
+gc-rich-editor .gc-rich-editor__surface .ProseMirror:focus-visible,
+gc-rich-editor .gc-rich-editor__surface .ProseMirror-focused {
+    @include rt.focus-ring-none;
 }
 
-/* TipTap wraps each line in <p>; default margins blow up line spacing */
-.gc-rich-editor__surface :global(.ProseMirror p) {
-    margin: 0;
-}
-
-.gc-rich-editor__surface :global(.ProseMirror p.is-editor-empty:first-child::before) {
+gc-rich-editor .gc-rich-editor__surface .ProseMirror p.is-editor-empty:first-child::before {
     content: attr(data-placeholder);
     float: left;
+    height: 0;
     color: var(--text-hint-color, rgba(255, 255, 255, 0.45));
     pointer-events: none;
-    height: 0;
 }
 
-.gc-rich-editor__counter {
+gc-rich-editor .gc-rich-editor__counter {
     padding: 0.25rem 0.75rem 0.45rem;
     font-size: 0.75rem;
     text-align: right;

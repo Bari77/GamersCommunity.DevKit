@@ -1,0 +1,113 @@
+/* Shared by gc-rich-editor and gc-rich-content so a draft renders exactly like the saved content,
+   and so neither has to trust the page it is dropped into. */
+
+/* Browsers paint their focus ring through :focus-visible on a contenteditable, and UI kits add
+   their own on :focus-within, so both have to be denied explicitly. */
+@mixin focus-ring-none {
+    outline: none !important;
+    outline-width: 0 !important;
+    outline-style: none !important;
+    outline-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* The block that holds the rich text. Inherits the host font and colour on purpose — everything
+   else is restated so a centred card or a spaced-out heading style cannot distort the content. */
+@mixin content-root {
+    display: block;
+    margin: 0;
+    padding: 0;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: normal;
+    line-height: 1.5;
+    text-align: start;
+    text-transform: none;
+    overflow-wrap: anywhere;
+}
+
+/* Rich text lands in pages this package knows nothing about: Nebular cards, documentation prose,
+   widget bodies. Every property a host rule or a browser default could set is restated here, which
+   is what keeps the rendering identical from one consumer to the next. */
+@mixin content-typography {
+    p,
+    h2,
+    h3,
+    ul,
+    ol,
+    li {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: inherit;
+        font-family: inherit;
+        font-size: inherit;
+        font-style: inherit;
+        font-weight: inherit;
+        letter-spacing: inherit;
+        line-height: inherit;
+        text-align: inherit;
+        text-transform: none;
+    }
+
+    h2,
+    h3 {
+        margin: 0.5rem 0 0.35rem;
+        font-weight: 600;
+    }
+
+    ul,
+    ol {
+        margin: 0.25rem 0 0.5rem;
+        padding-left: 1.25rem;
+    }
+
+    ul {
+        list-style: disc outside;
+    }
+
+    ol {
+        list-style: decimal outside;
+    }
+
+    li + li {
+        margin-top: 0.15rem;
+    }
+
+    a {
+        color: var(--link-text-color, var(--color-primary-default, var(--gc-accent-2, #3dd6ff)));
+        background: none;
+        text-decoration: underline;
+    }
+
+    strong,
+    b {
+        font-weight: 700;
+    }
+
+    em,
+    i {
+        font-style: italic;
+    }
+
+    u {
+        text-decoration: underline;
+    }
+
+    s {
+        text-decoration: line-through;
+    }
+
+    /* A leading block has nothing to breathe away from, a trailing one nothing to push. */
+    > :first-child {
+        margin-top: 0;
+    }
+
+    > :last-child {
+        margin-bottom: 0;
+    }
+}

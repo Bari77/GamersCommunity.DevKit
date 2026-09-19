@@ -97,6 +97,13 @@ export const docsSections: DocsSection[] = [
                 load: () =>
                     import('./pages/installation/installation.component').then((m) => m.InstallationComponent),
             },
+            {
+                path: 'versions',
+                label: 'Versions',
+                heading: 'Journal des versions',
+                load: () =>
+                    import('./pages/releases/releases-page.component').then((m) => m.ReleasesPageComponent),
+            },
         ],
     },
     {
@@ -104,7 +111,7 @@ export const docsSections: DocsSection[] = [
         package: PACKAGES.ui,
         breadcrumb: 'Composants UI',
         summary:
-            "Six primitives sans logique métier : fil d'Ariane, squelettes de chargement, modale, invite de décision et mur d'incitation.",
+            "Primitives sans logique métier : fil d'Ariane, squelettes, modale, invite de décision, mur d'incitation et éditeur HTML riche.",
         pages: [
             {
                 path: '',
@@ -164,6 +171,19 @@ export const docsSections: DocsSection[] = [
                 symbols: ['CreateWallComponent'],
                 load: () =>
                     import('./pages/ui/create-wall-page.component').then((m) => m.CreateWallPageComponent),
+            },
+            {
+                path: 'rich-text',
+                label: 'Rich text',
+                selector: 'gc-rich-editor',
+                summary: 'Édition TipTap et affichage HTML assaini pour présentations et contenus longs.',
+                symbols: [
+                    'RichEditorComponent',
+                    'RichContentComponent',
+                    'isRichHtmlBlank',
+                    'stripRichHtmlPlainText',
+                ],
+                load: () => import('./pages/ui/rich-text-page.component').then((m) => m.RichTextPageComponent),
             },
         ],
     },

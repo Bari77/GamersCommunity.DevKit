@@ -39,7 +39,7 @@ import { PageComponent } from '../../shared/page.component';
 
             <p>
                 Un champ de type <code>list</code> répète un groupe de champs, ce qui permet à un widget de porter
-                un nombre libre d'entrées — des liens, des personnages, des vidéos.
+                un nombre libre d'entrées — des liens, des équipiers, des vidéos.
             </p>
 
             <gcd-api [rows]="listField" />

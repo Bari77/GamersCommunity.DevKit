@@ -104,7 +104,7 @@ let workspace: WidgetWorkspace = {
 };
 
 workspace = addWidget(workspace, 'home', { type: 'identity', cols: 4, rows: 2, settings: {} });
-workspace = addPage(workspace, 'Guilde');`;
+workspace = addPage(workspace, 'Équipe');`;
 
     protected readonly io: ApiRow[] = [
         {

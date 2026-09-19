@@ -34,6 +34,25 @@ Pushing a `vX.Y.Z` tag runs `.github/workflows/release.yml`:
 > npm scope = GitHub owner (`Bari77`). Hence `@bari77/gc-*` rather than `@gamerscommunity/*`.  
 > If you later create a `gamerscommunity` organization, the scope can be renamed.
 
+## Release notes
+
+`CHANGELOG.json` at the repository root holds one entry per version, newest first. It is the single
+source for both the GitHub Release body and the **Versions** page of the documentation site, so add
+the entry for the version **before** pushing its tag:
+
+```json
+{
+  "version": "0.8.28",
+  "date": "2026-09-19",
+  "summary": "One sentence on what the version is about.",
+  "changes": [{ "package": "gc-ui", "kind": "fixed", "text": "What a consumer will notice." }]
+}
+```
+
+`package` names the affected part (`gc-ui`, `gc-widgets`, `gc-theme`, `gc-workspace-editor`, `docs`,
+`devkit`) and `kind` is `added`, `changed` or `fixed`. A tag without an entry still releases, with a
+placeholder body.
+
 ## Publish
 
 ```bash

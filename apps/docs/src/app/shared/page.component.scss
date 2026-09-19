@@ -40,7 +40,9 @@
     color: var(--gcd-text-dim);
 }
 
-:host ::ng-deep .gcd-prose h2 {
+/* Direct children only: the section titles of the page itself, never a heading that belongs to a
+   demo, a card or a rich text sample. */
+:host ::ng-deep .gcd-prose > h2 {
     margin: 2.5rem 0 0.85rem;
     padding-top: 1.25rem;
     border-top: 1px solid var(--gcd-border);
@@ -48,7 +50,7 @@
     color: var(--gcd-text);
 }
 
-:host ::ng-deep .gcd-prose h3 {
+:host ::ng-deep .gcd-prose > h3 {
     margin: 1.75rem 0 0.6rem;
     font-size: 1rem;
     color: var(--gcd-text);

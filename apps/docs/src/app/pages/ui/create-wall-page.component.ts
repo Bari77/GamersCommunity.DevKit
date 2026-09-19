@@ -16,15 +16,15 @@ import { PageComponent } from '../../shared/page.component';
         >
             <p>
                 Plutôt que de masquer une fonctionnalité indisponible ou d'afficher un message d'erreur, ce bloc
-                occupe sa place et explique quoi faire pour y accéder : créer un personnage, se connecter, rejoindre
-                une guilde.
+                occupe sa place et explique quoi faire pour y accéder : créer un profil, se connecter, rejoindre une
+                équipe.
             </p>
 
             <gcd-demo title="Variante block" description="Occupe la place du contenu absent, action comprise." [html]="blockHtml" [bare]="true">
                 <gc-create-wall
-                    heading="Aucun personnage sur ce royaume"
-                    message="Créez un personnage pour suivre votre progression et rejoindre une guilde."
-                    [actionLabel]="busy() ? '' : 'Créer un personnage'"
+                    heading="Aucun profil pour ce jeu"
+                    message="Créez votre profil pour suivre votre progression et rejoindre une équipe."
+                    [actionLabel]="busy() ? '' : 'Créer un profil'"
                     [busy]="busy()"
                     (action)="run()"
                 />
@@ -85,11 +85,11 @@ export class CreateWallPageComponent {
     }
 
     protected readonly blockHtml = `<gc-create-wall
-    heading="Aucun personnage sur ce royaume"
-    message="Créez un personnage pour suivre votre progression et rejoindre une guilde."
-    actionLabel="Créer un personnage"
+    heading="Aucun profil pour ce jeu"
+    message="Créez votre profil pour suivre votre progression et rejoindre une équipe."
+    actionLabel="Créer un profil"
     [busy]="creating()"
-    (action)="createCharacter()"
+    (action)="createProfile()"
 />`;
 
     protected readonly inlineHtml = `<gc-create-wall
@@ -105,8 +105,8 @@ export class CreateWallPageComponent {
     message="Le classement de la saison s'ouvrira à la fin de la période de qualification."
 />`;
 
-    protected readonly projectionSnippet = `<gc-create-wall heading="Guilde requise" actionLabel="Parcourir les guildes" (action)="browse()">
-    <a routerLink="/help/guilds">Comment fonctionnent les guildes ?</a>
+    protected readonly projectionSnippet = `<gc-create-wall heading="Équipe requise" actionLabel="Parcourir les équipes" (action)="browse()">
+    <a routerLink="/help/teams">Comment fonctionnent les équipes ?</a>
 </gc-create-wall>`;
 
     protected readonly inputs: ApiRow[] = [

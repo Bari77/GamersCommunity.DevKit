@@ -1,0 +1,39 @@
+<gcd-page
+    lead="Ce que chaque version apporte. Les packages avancent ensemble : un numéro décrit l'état de tout le DevKit, pas d'un package en particulier."
+>
+    <p>
+        La version installée par cette documentation est <code>{{ current }}</code>. Chaque entrée porte le package
+        concerné, ce qui permet de retrouver d'un coup d'œil dans quelle version une évolution de
+        <code>&#64;bari77/gc-ui</code> est arrivée.
+    </p>
+
+    <ol class="releases">
+        @for (release of releases; track release.version) {
+            <li class="release">
+                <header class="release__head">
+                    <a class="release__version" [href]="repository + '/releases/tag/v' + release.version">
+                        {{ release.version }}
+                    </a>
+                    <time class="release__date">{{ release.date }}</time>
+                    @if (release.version === current) {
+                        <span class="release__current">version de cette doc</span>
+                    }
+                </header>
+
+                <p class="release__summary">{{ release.summary }}</p>
+
+                <ul class="release__changes">
+                    @for (change of release.changes; track change.text) {
+                        <li class="change">
+                            <span class="change__scope">{{ change.package }}</span>
+                            <span class="change__kind" [class]="'change__kind--' + change.kind">
+                                {{ kindLabels[change.kind] }}
+                            </span>
+                            <span class="change__text">{{ change.text }}</span>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+    </ol>
+</gcd-page>

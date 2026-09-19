@@ -4,6 +4,7 @@ import {
     Component,
     ElementRef,
     OnDestroy,
+    ViewEncapsulation,
     effect,
     inject,
     input,
@@ -28,6 +29,9 @@ const SWATCH_COLORS = ['#222b45', '#3366ff', '#00d68f', '#ffaa00', '#ff3d71', '#
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './rich-editor.component.html',
     styleUrl: './rich-editor.component.scss',
+    /* ProseMirror and its <p> children are created outside Angular, so they never receive the
+       content attribute an emulated scope would require. Every selector is namespaced instead. */
+    encapsulation: ViewEncapsulation.None,
     host: {
         '[class.gc-rich-editor-host--disabled]': 'disabled()',
     },

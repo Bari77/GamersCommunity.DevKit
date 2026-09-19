@@ -161,7 +161,7 @@ export class WorkspacePageComponent {
                         rows: 3,
                         settings: {
                             title: 'À propos',
-                            body: "Tank principal, disponible en soirée. J'anime les raids du mercredi et du dimanche.",
+                            body: "Joueuse du soir, disponible en semaine. J'organise les sessions du mercredi et du dimanche.",
                         },
                     },
                     {
@@ -182,8 +182,8 @@ export class WorkspacePageComponent {
                 ],
             },
             {
-                id: 'page-guild',
-                title: 'Guilde',
+                id: 'page-team',
+                title: 'Équipe',
                 widgets: [],
             },
         ],

@@ -86,8 +86,8 @@ export class BreadcrumbPageComponent {
     protected readonly routesSnippet = `export const appRoutes: Routes = [
     { path: 'home', component: HomeComponent },
     {
-        path: 'world-of-warcraft',
-        data: { breadcrumb: 'World of Warcraft' },
+        path: 'games/:slug',
+        data: { breadcrumb: 'Jeu' },
         children: [
             {
                 path: 'players/:publicId',
