@@ -152,6 +152,34 @@ gridster-item {
     opacity: 0.75;
 }
 
+.gc-twitch-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.gc-twitch-edit__input {
+    @include controls.field;
+}
+
+.gc-twitch-edit__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.4rem;
+}
+
+.gc-twitch-edit__cancel {
+    @include controls.ghost-button;
+
+    font-size: 0.85rem;
+}
+
+.gc-twitch-edit__save {
+    @include controls.primary-button;
+
+    font-size: 0.85rem;
+}
+
 .gc-widget--editing {
     border-style: dashed;
     border-color: var(--gc-widget-editing-border, rgba(120, 170, 255, 0.55));

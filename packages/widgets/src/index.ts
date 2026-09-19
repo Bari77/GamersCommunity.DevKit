@@ -14,7 +14,9 @@ export type { WidgetTemplateContext, WidgetTemplateDef } from './widget-template
 export { WidgetEditBarComponent } from './widget-edit-bar/widget-edit-bar.component';
 export {
     GC_LINKS_WIDGET,
+    GC_PHOTOS_WIDGET,
     GC_TWITCH_WIDGET,
+    GC_VIDEOS_WIDGET,
     WIDGET_DRAG_HANDLE_CLASS,
     WidgetGridComponent,
 } from './widget-grid/widget-grid.component';

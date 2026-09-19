@@ -27,12 +27,14 @@
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0",
     "@angular/platform-browser": "^21.0.0",
+    "@bari77/gc-ui": "^0.8.0",
     "angular-gridster2": "^21.0.0"
   },
   "devDependencies": {
     "@angular/common": "21.2.22",
     "@angular/core": "21.2.22",
     "@angular/platform-browser": "21.2.22",
+    "@bari77/gc-ui": "*",
     "angular-gridster2": "21.0.1",
     "typescript": "^5.8.0"
   },

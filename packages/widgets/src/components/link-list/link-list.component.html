@@ -1,4 +1,86 @@
-@if (entries().length === 0) {
+@if (editing()) {
+    <div class="gc-links-edit">
+        <form class="gc-links-edit__form" (submit)="add($event)">
+            <input
+                class="gc-links-edit__input"
+                type="text"
+                [placeholder]="labelPlaceholder()"
+                [attr.aria-label]="labelPlaceholder()"
+                [value]="draftLabel()"
+                (input)="draftLabel.set(inputValue($event))"
+            />
+            <input
+                class="gc-links-edit__input gc-links-edit__input--wide"
+                type="url"
+                [placeholder]="urlPlaceholder()"
+                aria-label="URL"
+                [value]="draftUrl()"
+                (input)="draftUrl.set(inputValue($event))"
+            />
+            <button type="submit" class="gc-links-edit__add" [disabled]="!canAdd()">+ {{ addLabel() }}</button>
+        </form>
+
+        @if (draft().length === 0) {
+            <p class="gc-links__empty">{{ emptyLabel() }}</p>
+        } @else {
+            <ul class="gc-links-edit__list">
+                @for (row of draft(); track $index; let first = $first; let last = $last) {
+                    <li class="gc-links-edit__row">
+                        <input
+                            class="gc-links-edit__input"
+                            type="text"
+                            [placeholder]="labelPlaceholder()"
+                            [attr.aria-label]="labelPlaceholder()"
+                            [value]="row.label ?? ''"
+                            (change)="editRow($index, 'label', $event)"
+                        />
+                        <input
+                            class="gc-links-edit__input gc-links-edit__input--wide"
+                            type="url"
+                            [placeholder]="urlPlaceholder()"
+                            aria-label="URL"
+                            [value]="row.url"
+                            (change)="editRow($index, 'url', $event)"
+                        />
+                        <span class="gc-links-edit__tools">
+                            <button
+                                type="button"
+                                class="gc-links-edit__tool"
+                                [disabled]="first"
+                                [attr.aria-label]="moveUpLabel()"
+                                (click)="moveRow($index, -1)"
+                            >
+                                &#8593;
+                            </button>
+                            <button
+                                type="button"
+                                class="gc-links-edit__tool"
+                                [disabled]="last"
+                                [attr.aria-label]="moveDownLabel()"
+                                (click)="moveRow($index, 1)"
+                            >
+                                &#8595;
+                            </button>
+                            <button
+                                type="button"
+                                class="gc-links-edit__tool gc-links-edit__tool--danger"
+                                [attr.aria-label]="removeLabel()"
+                                (click)="removeRow($index)"
+                            >
+                                &#10005;
+                            </button>
+                        </span>
+                    </li>
+                }
+            </ul>
+        }
+
+        <div class="gc-links-edit__actions">
+            <button type="button" class="gc-links-edit__cancel" (click)="cancel.emit()">{{ cancelLabel() }}</button>
+            <button type="button" class="gc-links-edit__save" (click)="commit()">{{ saveLabel() }}</button>
+        </div>
+    </div>
+} @else if (entries().length === 0) {
     <p class="gc-links__empty">{{ emptyLabel() }}</p>
 } @else {
     <ul class="gc-links">

@@ -1,3 +1,5 @@
+@use '../../styles/controls';
+
 :host {
     display: block;
 }
@@ -71,4 +73,78 @@
     margin: 0;
     font-size: 0.9rem;
     opacity: 0.6;
+}
+
+.gc-links-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.gc-links-edit__form,
+.gc-links-edit__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.gc-links-edit__input {
+    @include controls.field;
+
+    flex: 1 1 7rem;
+    min-width: 0;
+}
+
+.gc-links-edit__input--wide {
+    flex: 2 1 12rem;
+}
+
+.gc-links-edit__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.gc-links-edit__tools {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    margin-left: auto;
+}
+
+.gc-links-edit__tool {
+    @include controls.icon-button(1.7rem);
+}
+
+.gc-links-edit__tool--danger {
+    @include controls.danger-button;
+}
+
+.gc-links-edit__add {
+    @include controls.dashed-button;
+
+    flex: none;
+    font-size: 0.85rem;
+}
+
+.gc-links-edit__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.4rem;
+}
+
+.gc-links-edit__cancel {
+    @include controls.ghost-button;
+
+    font-size: 0.85rem;
+}
+
+.gc-links-edit__save {
+    @include controls.primary-button;
+
+    font-size: 0.85rem;
 }

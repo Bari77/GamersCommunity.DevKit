@@ -20,7 +20,7 @@
                                     (mousedown)="$event.stopPropagation()"
                                     (touchstart)="$event.stopPropagation()"
                                 >
-                                    @if (!editing() && canConfigure()) {
+                                    @if (showsDataEdit(item)) {
                                         <ng-container [ngTemplateOutlet]="dataEditButton" [ngTemplateOutletContext]="{ $implicit: item }" />
                                     }
                                     <button
@@ -28,7 +28,7 @@
                                         class="gc-widget__action"
                                         [class.gc-widget__action--quiet]="!editing()"
                                         [attr.aria-label]="settingsLabel()"
-                                        [title]="settingsLabel()"
+                                        [gcTooltip]="settingsLabel()"
                                         (click)="onConfigure(item)"
                                     >
                                         &#9881;
@@ -38,7 +38,7 @@
                                             type="button"
                                             class="gc-widget__action gc-widget__action--danger"
                                             [attr.aria-label]="removeLabel()"
-                                            [title]="removeLabel()"
+                                            [gcTooltip]="removeLabel()"
                                             (click)="remove.emit(item.id)"
                                         >
                                             &#10005;
@@ -54,12 +54,14 @@
                             (mousedown)="$event.stopPropagation()"
                             (touchstart)="$event.stopPropagation()"
                         >
-                            <ng-container [ngTemplateOutlet]="dataEditButton" [ngTemplateOutletContext]="{ $implicit: item }" />
+                            @if (showsDataEdit(item)) {
+                                <ng-container [ngTemplateOutlet]="dataEditButton" [ngTemplateOutletContext]="{ $implicit: item }" />
+                            }
                             <button
                                 type="button"
                                 class="gc-widget__action gc-widget__action--quiet"
                                 [attr.aria-label]="settingsLabel()"
-                                [title]="settingsLabel()"
+                                [gcTooltip]="settingsLabel()"
                                 (click)="onConfigure(item)"
                             >
                                 &#9881;
@@ -70,7 +72,26 @@
                         @if (templateFor(item.type); as tpl) {
                             <ng-container [ngTemplateOutlet]="tpl" [ngTemplateOutletContext]="templateContext(item)" />
                         } @else if (item.type === twitchType) {
-                            @if (showTwitchPreview(item.settings)) {
+                            @if (isEditingData(item)) {
+                                <div class="gc-twitch-edit">
+                                    <input
+                                        class="gc-twitch-edit__input"
+                                        type="text"
+                                        placeholder="https://twitch.tv/…"
+                                        aria-label="Twitch"
+                                        [value]="twitchDraft()"
+                                        (input)="twitchDraft.set(inputValue($event))"
+                                    />
+                                    <div class="gc-twitch-edit__actions">
+                                        <button type="button" class="gc-twitch-edit__cancel" (click)="stopDataEdit(item.id)">
+                                            Cancel
+                                        </button>
+                                        <button type="button" class="gc-twitch-edit__save" (click)="onBuiltInTwitchSave(item)">
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
+                            } @else if (showTwitchPreview(item.settings)) {
                                 <div class="gc-twitch__preview" aria-hidden="true">
                                     <span>Twitch</span>
                                 </div>
@@ -78,7 +99,20 @@
                                 <gc-twitch-embed [channel]="twitchChannel(item.settings)" />
                             }
                         } @else if (item.type === linksType) {
-                            <gc-link-list [links]="linkItems(item.settings)" />
+                            <gc-link-list
+                                [links]="linkItems(item.settings)"
+                                [editing]="isEditingData(item)"
+                                (linksChange)="onBuiltInLinksChange(item, $event)"
+                                (cancel)="stopDataEdit(item.id)"
+                            />
+                        } @else if (item.type === photosType || item.type === videosType) {
+                            <gc-media-gallery
+                                [kind]="item.type === videosType ? 'video' : 'photo'"
+                                [items]="galleryItems(item.settings)"
+                                [editing]="isEditingData(item)"
+                                (itemsChange)="onBuiltInGalleryChange(item, $event)"
+                                (cancel)="stopDataEdit(item.id)"
+                            />
                         } @else {
                             <p class="gc-widget__missing">{{ unknownLabel() }}</p>
                         }
@@ -99,7 +133,7 @@
         class="gc-widget__action gc-widget__action--quiet"
         [class.gc-widget__action--current]="isEditingData(item)"
         [attr.aria-label]="editDataLabel()"
-        [title]="editDataLabel()"
+        [gcTooltip]="editDataLabel()"
         (click)="onEditData(item)"
     >
         &#9998;

@@ -59,6 +59,10 @@
     opacity: 0.6;
 }
 
+.gc-workspace__settings-modal {
+    --gc-modal-width: 32rem;
+}
+
 @media (max-width: 48rem) {
     .gc-workspace {
         grid-template-columns: minmax(0, 1fr);

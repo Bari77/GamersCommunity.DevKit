@@ -1,4 +1,86 @@
-@if (items().length === 0) {
+@if (editing()) {
+    <div class="gc-gallery-edit">
+        <form class="gc-gallery-edit__form" (submit)="add($event)">
+            <input
+                class="gc-gallery-edit__input"
+                type="text"
+                [placeholder]="titlePlaceholder()"
+                [attr.aria-label]="titlePlaceholder()"
+                [value]="draftTitle()"
+                (input)="draftTitle.set(inputValue($event))"
+            />
+            <input
+                class="gc-gallery-edit__input gc-gallery-edit__input--wide"
+                type="url"
+                [placeholder]="urlPlaceholder()"
+                aria-label="URL"
+                [value]="draftUrl()"
+                (input)="draftUrl.set(inputValue($event))"
+            />
+            <button type="submit" class="gc-gallery-edit__add" [disabled]="!canAdd()">+ {{ addLabel() }}</button>
+        </form>
+
+        @if (draft().length === 0) {
+            <p class="gc-gallery__empty">{{ emptyLabel() }}</p>
+        } @else {
+            <ul class="gc-gallery-edit__list">
+                @for (row of draft(); track $index; let first = $first; let last = $last) {
+                    <li class="gc-gallery-edit__row">
+                        <input
+                            class="gc-gallery-edit__input"
+                            type="text"
+                            [placeholder]="titlePlaceholder()"
+                            [attr.aria-label]="titlePlaceholder()"
+                            [value]="row.title ?? ''"
+                            (change)="editRow($index, 'title', $event)"
+                        />
+                        <input
+                            class="gc-gallery-edit__input gc-gallery-edit__input--wide"
+                            type="url"
+                            [placeholder]="urlPlaceholder()"
+                            aria-label="URL"
+                            [value]="row.url"
+                            (change)="editRow($index, 'url', $event)"
+                        />
+                        <span class="gc-gallery-edit__tools">
+                            <button
+                                type="button"
+                                class="gc-gallery-edit__tool"
+                                [disabled]="first"
+                                [attr.aria-label]="moveUpLabel()"
+                                (click)="moveRow($index, -1)"
+                            >
+                                &#8593;
+                            </button>
+                            <button
+                                type="button"
+                                class="gc-gallery-edit__tool"
+                                [disabled]="last"
+                                [attr.aria-label]="moveDownLabel()"
+                                (click)="moveRow($index, 1)"
+                            >
+                                &#8595;
+                            </button>
+                            <button
+                                type="button"
+                                class="gc-gallery-edit__tool gc-gallery-edit__tool--danger"
+                                [attr.aria-label]="removeLabel()"
+                                (click)="removeRow($index)"
+                            >
+                                &#10005;
+                            </button>
+                        </span>
+                    </li>
+                }
+            </ul>
+        }
+
+        <div class="gc-gallery-edit__actions">
+            <button type="button" class="gc-gallery-edit__cancel" (click)="cancel.emit()">{{ cancelLabel() }}</button>
+            <button type="button" class="gc-gallery-edit__save" (click)="commit()">{{ saveLabel() }}</button>
+        </div>
+    </div>
+} @else if (items().length === 0) {
     <p class="gc-gallery__empty">{{ emptyLabel() }}</p>
 } @else if (kind() === 'video') {
     <div class="gc-gallery gc-gallery--video">

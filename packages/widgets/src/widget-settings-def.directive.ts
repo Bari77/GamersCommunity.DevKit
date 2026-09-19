@@ -3,9 +3,9 @@ import { registerWidgetTemplateDef } from './widget-def.registry';
 import { WidgetTemplateContext } from './widget-template';
 
 /**
- * Extra settings UI for one widget *type*, rendered inside the gear panel below the
- * schema-driven fields. Widgets whose content lives in the host's backend declare their
- * data management here, which keeps the widget body itself identical for every visitor.
+ * Extra settings UI for one widget *type*, rendered inside the gear modal below the
+ * schema-driven fields. Only instance parameters belong here (title is already provided).
+ * Content that lives in the host's backend is edited in the widget via `gcWidgetEditable`.
  */
 @Directive({
     selector: '[gcWidgetSettings]',

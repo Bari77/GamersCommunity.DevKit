@@ -20,7 +20,7 @@ export class WidgetDefDirective {
 
     /**
      * The hover pencil then starts in-place data editing (via `editingData` / `stopDataEdit` on
-     * the template context) instead of opening the settings panel.
+     * the template context). The gear still opens instance settings (title and catalog fields).
      */
     public readonly editable = input(false, { alias: 'gcWidgetEditable', transform: booleanAttribute });
 

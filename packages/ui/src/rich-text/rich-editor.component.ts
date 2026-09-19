@@ -144,6 +144,10 @@ export class RichEditorComponent implements AfterViewInit, OnDestroy {
         this.editor?.chain().focus().toggleUnderline().run();
     }
 
+    protected toggleHeading(level: 2 | 3): void {
+        this.editor?.chain().focus().toggleHeading({ level }).run();
+    }
+
     protected toggleBulletList(): void {
         this.editor?.chain().focus().toggleBulletList().run();
     }

@@ -232,7 +232,7 @@ export const docsSections: DocsSection[] = [
         package: PACKAGES.widgets,
         breadcrumb: 'Widgets',
         summary:
-            'Le tableau de bord personnalisable : pages, grille redimensionnable, catalogue et panneau de réglages.',
+            'Le tableau de bord personnalisable : pages, grille redimensionnable, catalogue et modale de réglages.',
         pages: [
             {
                 path: '',

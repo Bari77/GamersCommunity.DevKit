@@ -1,3 +1,5 @@
+@use '../../styles/controls';
+
 :host {
     display: block;
 }
@@ -75,4 +77,78 @@
     max-width: 100%;
     max-height: 85%;
     object-fit: contain;
+}
+
+.gc-gallery-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.gc-gallery-edit__form,
+.gc-gallery-edit__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.gc-gallery-edit__input {
+    @include controls.field;
+
+    flex: 1 1 7rem;
+    min-width: 0;
+}
+
+.gc-gallery-edit__input--wide {
+    flex: 2 1 12rem;
+}
+
+.gc-gallery-edit__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.gc-gallery-edit__tools {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    margin-left: auto;
+}
+
+.gc-gallery-edit__tool {
+    @include controls.icon-button(1.7rem);
+}
+
+.gc-gallery-edit__tool--danger {
+    @include controls.danger-button;
+}
+
+.gc-gallery-edit__add {
+    @include controls.dashed-button;
+
+    flex: none;
+    font-size: 0.85rem;
+}
+
+.gc-gallery-edit__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.4rem;
+}
+
+.gc-gallery-edit__cancel {
+    @include controls.ghost-button;
+
+    font-size: 0.85rem;
+}
+
+.gc-gallery-edit__save {
+    @include controls.primary-button;
+
+    font-size: 0.85rem;
 }

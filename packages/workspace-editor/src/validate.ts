@@ -7,7 +7,7 @@ import {
 } from './widget-contract.js';
 import type { ValidationIssue, ValidationSeverity } from './types.js';
 
-const BUILTIN_WIDGET_TYPES = new Set(['gc-twitch', 'gc-links']);
+const BUILTIN_WIDGET_TYPES = new Set(['gc-twitch', 'gc-links', 'gc-photos', 'gc-videos']);
 
 function issue(path: string, message: string, severity: ValidationSeverity = 'error'): ValidationIssue {
     return { path, message, severity };

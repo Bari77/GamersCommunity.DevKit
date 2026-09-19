@@ -27,9 +27,12 @@ import {
 } from 'angular-gridster2';
 import { findCatalogEntry, WidgetCatalog } from '../catalog';
 import { GcLink, LinkListComponent } from '../components/link-list/link-list.component';
+import { MediaGalleryComponent } from '../components/media-gallery/media-gallery.component';
 import { TwitchEmbedComponent } from '../components/twitch-embed/twitch-embed.component';
+import { GcTooltipDirective } from '../tooltip/gc-tooltip.directive';
 import { WidgetDefDirective } from '../widget-def.directive';
 import { WidgetTemplateContext, WidgetTemplateDef } from '../widget-template';
+import { GcGalleryItem } from '../media';
 import { WidgetInstance, WidgetSettings } from '../workspace';
 
 export const WIDGET_DRAG_HANDLE_CLASS = 'gc-widget__handle';
@@ -37,6 +40,10 @@ export const WIDGET_DRAG_HANDLE_CLASS = 'gc-widget__handle';
 /** Widget types the package renders on its own, with no host template. */
 export const GC_TWITCH_WIDGET = 'gc-twitch';
 export const GC_LINKS_WIDGET = 'gc-links';
+export const GC_PHOTOS_WIDGET = 'gc-photos';
+export const GC_VIDEOS_WIDGET = 'gc-videos';
+
+const BUILTIN_DATA_EDITABLE = new Set([GC_LINKS_WIDGET, GC_TWITCH_WIDGET, GC_PHOTOS_WIDGET, GC_VIDEOS_WIDGET]);
 
 type GridWidget = GridsterItemConfig & {
     id: string;
@@ -55,7 +62,15 @@ export type WidgetPosition = Pick<WidgetInstance, 'id' | 'x' | 'y' | 'cols' | 'r
     selector: 'gc-widget-grid',
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [Gridster, GridsterItem, LinkListComponent, NgTemplateOutlet, TwitchEmbedComponent],
+    imports: [
+        Gridster,
+        GridsterItem,
+        GcTooltipDirective,
+        LinkListComponent,
+        MediaGalleryComponent,
+        NgTemplateOutlet,
+        TwitchEmbedComponent,
+    ],
     templateUrl: './widget-grid.component.html',
     styleUrl: './widget-grid.component.scss',
 })
@@ -72,7 +87,7 @@ export class WidgetGridComponent {
     /** Sample-data mode for the standalone layout editor. */
     public readonly preview = input(false);
 
-    /** Shows the data-edit pencil outside layout edit, so the owner tweaks a widget without moving anything. */
+    /** Shows the gear outside layout edit. The pencil is separate: only gcWidgetEditable widgets get it. */
     public readonly canConfigure = input(false);
 
     public readonly columns = input(12);
@@ -98,10 +113,19 @@ export class WidgetGridComponent {
 
     public readonly configure = output<string>();
 
+    /** Emitted when an in-place editor writes widget-carried settings (built-in links, host templates). */
+    public readonly settingsChange = output<{ id: string; settings: WidgetSettings }>();
+
+    /** Emitted when the pencil starts in-place editing, so the workspace can close settings. */
+    public readonly dataEdit = output<string>();
+
     protected readonly twitchType = GC_TWITCH_WIDGET;
     protected readonly linksType = GC_LINKS_WIDGET;
+    protected readonly photosType = GC_PHOTOS_WIDGET;
+    protected readonly videosType = GC_VIDEOS_WIDGET;
     protected readonly items = signal<GridWidget[]>([]);
     private readonly editingDataId = signal<string | null>(null);
+    protected readonly twitchDraft = signal('');
 
     private readonly host = inject(ElementRef<HTMLElement>);
     private readonly destroyRef = inject(DestroyRef);
@@ -196,7 +220,12 @@ export class WidgetGridComponent {
             instance: item.instance,
             editingData: this.isEditingData(item),
             stopDataEdit: () => this.stopDataEdit(item.id),
+            updateSettings: (settings: WidgetSettings) => this.settingsChange.emit({ id: item.id, settings }),
         };
+    }
+
+    protected showsDataEdit(item: GridWidget): boolean {
+        return this.canConfigure() && !this.editing() && !this.preview() && this.isInPlaceEditable(item.type);
     }
 
     protected isEditingData(item: GridWidget): boolean {
@@ -204,13 +233,21 @@ export class WidgetGridComponent {
     }
 
     protected onEditData(item: GridWidget): void {
-        if (this.isInPlaceEditable(item.type)) {
-            this.editingDataId.set(item.id);
+        if (!this.isInPlaceEditable(item.type)) {
             return;
         }
 
-        this.editingDataId.set(null);
-        this.configure.emit(item.id);
+        if (this.isEditingData(item)) {
+            this.editingDataId.set(null);
+            return;
+        }
+
+        if (item.type === this.twitchType) {
+            this.twitchDraft.set(this.asText(item.settings['channel']));
+        }
+
+        this.editingDataId.set(item.id);
+        this.dataEdit.emit(item.id);
     }
 
     protected onConfigure(item: GridWidget): void {
@@ -220,6 +257,14 @@ export class WidgetGridComponent {
 
     protected asText(value: unknown): string {
         return typeof value === 'string' ? value : '';
+    }
+
+    protected inputValue(event: Event): string {
+        return (event.target as HTMLInputElement).value;
+    }
+
+    protected asGallery(value: unknown): GcGalleryItem[] {
+        return Array.isArray(value) ? (value as GcGalleryItem[]) : [];
     }
 
     protected asLinks(value: unknown): GcLink[] {
@@ -252,6 +297,40 @@ export class WidgetGridComponent {
         ];
     }
 
+    protected onBuiltInLinksChange(item: GridWidget, links: GcLink[]): void {
+        this.settingsChange.emit({ id: item.id, settings: { ...item.settings, links } });
+        this.stopDataEdit(item.id);
+    }
+
+    protected onBuiltInGalleryChange(item: GridWidget, items: GcGalleryItem[]): void {
+        this.settingsChange.emit({ id: item.id, settings: { ...item.settings, items } });
+        this.stopDataEdit(item.id);
+    }
+
+    protected onBuiltInTwitchSave(item: GridWidget): void {
+        this.settingsChange.emit({
+            id: item.id,
+            settings: { ...item.settings, channel: this.twitchDraft().trim() },
+        });
+        this.stopDataEdit(item.id);
+    }
+
+    protected galleryItems(settings: WidgetSettings): GcGalleryItem[] {
+        const items = this.asGallery(settings['items']);
+        if (items.length > 0) {
+            return items;
+        }
+
+        if (!this.preview()) {
+            return [];
+        }
+
+        return [
+            { url: 'https://picsum.photos/seed/gc-match/640/360', title: 'Match' },
+            { url: 'https://picsum.photos/seed/gc-team/640/360', title: 'Team' },
+        ];
+    }
+
     protected showTwitchPreview(settings: WidgetSettings): boolean {
         return this.preview() && !this.asText(settings['channel']);
     }
@@ -277,10 +356,15 @@ export class WidgetGridComponent {
 
     private isInPlaceEditable(type: string): boolean {
         const defs: readonly WidgetTemplateDef[] = this.defs() ?? this.ownDefs();
-        return defs.some((def) => def.type() === type && !!def.editable?.());
+        const def = defs.find((entry) => entry.type() === type);
+        if (def) {
+            return !!def.editable?.();
+        }
+
+        return BUILTIN_DATA_EDITABLE.has(type);
     }
 
-    private stopDataEdit(id: string): void {
+    protected stopDataEdit(id: string): void {
         if (this.editingDataId() === id) {
             this.editingDataId.set(null);
         }

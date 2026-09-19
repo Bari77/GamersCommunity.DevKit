@@ -24,7 +24,9 @@ import { PageComponent } from '../../shared/page.component';
         >
             <p>
                 Ce sont des composants indépendants : ils ne connaissent ni le workspace ni le catalogue, et se
-                contentent de leurs entrées. Rien n'empêche de les utiliser sur une page ordinaire.
+                contentent de leurs entrées. Rien n'empêche de les utiliser sur une page ordinaire. Placés dans un
+                workspace sous les types <code>gc-links</code>, <code>gc-twitch</code>, <code>gc-photos</code> et
+                <code>gc-videos</code>, le crayon ouvre leur éditeur interne sans gabarit hôte.
             </p>
 
             <h2>gc-link-list</h2>
@@ -148,6 +150,12 @@ export class BuiltInPageComponent {
     protected readonly linkInputs: ApiRow[] = [
         { name: 'links', type: 'GcLink[]', default: '[]', description: 'Liens à afficher. Ceux sans URL sont ignorés.' },
         {
+            name: 'editing',
+            type: 'boolean',
+            default: 'false',
+            description: 'Remplace la liste par l’éditeur interne (brouillon, puis enregistrer ou annuler).',
+        },
+        {
             name: 'emptyLabel',
             type: 'string',
             default: "'No link yet.'",
@@ -157,6 +165,12 @@ export class BuiltInPageComponent {
 
     protected readonly galleryInputs: ApiRow[] = [
         { name: 'items', type: 'GcGalleryItem[]', default: '[]', description: 'Médias à présenter.' },
+        {
+            name: 'editing',
+            type: 'boolean',
+            default: 'false',
+            description: 'Remplace la galerie par l’éditeur interne (brouillon, puis enregistrer ou annuler).',
+        },
         {
             name: 'kind',
             type: "'photo' | 'video'",

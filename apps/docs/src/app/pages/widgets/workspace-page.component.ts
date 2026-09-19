@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, output, signal, untracked } from '@angular/core';
+import { isRichHtmlBlank, RichContentComponent, RichEditorComponent } from '@bari77/gc-ui';
 import {
     GcLink,
     LinkListComponent,
@@ -14,6 +15,103 @@ import { CodeBlockComponent } from '../../shared/code-block.component';
 import { DemoComponent } from '../../shared/demo.component';
 import { PageComponent } from '../../shared/page.component';
 
+/** In-place note editor for the live workspace demo: draft, then save or cancel. */
+@Component({
+    selector: 'gcd-demo-note',
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [RichContentComponent, RichEditorComponent],
+    template: `
+        @if (editing()) {
+            <div class="gcd-widget-edit">
+                <gc-rich-editor
+                    [value]="draft()"
+                    (valueChange)="draft.set($event)"
+                    [maxLength]="4000"
+                    placeholder="Présentez-vous en quelques lignes"
+                ></gc-rich-editor>
+                <div class="gcd-widget-edit__actions">
+                    <button type="button" class="gcd-widget-edit__cancel" (click)="cancel.emit()">Annuler</button>
+                    <button type="button" class="gcd-widget-edit__save" (click)="commit()">Enregistrer</button>
+                </div>
+            </div>
+        } @else if (!blank()) {
+            <gc-rich-content [html]="html()"></gc-rich-content>
+        } @else {
+            <p class="gcd-widget-text gcd-widget-text--empty">Aucun texte pour l'instant.</p>
+        }
+    `,
+    styles: `
+        .gcd-widget-text {
+            margin: 0;
+            font-size: 0.8125rem;
+            line-height: 1.6;
+        }
+
+        .gcd-widget-text--empty {
+            opacity: 0.55;
+        }
+
+        .gcd-widget-edit {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .gcd-widget-edit__actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.4rem;
+        }
+
+        .gcd-widget-edit__cancel,
+        .gcd-widget-edit__save {
+            cursor: pointer;
+            padding: 0.4rem 0.85rem;
+            border-radius: 0.5rem;
+            font: inherit;
+            font-size: 0.85rem;
+        }
+
+        .gcd-widget-edit__cancel {
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.04);
+            color: inherit;
+        }
+
+        .gcd-widget-edit__save {
+            border: 1px solid transparent;
+            background: #3366ff;
+            color: #fff;
+        }
+    `,
+})
+export class DemoNoteComponent {
+    public readonly html = input('');
+    public readonly editing = input(false);
+    public readonly save = output<string>();
+    public readonly cancel = output<void>();
+
+    protected readonly draft = signal('');
+    protected readonly blank = computed(() => isRichHtmlBlank(this.html()));
+
+    public constructor() {
+        effect(() => {
+            const editing = this.editing();
+            untracked(() => {
+                if (editing) {
+                    this.draft.set(this.html());
+                }
+            });
+        });
+    }
+
+    protected commit(): void {
+        const html = this.draft();
+        this.save.emit(isRichHtmlBlank(html) ? '' : html);
+    }
+}
+
 @Component({
     selector: 'gcd-workspace-page',
     standalone: true,
@@ -26,10 +124,11 @@ import { PageComponent } from '../../shared/page.component';
         WidgetWorkspaceComponent,
         WidgetDefDirective,
         LinkListComponent,
+        DemoNoteComponent,
     ],
     template: `
         <gcd-page
-            lead="Le tableau de bord complet : rail de pages, grille redimensionnable, catalogue et panneau de réglages, assemblés autour d'un brouillon local."
+            lead="Le tableau de bord complet : rail de pages, grille redimensionnable, catalogue et modale de réglages, assemblés autour d'un brouillon local."
         >
             <p>
                 Passez en mode édition pour déplacer un widget par son en-tête, le redimensionner par son coin, en
@@ -65,12 +164,40 @@ import { PageComponent } from '../../shared/page.component';
                         doneLabel="Terminé"
                         (save)="onSave($event)"
                     >
-                        <ng-template gcWidget="notes" let-settings>
-                            <p class="gcd-widget-text">{{ text(settings, "body") }}</p>
+                        <ng-template
+                            gcWidget="notes"
+                            gcWidgetEditable
+                            let-settings
+                            let-editingData="editingData"
+                            let-stopDataEdit="stopDataEdit"
+                            let-updateSettings="updateSettings"
+                        >
+                            <gcd-demo-note
+                                [html]="text(settings, 'body')"
+                                [editing]="!!editingData"
+                                (save)="updateSettings?.({ ...settings, body: $event }); stopDataEdit?.()"
+                                (cancel)="stopDataEdit?.()"
+                            ></gcd-demo-note>
                         </ng-template>
 
-                        <ng-template gcWidget="links" let-settings>
-                            <gc-link-list [links]="links(settings)" emptyLabel="Aucun lien pour l'instant." />
+                        <ng-template
+                            gcWidget="links"
+                            gcWidgetEditable
+                            let-settings
+                            let-editingData="editingData"
+                            let-stopDataEdit="stopDataEdit"
+                            let-updateSettings="updateSettings"
+                        >
+                            <gc-link-list
+                                [links]="links(settings)"
+                                emptyLabel="Aucun lien pour l'instant."
+                                addLabel="Ajouter"
+                                saveLabel="Enregistrer"
+                                cancelLabel="Annuler"
+                                [editing]="!!editingData"
+                                (linksChange)="updateSettings?.({ ...settings, links: $event }); stopDataEdit?.()"
+                                (cancel)="stopDataEdit?.()"
+                            ></gc-link-list>
                         </ng-template>
                     </gc-widget-workspace>
                 </div>
@@ -125,18 +252,11 @@ import { PageComponent } from '../../shared/page.component';
     styles: [
         `
             .gcd-workspace-frame {
-                min-height: 26rem;
+                min-height: 42rem;
                 border: 1px solid var(--gcd-border);
                 border-radius: 0.45rem;
                 background: var(--gc-surface-0);
                 overflow: hidden;
-            }
-
-            .gcd-widget-text {
-                margin: 0;
-                font-size: 0.8125rem;
-                line-height: 1.6;
-                color: #c9d4ea;
             }
         `,
     ],
@@ -159,10 +279,10 @@ export class WorkspacePageComponent {
                         x: 0,
                         y: 0,
                         cols: 6,
-                        rows: 3,
+                        rows: 5,
                         settings: {
                             title: 'À propos',
-                            body: "Joueuse du soir, disponible en semaine. J'organise les sessions du mercredi et du dimanche.",
+                            body: "<p>Joueuse du soir, disponible en semaine. J'organise les sessions du mercredi et du dimanche.</p>",
                         },
                     },
                     {
@@ -178,6 +298,42 @@ export class WorkspacePageComponent {
                                 { url: 'https://twitch.tv/gamerscommunity', label: 'Ma chaîne' },
                                 { url: 'https://github.com/Bari77' },
                             ],
+                        },
+                    },
+                    {
+                        id: 'w-twitch',
+                        type: 'gc-twitch',
+                        x: 6,
+                        y: 3,
+                        cols: 6,
+                        rows: 5,
+                        settings: { title: 'En live', channel: 'shroud' },
+                    },
+                    {
+                        id: 'w-photos',
+                        type: 'gc-photos',
+                        x: 0,
+                        y: 5,
+                        cols: 6,
+                        rows: 5,
+                        settings: {
+                            title: 'Photos',
+                            items: [
+                                { url: 'https://picsum.photos/seed/gc-match/640/360', title: 'Fin de partie' },
+                                { url: 'https://picsum.photos/seed/gc-team/640/360', title: "Photo d'équipe" },
+                            ],
+                        },
+                    },
+                    {
+                        id: 'w-videos',
+                        type: 'gc-videos',
+                        x: 6,
+                        y: 8,
+                        cols: 6,
+                        rows: 5,
+                        settings: {
+                            title: 'Vidéos',
+                            items: [{ url: 'https://www.youtube.com/watch?v=jNQXAC9IVRw', title: 'Me at the zoo' }],
                         },
                     },
                 ],
@@ -196,16 +352,8 @@ export class WorkspacePageComponent {
             label: 'Note',
             description: 'Un bloc de texte libre.',
             cols: 6,
-            rows: 3,
-            fields: [
-                {
-                    key: 'body',
-                    label: 'Texte',
-                    type: 'textarea',
-                    placeholder: 'Présentez-vous en quelques lignes',
-                },
-            ],
-            defaultSettings: { body: 'Un mot sur moi.' },
+            rows: 5,
+            defaultSettings: { body: '<p>Un mot sur moi.</p>' },
         },
         {
             type: 'links',
@@ -213,19 +361,30 @@ export class WorkspacePageComponent {
             description: 'Une liste de liens vers vos réseaux.',
             cols: 6,
             rows: 3,
-            fields: [
-                {
-                    key: 'links',
-                    label: 'Liens',
-                    type: 'list',
-                    addLabel: 'Ajouter un lien',
-                    itemFields: [
-                        { key: 'label', label: 'Libellé', type: 'text', placeholder: 'Ma chaîne' },
-                        { key: 'url', label: 'Adresse', type: 'url', placeholder: 'https://twitch.tv/…' },
-                    ],
-                },
-            ],
             defaultSettings: { links: [] },
+        },
+        {
+            type: 'gc-twitch',
+            label: 'Twitch',
+            description: 'Le lecteur d’une chaîne.',
+            cols: 6,
+            rows: 5,
+        },
+        {
+            type: 'gc-photos',
+            label: 'Photos',
+            description: 'Une galerie d’images.',
+            cols: 6,
+            rows: 5,
+            defaultSettings: { items: [] },
+        },
+        {
+            type: 'gc-videos',
+            label: 'Vidéos',
+            description: 'Une galerie de lecteurs vidéo.',
+            cols: 6,
+            rows: 5,
+            defaultSettings: { items: [] },
         },
     ];
 
@@ -257,12 +416,39 @@ export class WorkspacePageComponent {
     [(editing)]="editing"
     (save)="onSave($event)"
 >
-    <ng-template gcWidget="notes" let-settings>
-        <p>{{ text(settings, 'body') }}</p>
+    <ng-template
+        gcWidget="notes"
+        gcWidgetEditable
+        let-settings
+        let-editingData="editingData"
+        let-stopDataEdit="stopDataEdit"
+        let-updateSettings="updateSettings"
+    >
+        @if (editingData) {
+            <gc-rich-editor
+                [value]="text(settings, 'body')"
+                (valueChange)="updateSettings?.({ ...settings, body: $event })"
+                [maxLength]="4000"
+            ></gc-rich-editor>
+        } @else {
+            <gc-rich-content [html]="text(settings, 'body')"></gc-rich-content>
+        }
     </ng-template>
 
-    <ng-template gcWidget="links" let-settings>
-        <gc-link-list [links]="links(settings)" />
+    <ng-template
+        gcWidget="links"
+        gcWidgetEditable
+        let-settings
+        let-editingData="editingData"
+        let-stopDataEdit="stopDataEdit"
+        let-updateSettings="updateSettings"
+    >
+        <gc-link-list
+            [links]="links(settings)"
+            [editing]="!!editingData"
+            (linksChange)="updateSettings?.({ ...settings, links: $event }); stopDataEdit?.()"
+            (cancel)="stopDataEdit?.()"
+        ></gc-link-list>
     </ng-template>
 </gc-widget-workspace>`;
 
@@ -274,6 +460,9 @@ export class WorkspacePageComponent {
     protected readonly catalog: WidgetCatalog = [
         { type: 'notes', label: 'Note', cols: 6, rows: 3 },
         { type: 'links', label: 'Liens', cols: 6, rows: 3 },
+        { type: 'gc-twitch', label: 'Twitch', cols: 6, rows: 5 },
+        { type: 'gc-photos', label: 'Photos', cols: 6, rows: 5 },
+        { type: 'gc-videos', label: 'Vidéos', cols: 6, rows: 5 },
     ];
 
     protected onSave(next: WidgetWorkspace): void {
@@ -326,7 +515,7 @@ export class WorkspacePageComponent {
             type: 'boolean',
             default: 'false',
             description:
-                "Affiche la barre d'édition, le crayon au survol et la roue crantée. À false, le tableau est en lecture seule.",
+                "Affiche la barre d'édition, le crayon (données) et la roue crantée (réglages). À false, le tableau est en lecture seule.",
         },
         {
             name: 'saving',
@@ -396,7 +585,7 @@ export class WorkspacePageComponent {
             name: 'editDataLabel',
             type: 'string',
             default: "'Edit data'",
-            description: 'Infobulle du crayon affiché au survol, hors mode mise en page.',
+            description: 'Infobulle du crayon : remplace le contenu du widget par son éditeur, hors mode mise en page.',
         },
         {
             name: 'removeWidgetLabel',
@@ -416,7 +605,7 @@ export class WorkspacePageComponent {
             default: "'Leave empty to drop the header.'",
             description: 'Aide affichée sous le champ de titre.',
         },
-        { name: 'doneLabel', type: 'string', default: "'Done'", description: 'Ferme le panneau de réglages.' },
+        { name: 'doneLabel', type: 'string', default: "'Done'", description: 'Ferme la modale de réglages.' },
     ];
 
     protected readonly outputs: ApiRow[] = [
@@ -424,7 +613,7 @@ export class WorkspacePageComponent {
             name: 'save',
             type: 'OutputEmitterRef<WidgetWorkspace>',
             description:
-                'Workspace normalisé à persister. Émis à la validation en mode édition, et à la fermeture du panneau de réglages hors édition si quelque chose a changé.',
+                'Workspace normalisé à persister. Émis à la validation en mode édition, et à la fermeture de la modale de réglages hors édition si quelque chose a changé.',
         },
     ];
 }

@@ -28,7 +28,7 @@ import { PageComponent } from '../../shared/page.component';
             <h2>Champs de réglage</h2>
 
             <p>
-                Le panneau de réglages est généré à partir de <code>fields</code> : il n'y a rien à écrire pour un
+                La modale de réglages est générée à partir de <code>fields</code> : il n'y a rien à écrire pour un
                 widget dont les réglages tiennent en quelques champs simples. Deux formes existent.
             </p>
 
@@ -52,10 +52,9 @@ import { PageComponent } from '../../shared/page.component';
             <p>
                 Quand les champs générés ne suffisent pas, la directive <code>gcWidgetSettings</code> ajoute votre
                 propre interface <strong>sous</strong> les champs générés, pour un type donné. Elle reçoit le même
-                contexte que le gabarit de rendu. C'est là que se déclare, par exemple, la gestion d'un contenu qui
-                vit dans le backend de l'application plutôt que dans les réglages. Le crayon au survol ouvre ce
-                panneau, sauf si le gabarit de rendu est marqué <code>gcWidgetEditable</code> — auquel cas
-                l'édition se fait dans le widget, voir <a routerLink="/widgets">Concepts</a>.
+                contexte que le gabarit de rendu. Réservez-la aux paramètres d'instance, pas au contenu backend :
+                celui-ci s'édite dans le widget via <code>gcWidgetEditable</code>, voir
+                <a routerLink="/widgets">Concepts</a>.
             </p>
 
             <gcd-code language="html" [code]="customSnippet" />
@@ -116,15 +115,18 @@ const catalog: WidgetCatalog = [
     ],
 }`;
 
-    protected readonly customSnippet = `<gc-widget-workspace [workspace]="workspace()" [catalog]="catalog">
-    <ng-template gcWidget="roster" let-settings>
-        <app-roster [roster]="settings" />
-    </ng-template>
-
-    <ng-template gcWidgetSettings="roster" let-settings let-instance="instance">
-        <app-roster-picker [settings]="settings" [instance]="instance" />
-    </ng-template>
-</gc-widget-workspace>`;
+    protected readonly customSnippet = `<ng-template
+    gcWidget="links"
+    gcWidgetEditable
+    let-editingData="editingData"
+    let-stopDataEdit="stopDataEdit"
+>
+    @if (editingData) {
+        <app-link-admin (done)="stopDataEdit()" />
+    } @else {
+        <app-link-list />
+    }
+</ng-template>`;
 
     protected readonly entry: ApiRow[] = [
         { name: 'type', type: 'string', default: 'requis', description: "Identifiant du type, stocké dans chaque instance." },
@@ -146,7 +148,7 @@ const catalog: WidgetCatalog = [
         {
             name: 'fields',
             type: 'WidgetSettingsField[]',
-            description: 'Champs à générer dans le panneau de réglages.',
+            description: 'Champs à générer dans la modale de réglages.',
         },
         {
             name: 'defaultSettings',

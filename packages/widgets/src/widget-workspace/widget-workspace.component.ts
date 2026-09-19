@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model, output, signal, TemplateRef, untracked } from '@angular/core';
+import { ModalComponent } from '@bari77/gc-ui';
 import { findCatalogEntry, WidgetCatalog, WidgetCatalogEntry } from '../catalog';
 import { WidgetDefRegistry } from '../widget-def.registry';
 import { WidgetTemplateContext } from '../widget-template';
@@ -44,6 +45,7 @@ import {
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        ModalComponent,
         NgTemplateOutlet,
         WidgetEditBarComponent,
         WidgetGridComponent,
@@ -202,7 +204,7 @@ export class WidgetWorkspaceComponent {
     }
 
     protected onSelectPage(id: string): void {
-        // Leaving the page hides the settings panel, so commit before it disappears.
+        // Leaving the page hides the settings modal, so commit before it disappears.
         this.onCloseSettings();
         this.activePageId.set(id);
     }
@@ -264,6 +266,14 @@ export class WidgetWorkspaceComponent {
 
     /** Outside edit mode the gear works on its own draft, committed when the panel closes. */
     protected onConfigure(widgetId: string): void {
+        if (this.configuringId() === widgetId) {
+            this.configuringId.set(null);
+            if (!this.editing()) {
+                this.draft.set(null);
+            }
+            return;
+        }
+
         if (!this.draft()) {
             this.draft.set(cloneWorkspace(this.workspace()));
         }
@@ -277,6 +287,40 @@ export class WidgetWorkspaceComponent {
      */
     protected onCloseSettings(): void {
         this.configuringId.set(null);
+        this.persistDraftOutsideEdit();
+    }
+
+    protected onSettingsChange(settings: WidgetSettings): void {
+        const widgetId = this.configuringId();
+        if (!widgetId) {
+            return;
+        }
+
+        this.mutate((current, pageId) => updateWidgetSettings(current, pageId, widgetId, settings));
+    }
+
+    /** In-place editors that write instance settings (built-in links) persist the same way as the gear. */
+    protected onWidgetSettingsFromGrid(event: { id: string; settings: WidgetSettings }): void {
+        if (!this.draft()) {
+            this.draft.set(cloneWorkspace(this.workspace()));
+        }
+
+        this.mutate((current, pageId) => updateWidgetSettings(current, pageId, event.id, event.settings));
+        this.persistDraftOutsideEdit();
+    }
+
+    protected onCancel(): void {
+        this.draft.set(null);
+    }
+
+    protected onSave(): void {
+        const current = this.draft();
+        if (current) {
+            this.save.emit(normalizeWorkspace(current, this.columns()));
+        }
+    }
+
+    private persistDraftOutsideEdit(): void {
         const current = this.draft();
         if (this.editing() || !current) {
             return;
@@ -289,26 +333,6 @@ export class WidgetWorkspaceComponent {
         }
 
         this.save.emit(next);
-    }
-
-    protected onSettingsChange(settings: WidgetSettings): void {
-        const widgetId = this.configuringId();
-        if (!widgetId) {
-            return;
-        }
-
-        this.mutate((current, pageId) => updateWidgetSettings(current, pageId, widgetId, settings));
-    }
-
-    protected onCancel(): void {
-        this.draft.set(null);
-    }
-
-    protected onSave(): void {
-        const current = this.draft();
-        if (current) {
-            this.save.emit(normalizeWorkspace(current, this.columns()));
-        }
     }
 
     private mutate(project: (current: WidgetWorkspace, pageId: string) => WidgetWorkspace): void {

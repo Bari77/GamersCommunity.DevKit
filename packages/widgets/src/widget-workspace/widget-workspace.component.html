@@ -58,27 +58,6 @@
             />
         }
 
-        @if (configuring(); as target) {
-            <gc-widget-settings
-                [entry]="target.entry"
-                [settings]="target.widget.settings"
-                [titleLabel]="widgetTitleLabel()"
-                [titleHint]="widgetTitleHint()"
-                [doneLabel]="doneLabel()"
-                [moveUpLabel]="moveUpLabel()"
-                [moveDownLabel]="moveDownLabel()"
-                (settingsChange)="onSettingsChange($event)"
-                (close)="onCloseSettings()"
-            >
-                @if (settingsTemplateFor(target.widget.type); as tpl) {
-                    <ng-container
-                        [ngTemplateOutlet]="tpl"
-                        [ngTemplateOutletContext]="{ $implicit: target.widget.settings, instance: target.widget }"
-                    />
-                }
-            </gc-widget-settings>
-        }
-
         <gc-widget-grid
             [widgets]="activePage()?.widgets ?? []"
             [catalog]="catalog()"
@@ -96,8 +75,38 @@
             (positionsChange)="onPositions($event)"
             (remove)="onRemoveWidget($event)"
             (configure)="onConfigure($event)"
+            (settingsChange)="onWidgetSettingsFromGrid($event)"
+            (dataEdit)="onCloseSettings()"
         />
     </div>
 </div>
+
+@if (configuring(); as target) {
+    <gc-modal
+        class="gc-workspace__settings-modal"
+        [open]="true"
+        [ariaLabel]="settingsLabel()"
+        (dismissed)="onCloseSettings()"
+    >
+        <gc-widget-settings
+            [entry]="target.entry"
+            [settings]="target.widget.settings"
+            [titleLabel]="widgetTitleLabel()"
+            [titleHint]="widgetTitleHint()"
+            [doneLabel]="doneLabel()"
+            [moveUpLabel]="moveUpLabel()"
+            [moveDownLabel]="moveDownLabel()"
+            (settingsChange)="onSettingsChange($event)"
+            (close)="onCloseSettings()"
+        >
+            @if (settingsTemplateFor(target.widget.type); as tpl) {
+                <ng-container
+                    [ngTemplateOutlet]="tpl"
+                    [ngTemplateOutletContext]="{ $implicit: target.widget.settings, instance: target.widget }"
+                />
+            }
+        </gc-widget-settings>
+    </gc-modal>
+}
 
 <ng-content />

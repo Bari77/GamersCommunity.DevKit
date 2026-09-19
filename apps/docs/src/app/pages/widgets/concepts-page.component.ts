@@ -67,10 +67,18 @@ import { PageComponent } from '../../shared/page.component';
 
             <p>
                 Hors mode mise en page, le propriétaire voit au survol un crayon
-                (<code>editDataLabel</code>, par défaut « Edit data ») à côté de la roue crantée. Le crayon ouvre le
-                panneau de réglages, sauf si le gabarit est marqué <code>gcWidgetEditable</code> : dans ce cas le
-                widget s'édite sur place, via <code>editingData</code> et <code>stopDataEdit</code> fournis au
-                gabarit.
+                (<code>editDataLabel</code>, par défaut « Edit data ») à côté de la roue crantée : sur les
+                gabarits marqués <code>gcWidgetEditable</code>, et sur les types fournis par le kit
+                (<code>gc-links</code>, <code>gc-twitch</code>, <code>gc-photos</code>, <code>gc-videos</code>)
+                même sans gabarit hôte. Le crayon remplace le contenu du widget par son
+                éditeur interne, via <code>editingData</code> et <code>stopDataEdit</code>. Un second clic
+                annule, sans enregistrer.
+            </p>
+
+            <p>
+                La roue crantée ouvre une <strong>modale</strong> de <strong>paramètres portés par l'instance</strong>
+                : le titre. Les listes et le contenu — présentation, liens, médias, chaîne Twitch —
+                s'éditent dans le widget, pas dans cette modale.
             </p>
 
             <gcd-code language="html" label="Édition sur place" [code]="editableSnippet" />
@@ -104,9 +112,9 @@ import { PageComponent } from '../../shared/page.component';
             </p>
 
             <p>
-                La <strong>roue crantée</strong> d'un widget reste accessible hors mode édition pour ajuster ses
-                réglages. Dans ce cas, la fermeture du panneau enregistre toute seule, et uniquement si quelque
-                chose a réellement changé.
+                La <strong>roue crantée</strong> d'un widget reste accessible hors mode édition pour ajuster les
+                paramètres de l'instance. Dans ce cas, la fermeture de la modale enregistre toute seule, et uniquement
+                si quelque chose a réellement changé.
             </p>
 
             <h2>Aller plus loin</h2>

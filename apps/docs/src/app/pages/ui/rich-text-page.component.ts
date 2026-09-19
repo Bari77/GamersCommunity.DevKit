@@ -70,10 +70,10 @@ const SAMPLE_HTML = [
             </p>
 
             <p>
-                La barre d'outils couvre le gras, l'italique, le souligné, les listes à puces et numérotées, le lien
-                et six couleurs de texte. Le barré et les titres <code>h2</code>/<code>h3</code> font aussi partie du
-                schéma : ils s'obtiennent au clavier (<code>~~barré~~</code>, <code>##&nbsp;titre</code>) ou par
-                collage, et survivent à l'assainissement.
+                La barre d'outils couvre le gras, l'italique, le souligné, les titres <code>h2</code>/<code>h3</code>,
+                les listes à puces et numérotées, le lien et six couleurs de texte. Le barré fait aussi partie du
+                schéma : il s'obtient au clavier (<code>~~barré~~</code>) ou par collage, et survit à
+                l'assainissement.
             </p>
 
             <div class="gcd-note">
@@ -194,7 +194,7 @@ const plain = stripRichHtmlPlainText(storedHtml);`;
             name: 'compact',
             type: 'boolean',
             default: 'false',
-            description: 'Barre d’outils réduite pour les champs courts.',
+            description: 'Barre d’outils réduite (sans titres, listes ni lien) pour les champs courts.',
         },
         { name: 'placeholder', type: 'string', default: "''", description: 'Texte fantôme TipTap.' },
         {

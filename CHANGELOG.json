@@ -1,5 +1,47 @@
 [
   {
+    "version": "0.8.30",
+    "date": "2026-09-19",
+    "summary": "La roue ouvre une modale de réglages, le crayon édite le contenu dans le widget, et le rich-text propose H2/H3.",
+    "changes": [
+      {
+        "package": "gc-widgets",
+        "kind": "changed",
+        "text": "La roue crantée ouvre une modale gc-modal (titre et champs d'instance), plus une carte empilée au-dessus de la grille."
+      },
+      {
+        "package": "gc-widgets",
+        "kind": "changed",
+        "text": "Le crayon remplace le contenu du widget par son éditeur interne (editingData / stopDataEdit). Un second clic annule. Les listes et le texte ne passent plus par le formulaire de champs."
+      },
+      {
+        "package": "gc-widgets",
+        "kind": "added",
+        "text": "Édition sur place fournie pour gc-links, gc-twitch, gc-photos et gc-videos, même sans gabarit hôte."
+      },
+      {
+        "package": "gc-widgets",
+        "kind": "added",
+        "text": "Infobulles en overlay (gcTooltip) sur les actions du widget, à la place de l'attribut title natif."
+      },
+      {
+        "package": "gc-ui",
+        "kind": "added",
+        "text": "Boutons H2 et H3 dans la barre de gc-rich-editor (mode complet)."
+      },
+      {
+        "package": "gc-ui",
+        "kind": "changed",
+        "text": "Les titres h2/h3 se distinguent du paragraphe en édition comme à l'affichage."
+      },
+      {
+        "package": "docs",
+        "kind": "changed",
+        "text": "Concepts, Workspace et Widgets fournis : crayon vs roue, types built-in, titres dans la barre d'outils."
+      }
+    ]
+  },
+  {
     "version": "0.8.29",
     "date": "2026-09-19",
     "summary": "Chaque widget s'édite au survol, avec un crayon à côté de la roue crantée.",

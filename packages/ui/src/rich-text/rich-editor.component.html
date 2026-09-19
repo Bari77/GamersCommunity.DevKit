@@ -17,6 +17,22 @@
         @if (!compact()) {
             <button
                 type="button"
+                [class.is-active]="isActive('heading', { level: 2 })"
+                [disabled]="disabled()"
+                (click)="toggleHeading(2)"
+            >
+                H2
+            </button>
+            <button
+                type="button"
+                [class.is-active]="isActive('heading', { level: 3 })"
+                [disabled]="disabled()"
+                (click)="toggleHeading(3)"
+            >
+                H3
+            </button>
+            <button
+                type="button"
                 [class.is-active]="isActive('bulletList')"
                 [disabled]="disabled()"
                 (click)="toggleBulletList()"
