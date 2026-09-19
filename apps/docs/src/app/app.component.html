@@ -8,7 +8,14 @@
         <span class="topbar__name">{{ siteName }}</span>
     </a>
 
-    <span class="topbar__version">v{{ version }}</span>
+    <a
+        class="topbar__version"
+        routerLink="/versions"
+        routerLinkActive="topbar__version--active"
+        (click)="closeMenu()"
+        title="Journal des versions"
+        >v{{ version }}</a
+    >
 
     <a class="topbar__repo" [href]="repository" target="_blank" rel="noreferrer">GitHub</a>
 </header>

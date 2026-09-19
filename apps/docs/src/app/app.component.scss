@@ -62,12 +62,27 @@
     color: var(--gcd-text);
 }
 
+/* Doubles as the way into the changelog: the version on screen is the question it answers. */
 .topbar__version {
     padding: 0.1rem 0.45rem;
     border: 1px solid var(--gcd-border);
     border-radius: 1rem;
     color: var(--gcd-text-dim);
     font-size: 0.7rem;
+    text-decoration: none;
+    transition:
+        color 0.12s ease-out,
+        border-color 0.12s ease-out;
+
+    &:hover {
+        border-color: var(--gc-accent);
+        color: var(--gc-accent);
+    }
+}
+
+.topbar__version--active {
+    border-color: var(--gc-accent);
+    color: var(--gc-accent);
 }
 
 .topbar__repo {
