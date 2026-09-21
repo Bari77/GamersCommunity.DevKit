@@ -1,5 +1,27 @@
 [
   {
+    "version": "0.8.32",
+    "date": "2026-09-21",
+    "summary": "Les combos Nebular tiennent dans leur colonne, et une classe partagée aligne icône et libellé.",
+    "changes": [
+      {
+        "package": "gc-theme",
+        "kind": "fixed",
+        "text": "nb-select n'impose plus le min-width: 13rem de Cosmic : le bouton reste à 100% de sa cellule de grille."
+      },
+      {
+        "package": "gc-theme",
+        "kind": "added",
+        "text": "Classe .gc-select-option pour aligner une icône et un texte dans un nb-option, y compris dans l'overlay."
+      },
+      {
+        "package": "docs",
+        "kind": "added",
+        "text": "Entrée .gc-select-option dans la page des utilitaires du thème."
+      }
+    ]
+  },
+  {
     "version": "0.8.31",
     "date": "2026-09-19",
     "summary": "La modale de configuration d'un widget couvre tout le viewport, et le header de la doc affiche la version du CHANGELOG.",

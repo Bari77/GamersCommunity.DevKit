@@ -111,5 +111,10 @@ nb-layout-header {
             type: 'règle globale',
             description: "Donne 0.5rem de marge horizontale aux enfants directs d'un en-tête de carte Nebular.",
         },
+        {
+            name: '.gc-select-option',
+            type: 'combo',
+            description: 'Aligne une icône et un libellé dans un nb-option, avec un écart de 0.5rem.',
+        },
     ];
 }

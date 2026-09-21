@@ -9,3 +9,43 @@
 nb-card-header > * {
     margin: 0 0.5rem;
 }
+
+/* Icon + label inside combos. Overlay options attach to body, so this wrapper
+   carries the gap instead of relying on the option or the select button. */
+.gc-select-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+/* Cosmic pins min-width: 13rem on the button. A grid cell narrower than that
+   overflows unless the host skin overrides it. */
+nb-select {
+    max-width: 100%;
+    min-width: 0;
+}
+
+nb-select .select-button.select-button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+nb-select .select-button > span {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+nb-option {
+    display: flex;
+    align-items: center;
+}
