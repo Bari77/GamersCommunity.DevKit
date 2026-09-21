@@ -1,7 +1,5 @@
 ## .NET
 bin/
-!packages/workspace-editor/bin/
-!packages/workspace-editor/bin/**
 obj/
 out/
 *.user
@@ -19,6 +17,11 @@ x86/
 bld/
 [Bb]in/
 [Oo]bj/
+# npm package CLIs (must stay after [Bb]in/ — last match wins)
+!packages/workspace-editor/bin/
+!packages/workspace-editor/bin/**
+!packages/create-game/bin/
+!packages/create-game/bin/**
 [Ll]og/
 [Ll]ogs/
 *.nupkg

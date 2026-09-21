@@ -26,7 +26,14 @@ npx @bari77/gc-create-game StarCraft
 #   renames Template → StarCraft, writes ./GamersCommunity.Games.StarCraft/
 ```
 
-Requires `git` on PATH and GitHub Packages auth (`NODE_AUTH_TOKEN` with `read:packages`) to run `npx` against `@bari77/*`. The template repo itself is public-cloneable over HTTPS once published.
+Works from the parent folder or from an already-cloned `GamersCommunity.Games.StarCraft` that only has `.git` + a stub README.
+
+Requires `git` on PATH and a user `.npmrc` that points `@bari77` at GitHub Packages (`NODE_AUTH_TOKEN` with `read:packages`). `npx` does not see a game Front `.npmrc`. The template repo itself is public-cloneable over HTTPS once published.
+
+```
+@bari77:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+```
 
 ## Publishing
 

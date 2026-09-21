@@ -93,9 +93,17 @@ section above.
 
 ### Create a game
 
+`npx` reads the **user** `.npmrc` (or the cwd one), not a game Front `.npmrc`:
+
+```
+@bari77:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+```
+
 ```bash
 npx @bari77/gc-create-game YourGame
 # clones Bari77/GamersCommunity.Games.Template (main), renames Template → YourGame
+# existing empty GitHub clone (`.git` + stub README) is reused
 ```
 
 ### DevGateway (game-full)

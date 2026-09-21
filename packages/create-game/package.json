@@ -10,6 +10,9 @@
     "bin",
     "src"
   ],
+  "scripts": {
+    "prepack": "node --input-type=module -e \"import fs from 'node:fs'; fs.accessSync(new URL('./bin/gc-create-game.mjs', import.meta.url))\""
+  },
   "exports": {
     ".": "./src/index.mjs"
   },

@@ -186,11 +186,35 @@ function parseArgs(argv) {
   return opts;
 }
 
+const FRESH_REPO_ENTRIES = new Set([
+  ".git",
+  ".gitattributes",
+  ".gitignore",
+  ".npmrc",
+  "LICENSE",
+  "LICENSE.md",
+  "README",
+  "README.md",
+]);
+
+/**
+ * GitHub "create repo" clones are not empty: they keep .git plus a stub README.
+ * Those are safe to overwrite; anything else means a real project already lives here.
+ * @param {string} dest
+ */
+export function isFreshGameDir(dest) {
+  if (!fs.existsSync(dest)) return true;
+  return fs.readdirSync(dest).every((name) => FRESH_REPO_ENTRIES.has(name));
+}
+
 function printHelp() {
   console.log(`Usage: gc-create-game <GameName> [options]
 
 Scaffold GamersCommunity.Games.<GameName> by cloning
 ${TEMPLATE_REPO} (${TEMPLATE_REF}) and renaming Template → your game.
+
+If the target folder already exists (typical after creating the GitHub repo),
+it may only contain .git and a stub README — those files are overwritten.
 
 Options:
   --out <dir>             Output parent directory (default: cwd)
@@ -200,6 +224,7 @@ Options:
 
 Example:
   npx @bari77/gc-create-game StarCraft
+  npx @bari77/gc-create-game LeagueOfLegends --front-port 4203 --gateway-port 8083
 `);
 }
 
@@ -225,9 +250,10 @@ export async function main(argv) {
   };
 
   const parent = path.resolve(opts.out ?? process.cwd());
-  const dest = path.join(parent, `GamersCommunity.Games.${names.GamePascal}`);
-  if (fs.existsSync(dest)) {
-    throw new Error(`Target already exists: ${dest}`);
+  const folderName = `GamersCommunity.Games.${names.GamePascal}`;
+  const dest = path.basename(parent) === folderName ? parent : path.join(parent, folderName);
+  if (!isFreshGameDir(dest)) {
+    throw new Error(`Target already exists and is not empty: ${dest}`);
   }
 
   console.log(`Scaffolding ${names.GamePascal} from ${TEMPLATE_REPO} (${TEMPLATE_REF})`);

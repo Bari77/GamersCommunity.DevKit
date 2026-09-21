@@ -1,5 +1,22 @@
 [
   {
+    "version": "0.8.33",
+    "date": "2026-09-22",
+    "summary": "gc-create-game publie enfin son binaire, et accepte un repo GitHub déjà créé.",
+    "changes": [
+      {
+        "package": "gc-create-game",
+        "kind": "fixed",
+        "text": "Le CLI bin/gc-create-game.mjs est versionné : npx @bari77/gc-create-game retrouve la commande (elle était ignorée par le .gitignore .NET bin/)."
+      },
+      {
+        "package": "gc-create-game",
+        "kind": "changed",
+        "text": "Un dossier déjà présent n'est plus refusé s'il ne contient que .git et un README stub (create-repo GitHub). Lancer le CLI depuis le repo ou son parent fonctionne."
+      }
+    ]
+  },
+  {
     "version": "0.8.32",
     "date": "2026-09-21",
     "summary": "Les combos Nebular tiennent dans leur colonne, et une classe partagée aligne icône et libellé.",
