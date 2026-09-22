@@ -52,24 +52,84 @@ export function deriveNames(raw) {
   };
 }
 
+const FRAMEWORK_TOKENS = [
+  "@babel/plugin-transform-template-literals",
+  "plugin-transform-template-literals",
+  "@types/babel__template",
+  "babel__template",
+  "@babel/template",
+  "template-literals",
+  "templateUrl",
+  "ng-template",
+  "ngTemplateOutlet",
+  "TemplateRef",
+  "NgTemplateOutlet",
+];
+
+/**
+ * Angular / Babel tokens that contain "template" but are not the game identity.
+ * @param {string} content
+ */
+function protectFrameworkTemplate(content) {
+  const marks = [];
+  let out = content;
+  FRAMEWORK_TOKENS.forEach((token, i) => {
+    const mark = `\0GC_FW_${i}\0`;
+    marks.push([mark, token]);
+    out = out.split(token).join(mark);
+  });
+  const inlineMark = "\0GC_FW_INLINE\0";
+  marks.push([inlineMark, "template"]);
+  out = out.replace(/(^|[^A-Za-z0-9_])template:/g, `$1${inlineMark}:`);
+  return { out, marks };
+}
+
+/**
+ * @param {string} content
+ * @param {Array<[string, string]>} marks
+ */
+function restoreFrameworkTemplate(content, marks) {
+  let out = content;
+  for (const [mark, token] of marks) {
+    out = out.split(mark).join(token);
+  }
+  return out;
+}
+
 /**
  * @param {string} content
  * @param {{ GamePascal: string, GameKebab: string, GameCamel: string, MicroserviceId: string, QueueName: string, ComposeName: string, NetworkName: string, CssPrefix: string, FrontPort: string, GatewayPort: string }} map
  */
-export function rewriteTemplateContent(content, map) {
+function rewriteIdentityExceptLower(content, map) {
   let out = content;
   out = out.split(SRC.queue).join(map.QueueName);
   out = out.split(SRC.compose).join(map.ComposeName);
   out = out.split(SRC.gatewayPort).join(map.GatewayPort);
   out = out.split(SRC.frontPort).join(map.FrontPort);
+  out = out.split(`${SRC.lower}.front`).join(`${map.MicroserviceId}.front`);
   out = out.split(SRC.pascal).join(map.GamePascal);
   out = out.split(SRC.css).join(map.CssPrefix);
+  return out;
+}
+
+/**
+ * @param {string} content
+ * @param {{ GamePascal: string, GameKebab: string, GameCamel: string, MicroserviceId: string, QueueName: string, ComposeName: string, NetworkName: string, CssPrefix: string, FrontPort: string, GatewayPort: string }} map
+ * @param {string} [fileName]
+ */
+export function rewriteTemplateContent(content, map, fileName = "") {
+  if (fileName === "package-lock.json") {
+    return rewriteIdentityExceptLower(content, map);
+  }
+
+  const protectedContent = protectFrameworkTemplate(content);
+  let out = rewriteIdentityExceptLower(protectedContent.out, map);
 
   const { GameKebab: kebab, GameCamel: camel, MicroserviceId: id, NetworkName: network } = map;
   const collapsed = kebab === camel && camel === id;
 
   if (collapsed) {
-    return out.split(SRC.lower).join(id);
+    return restoreFrameworkTemplate(out.split(SRC.lower).join(id), protectedContent.marks);
   }
 
   const MK_ROUTES = "\0GC_KEBAB_ROUTES\0";
@@ -93,7 +153,7 @@ export function rewriteTemplateContent(content, map) {
   out = out.split(MK_QID_S).join(`'${id}'`);
   out = out.split(MK_NET).join(network);
   out = out.split(MK_ID).join(id);
-  return out;
+  return restoreFrameworkTemplate(out, protectedContent.marks);
 }
 
 /**
@@ -125,7 +185,7 @@ export function rewriteTemplatePath(name, map) {
 export function copyRewrittenTree(srcDir, destDir, map) {
   fs.mkdirSync(destDir, { recursive: true });
   for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
-    if (entry.name === ".git") continue;
+    if (entry.name === ".git" || entry.name === "node_modules") continue;
     const from = path.join(srcDir, entry.name);
     const toName = rewriteTemplatePath(entry.name, map);
     const to = path.join(destDir, toName);
@@ -138,7 +198,7 @@ export function copyRewrittenTree(srcDir, destDir, map) {
     if (isBinary) {
       fs.writeFileSync(to, raw);
     } else {
-      fs.writeFileSync(to, rewriteTemplateContent(raw.toString("utf8"), map), "utf8");
+      fs.writeFileSync(to, rewriteTemplateContent(raw.toString("utf8"), map, entry.name), "utf8");
     }
   }
 }

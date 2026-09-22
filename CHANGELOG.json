@@ -1,5 +1,17 @@
 [
   {
+    "version": "0.8.34",
+    "date": "2026-09-22",
+    "summary": "gc-create-game ne réécrit plus les tokens Angular/Babel « template ».",
+    "changes": [
+      {
+        "package": "gc-create-game",
+        "kind": "fixed",
+        "text": "templateUrl, ng-template, template: et @babel/template ne sont plus remplacés par l'id du jeu ; package-lock.json n'est plus réécrit au mot « template »."
+      }
+    ]
+  },
+  {
     "version": "0.8.33",
     "date": "2026-09-22",
     "summary": "gc-create-game publie enfin son binaire, et accepte un repo GitHub déjà créé.",

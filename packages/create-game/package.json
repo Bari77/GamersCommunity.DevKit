@@ -11,7 +11,8 @@
     "src"
   ],
   "scripts": {
-    "prepack": "node --input-type=module -e \"import fs from 'node:fs'; fs.accessSync(new URL('./bin/gc-create-game.mjs', import.meta.url))\""
+    "prepack": "node --input-type=module -e \"import fs from 'node:fs'; fs.accessSync(new URL('./bin/gc-create-game.mjs', import.meta.url))\"",
+    "test": "node --test ./src/rewrite.test.mjs"
   },
   "exports": {
     ".": "./src/index.mjs"
