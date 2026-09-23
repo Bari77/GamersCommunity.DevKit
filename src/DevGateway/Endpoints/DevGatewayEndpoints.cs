@@ -1,7 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using DevGateway.Configuration;
-using DevGateway.Messaging;
 using GamersCommunity.Core.Enums;
 using GamersCommunity.Core.Rabbit;
 using Microsoft.Extensions.Options;
@@ -25,7 +24,7 @@ public static class DevGatewayEndpoints
             string resource,
             HttpRequest req,
             IOptions<DevGatewayOptions> options,
-            RabbitRpcClient rpc,
+            IRabbitRpcClient rpc,
             CancellationToken ct) =>
         {
             var opts = options.Value;
@@ -42,7 +41,7 @@ public static class DevGatewayEndpoints
             string ms,
             string resource,
             IOptions<DevGatewayOptions> options,
-            RabbitRpcClient rpc,
+            IRabbitRpcClient rpc,
             CancellationToken ct) =>
         {
             var opts = options.Value;
@@ -59,7 +58,7 @@ public static class DevGatewayEndpoints
             string resource,
             HttpRequest req,
             IOptions<DevGatewayOptions> options,
-            RabbitRpcClient rpc,
+            IRabbitRpcClient rpc,
             CancellationToken ct) =>
         {
             var opts = options.Value;
@@ -76,7 +75,7 @@ public static class DevGatewayEndpoints
             string ms,
             string resource,
             IOptions<DevGatewayOptions> options,
-            RabbitRpcClient rpc,
+            IRabbitRpcClient rpc,
             CancellationToken ct) =>
         {
             var opts = options.Value;
@@ -93,7 +92,7 @@ public static class DevGatewayEndpoints
             string resource,
             int id,
             IOptions<DevGatewayOptions> options,
-            RabbitRpcClient rpc,
+            IRabbitRpcClient rpc,
             CancellationToken ct) =>
         {
             var opts = options.Value;
@@ -111,7 +110,7 @@ public static class DevGatewayEndpoints
             int id,
             HttpRequest req,
             IOptions<DevGatewayOptions> options,
-            RabbitRpcClient rpc,
+            IRabbitRpcClient rpc,
             CancellationToken ct) =>
         {
             var opts = options.Value;
@@ -129,7 +128,7 @@ public static class DevGatewayEndpoints
             string resource,
             int id,
             IOptions<DevGatewayOptions> options,
-            RabbitRpcClient rpc,
+            IRabbitRpcClient rpc,
             CancellationToken ct) =>
         {
             var opts = options.Value;
@@ -147,7 +146,7 @@ public static class DevGatewayEndpoints
             string action,
             HttpRequest req,
             IOptions<DevGatewayOptions> options,
-            RabbitRpcClient rpc,
+            IRabbitRpcClient rpc,
             CancellationToken ct) =>
         {
             var opts = options.Value;
@@ -168,7 +167,7 @@ public static class DevGatewayEndpoints
             string action,
             HttpRequest req,
             IOptions<DevGatewayOptions> options,
-            RabbitRpcClient rpc,
+            IRabbitRpcClient rpc,
             CancellationToken ct) =>
         {
             var opts = options.Value;

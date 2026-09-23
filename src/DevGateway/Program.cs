@@ -1,8 +1,8 @@
 using DevGateway.Configuration;
 using DevGateway.Endpoints;
-using DevGateway.Messaging;
 using DevGateway.Middleware;
 using GamersCommunity.Core.Rabbit;
+using Microsoft.Extensions.Options;
 using Serilog;
 
 Console.Title = "DevGateway";
@@ -23,8 +23,10 @@ builder.Services.AddOptions<DevGatewayOptions>()
     .ValidateOnStart();
 
 builder.Services.AddSingleton<Serilog.ILogger>(_ => Log.Logger);
-builder.Services.AddSingleton<RabbitMQProducer>();
-builder.Services.AddSingleton<RabbitRpcClient>();
+builder.Services.AddSingleton<IRabbitRpcClient>(sp =>
+    new RabbitRpcClient(
+        sp.GetRequiredService<IOptions<RabbitMQSettings>>(),
+        sp.GetRequiredService<Serilog.ILogger>()));
 
 builder.Services.AddCors(options =>
 {
