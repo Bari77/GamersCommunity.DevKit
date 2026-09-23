@@ -65,7 +65,7 @@ providers: [
 ]
 ```
 
-`PlayersService` must expose `resolve(platformUserPublicId)` and `load({ platformUserId, platformUserPublicId })`. Keep `node_modules/@bari77/gc-sdk/src/**/*.ts` in `tsconfig.app.json` `include` so Angular compiles the source package.
+`PlayersService` must expose `resolve(platformUserPublicId)` and `load({ platformUserId, platformUserPublicId })`. Keep `node_modules/@bari77/gc-sdk/src/**/*.ts` in `tsconfig.app.json` `include` so Angular compiles the source package. Add `@bari77/gc-sdk` to the Native Federation `skip` list (same reason as `gc-widgets`: raw TypeScript + Angular DI must not go through the federation package bundler).
 
 ## Game team onboarding
 
