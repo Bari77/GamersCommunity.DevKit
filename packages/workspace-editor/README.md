@@ -38,7 +38,7 @@ In `package.json`:
     "workspace:edit:guild": "gc-workspace edit --target guild"
   },
   "devDependencies": {
-    "@bari77/gc-workspace-editor": "0.8.6"
+    "@bari77/gc-workspace-editor": "1.0.0"
   }
 }
 ```

@@ -56,11 +56,12 @@ GitHub Packages authentication is required to restore `GamersCommunity.Core` (Nu
 No `file:` / sibling links. Use published versions:
 
 ```json
-"@bari77/gc-sdk": "0.3.1",
-"@bari77/gc-msw": "0.3.1",
-"@bari77/gc-playground": "0.3.1"
+"@bari77/gc-sdk": "1.0.0",
+"@bari77/gc-msw": "1.0.0",
+"@bari77/gc-playground": "1.0.0"
 ```
 
 ```yaml
-image: ghcr.io/bari77/gc-devgateway:latest
+image: ghcr.io/bari77/gc-devgateway:1.0.0
+# or :latest
 ```

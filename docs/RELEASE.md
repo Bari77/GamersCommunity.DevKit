@@ -9,7 +9,7 @@ From **1.0.0** onward the lockstep version follows SemVer (breaking changes bump
 Consequences:
 
 - **Consumers must pin every `@bari77/*` dependency to the same version.** Mixing
-  `gc-ui@0.8.1` with `gc-theme@0.4.2` is not a supported combination, even when it happens to work.
+  `gc-ui@1.0.0` with `gc-theme@1.2.0` is not a supported combination, even when it happens to work.
 - The `version` field in each `packages/*/package.json` is kept in sync with the last published tag.
   The workflow overwrites it at publish time, so it is documentation rather than the source of truth.
 - Cross-package deps (`gc-msw` → `gc-sdk`) stay `"*"` in source; the workflow pins them to the tag.
@@ -43,8 +43,8 @@ the entry for the version **before** pushing its tag:
 
 ```json
 {
-  "version": "0.8.28",
-  "date": "2026-09-19",
+  "version": "1.0.0",
+  "date": "2026-09-23",
   "summary": "One sentence on what the version is about.",
   "changes": [{ "package": "gc-ui", "kind": "fixed", "text": "What a consumer will notice." }]
 }
@@ -57,8 +57,8 @@ placeholder body.
 ## Publish
 
 ```bash
-git tag v0.3.1
-git push origin v0.3.1
+git tag v1.0.0
+git push origin v1.0.0
 ```
 
 **Recommended order**: publish a **Core** tag first (NuGet `GamersCommunity.Core`) before DevKit, because the DevGateway image restores that package. Keep `GamersCommunity.Games.Template` `main` usable before publishing a create-game that clones it.
@@ -82,9 +82,9 @@ npm install
 ```json
 {
   "dependencies": {
-    "@bari77/gc-sdk": "0.8.2",
-    "@bari77/gc-msw": "0.8.2",
-    "@bari77/gc-playground": "0.8.2"
+    "@bari77/gc-sdk": "1.0.0",
+    "@bari77/gc-msw": "1.0.0",
+    "@bari77/gc-playground": "1.0.0"
   }
 }
 ```
@@ -112,7 +112,7 @@ npx @bari77/gc-create-game YourGame
 ```yaml
 devgateway:
   image: ghcr.io/bari77/gc-devgateway:latest
-  # or pin: ghcr.io/bari77/gc-devgateway:0.3.1 / DEVGATEWAY_VERSION=0.3.1
+  # or pin: ghcr.io/bari77/gc-devgateway:1.0.0 / DEVGATEWAY_VERSION=1.0.0
 ```
 
 ```powershell

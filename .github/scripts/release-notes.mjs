@@ -3,7 +3,7 @@
  * Body of a GitHub Release, built from the CHANGELOG.json the documentation site also renders, so a
  * version cannot describe itself one way in the release and another way in the docs.
  *
- * Usage: node .github/scripts/release-notes.mjs 0.8.28
+ * Usage: node .github/scripts/release-notes.mjs 1.0.0
  */
 import { readFileSync } from 'node:fs';
 
