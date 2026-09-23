@@ -37,6 +37,36 @@ Front → HTTP /api/{ms}/… → DevGateway (fake Caller) → RabbitMQ → game 
 
 Same URL contract as the prod Gateway; OIDC auth is disabled.
 
+## Game remote kernel (`@bari77/gc-sdk`)
+
+Shared Angular pieces for every game remote (do not copy LoL/WoW twins):
+
+- `BaseService`, `PromiseUtils`, `ResourceUtils`
+- `PlatformSessionService`, `PlatformGamesService`
+- `GameMembershipStore` + `provideGameRemoteKernel(...)`
+
+Wire once in the remote `app.config.ts`:
+
+```ts
+import { provideGameRemoteKernel } from "@bari77/gc-sdk";
+import { MY_GAME_ID, MY_GAME_URL } from "@core/constants/game.constants";
+import { PlayersService } from "@features/players/services/players.service";
+import { environment } from "../environments/environment";
+
+providers: [
+  provideGameRemoteKernel({
+    environment: {
+      apiUrl: environment.apiUrl,
+      assetsBaseUrl: environment.assetsBaseUrl,
+    },
+    membership: { gameId: MY_GAME_ID, gameUrl: MY_GAME_URL },
+    playerSheetApi: PlayersService,
+  }),
+]
+```
+
+`PlayersService` must expose `resolve(platformUserPublicId)` and `load({ platformUserId, platformUserPublicId })`. Keep `node_modules/@bari77/gc-sdk/src/**/*.ts` in `tsconfig.app.json` `include` so Angular compiles the source package.
+
 ## Game team onboarding
 
 1. `npx @bari77/gc-create-game YourGame` (or clone an existing `GamersCommunity.Games.*`)
