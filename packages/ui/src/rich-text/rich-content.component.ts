@@ -14,13 +14,14 @@ import { RICH_HTML_PURIFY_CONFIG } from './rich-html.utils';
     encapsulation: ViewEncapsulation.None,
 })
 export class RichContentComponent {
-    public readonly html = input<string | null>(null);
+    public readonly html = input('', {
+        transform: (value: string | null | undefined): string => value ?? '',
+    });
 
     private readonly domSanitizer = inject(DomSanitizer);
 
     protected readonly safeHtml = computed((): SafeHtml => {
-        const raw = this.html() ?? '';
-        const clean = DOMPurify.sanitize(raw, RICH_HTML_PURIFY_CONFIG);
+        const clean = DOMPurify.sanitize(this.html(), RICH_HTML_PURIFY_CONFIG);
         return this.domSanitizer.bypassSecurityTrustHtml(clean);
     });
 }

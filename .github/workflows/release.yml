@@ -49,7 +49,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Verify TypeScript
+      - name: Build packages
         run: npm run build
 
       - name: Publish npm packages
@@ -58,7 +58,8 @@ jobs:
           npm publish --workspace=@bari77/gc-sdk --access restricted
           npm publish --workspace=@bari77/gc-msw --access restricted
           npm publish --workspace=@bari77/gc-playground --access restricted
-          npm publish --workspace=@bari77/gc-ui --access restricted
+          # gc-ui: ng-packagr écrit le paquet dans dist/ (FESM), pas le TypeScript source
+          npm publish ./packages/ui/dist --access restricted
           npm publish --workspace=@bari77/gc-widgets --access restricted
           npm publish --workspace=@bari77/gc-theme --access restricted
           npm publish --workspace=@bari77/gc-workspace-editor --access restricted
