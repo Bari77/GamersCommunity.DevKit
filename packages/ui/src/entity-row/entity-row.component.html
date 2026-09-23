@@ -1,0 +1,60 @@
+<a class="gc-entity-row" [style.--row-accent]="accent()" [routerLink]="link()">
+  <span class="gc-entity-row__visual" aria-hidden="true">
+    <ng-content select="[rowVisual]" />
+  </span>
+
+  <span class="gc-entity-row__main">
+    <span class="gc-entity-row__head">
+      <span class="gc-entity-row__identity">
+        <span class="gc-entity-row__name gc-display">
+          {{ name() }}
+          @if (badge(); as pill) {
+            <span class="gc-entity-row__badge">{{ pill }}</span>
+          }
+        </span>
+
+        @if (subtitle()) {
+          <span class="gc-entity-row__subtitle" [class.gc-entity-row__subtitle--muted]="subtitleMuted()">
+            <ng-content select="[rowSubtitleLeading]" />
+            <span>{{ subtitle() }}</span>
+          </span>
+        }
+      </span>
+
+      <span class="gc-entity-row__trailing">
+        <ng-content select="[rowTrailing]" />
+
+        <span class="gc-entity-row__trailing-stack">
+          @if (level() !== null) {
+            <span class="gc-entity-row__level">
+              <span class="sr-only">{{ levelLabel() }}</span>
+              {{ level() }}
+            </span>
+          }
+        </span>
+      </span>
+    </span>
+
+    @if (description(); as text) {
+      <span class="gc-entity-row__description" [class.gc-entity-row__description--muted]="descriptionMuted()">
+        {{ text }}
+      </span>
+    }
+
+    <span class="gc-entity-row__facts">
+      <ng-content select="[rowFacts]" />
+      @for (fact of facts(); track fact.label) {
+        <span class="gc-entity-row__fact" [class.gc-entity-row__fact--accent]="fact.accent">
+          @if (fact.prefix; as prefix) {
+            <span class="gc-entity-row__fact-prefix">{{ prefix }}</span>
+          }
+          {{ fact.label }}
+        </span>
+      }
+    </span>
+  </span>
+
+  @if (date(); as created) {
+    <time class="gc-entity-row__date">{{ created | date: "mediumDate" }}</time>
+  }
+</a>

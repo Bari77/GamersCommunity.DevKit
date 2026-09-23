@@ -1,0 +1,206 @@
+:host {
+  display: block;
+}
+
+.gc-entity-row {
+  --_accent: var(--row-accent, var(--gc-accent, var(--game-accent, #c8aa6e)));
+
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: stretch;
+  gap: 0.6rem;
+  height: 7.25rem;
+  padding: 0.7rem 0.8rem 0.7rem 1.1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(255 255 255 / 7%);
+  background: var(--gc-surface-2, rgb(255 255 255 / 4%));
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: var(--_accent);
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--_accent) 45%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--_accent) 55%, transparent);
+    outline-offset: 2px;
+  }
+}
+
+.gc-entity-row__visual {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.gc-entity-row__main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding-bottom: 1rem;
+}
+
+.gc-entity-row__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.gc-entity-row__identity {
+  display: block;
+  min-width: 0;
+}
+
+.gc-entity-row__name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--_accent);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.gc-entity-row__subtitle {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.2rem;
+  min-width: 0;
+  font-size: 0.9rem;
+  opacity: 0.75;
+
+  > span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.gc-entity-row__subtitle--muted {
+  opacity: 0.5;
+  font-style: italic;
+}
+
+.gc-entity-row__trailing {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.gc-entity-row__trailing-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+}
+
+.gc-entity-row__badge {
+  margin-left: 0.35rem;
+  padding: 0.08rem 0.4rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--_accent) 22%, transparent);
+  color: var(--_accent);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.gc-entity-row__level {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0.55;
+  font-variant-numeric: tabular-nums;
+}
+
+.gc-entity-row__date {
+  position: absolute;
+  right: 0.8rem;
+  bottom: 0.45rem;
+  color: rgb(150 162 195 / 72%);
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.gc-entity-row__description {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: rgb(175 186 215 / 82%);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.gc-entity-row__description--muted {
+  color: rgb(150 162 195 / 58%);
+  font-style: italic;
+}
+
+.gc-entity-row__facts {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.3rem 0.4rem;
+  overflow: hidden;
+
+  &:not(:has(*)) {
+    display: none;
+  }
+}
+
+/* Projected fact pills (e.g. WoW icons) keep the same chrome. */
+:host ::ng-deep .gc-entity-row__fact {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 6%);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+:host ::ng-deep .gc-entity-row__fact--accent {
+  background: color-mix(in srgb, var(--_accent) 16%, transparent);
+  color: color-mix(in srgb, var(--_accent) 80%, #fff);
+}
+
+:host ::ng-deep .gc-entity-row__fact-prefix {
+  opacity: 0.55;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

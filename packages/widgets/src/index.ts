@@ -27,6 +27,19 @@ export {
   type EntityWallPost,
 } from './entity-wall/entity-wall.component';
 
+export {
+  DEFAULT_LFG_CHAT_LABELS,
+  LfgChatComponent,
+  LfgChatLeadingDirective,
+  LfgChatMetaDirective,
+  LfgChatNeedsSheetDirective,
+  LfgChatPublishErrorDirective,
+  type LfgChatComposerState,
+  type LfgChatLabels,
+  type LfgChatMessage,
+  type LfgChatPosterOption,
+} from './lfg-chat/lfg-chat.component';
+
 export { WidgetDefDirective } from './widget-def.directive';
 export { WidgetDefRegistry } from './widget-def.registry';
 export type { WidgetTemplateContext, WidgetTemplateDef } from './widget-template';

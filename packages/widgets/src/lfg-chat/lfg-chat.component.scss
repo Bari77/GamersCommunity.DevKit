@@ -1,0 +1,316 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.gc-lfg-chat {
+  --gc-accent: var(--game-accent, #c8aa6e);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+  border-radius: 0.85rem;
+  border: 1px solid rgb(255 255 255 / 8%);
+  background: var(--gc-surface-1, var(--game-surface-1, #121826));
+  box-shadow: 0 0.75rem 2rem rgb(0 0 0 / 22%);
+}
+
+.gc-lfg-chat__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3.25rem;
+  padding: 0.5rem 0.9rem;
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+}
+
+.gc-lfg-chat__title {
+  flex: 1;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #f3f6ff;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.gc-lfg-chat__live {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6fdf8c;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.gc-lfg-chat__offline {
+  margin: 0;
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+  background: color-mix(in srgb, #c45c5c 18%, transparent);
+  color: rgb(255 210 210 / 92%);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.gc-lfg-chat__offline.is-connecting {
+  background: color-mix(in srgb, var(--gc-accent) 16%, transparent);
+  color: rgb(240 230 200 / 92%);
+}
+
+.gc-lfg-chat__thread {
+  flex: 1;
+  min-height: 22rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.gc-lfg-chat__messages--skeleton,
+.gc-lfg-chat__bubble--skeleton {
+  pointer-events: none;
+}
+
+.gc-lfg-chat__bubble--skeleton .gc-lfg-chat__bubble-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.gc-lfg-chat__messages {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.65rem 0.75rem 0.35rem;
+  max-height: 22rem;
+}
+
+.gc-lfg-chat__empty {
+  margin: auto 1rem;
+  color: rgb(160 170 200 / 72%);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.gc-lfg-chat__bubble {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.45rem;
+  max-width: 92%;
+}
+
+.gc-lfg-chat__bubble.is-mine {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.gc-lfg-chat__bubble-avatar {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 999px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.gc-lfg-chat__bubble-avatar--fallback {
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--gc-accent) 28%, var(--gc-surface-2, #1a2234));
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.gc-lfg-chat__bubble-crest {
+  flex-shrink: 0;
+}
+
+/* Projected leading / meta reuse the same chrome. */
+:host ::ng-deep .gc-lfg-chat__bubble-avatar {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 999px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+:host ::ng-deep .gc-lfg-chat__bubble-avatar--fallback {
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--gc-accent) 28%, var(--gc-surface-2, #1a2234));
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+:host ::ng-deep .gc-lfg-chat__bubble-crest {
+  flex-shrink: 0;
+}
+
+:host ::ng-deep .gc-lfg-chat__bubble-meta {
+  margin: 0 0 0.15rem;
+  color: rgb(160 170 200 / 72%);
+  font-size: 0.68rem;
+  line-height: 1.2;
+}
+
+.gc-lfg-chat__bubble-body {
+  min-width: 0;
+  padding: 0.45rem 0.65rem 0.4rem;
+  border-radius: 0.85rem;
+  background: rgb(255 255 255 / 7%);
+}
+
+.gc-lfg-chat__bubble.is-mine .gc-lfg-chat__bubble-body {
+  background: color-mix(in srgb, var(--gc-accent) 22%, rgb(18 24 38));
+}
+
+.gc-lfg-chat__bubble-sender {
+  appearance: none;
+  display: block;
+  margin: 0 0 0.15rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: rgb(190 200 230 / 88%);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: inherit;
+  text-decoration: none;
+}
+
+.gc-lfg-chat__bubble-sender:hover,
+.gc-lfg-chat__bubble-sender:focus-visible {
+  text-decoration: underline;
+}
+
+.gc-lfg-chat__bubble-sender--static {
+  cursor: default;
+}
+
+.gc-lfg-chat__bubble-sender--static:hover,
+.gc-lfg-chat__bubble-sender--static:focus-visible {
+  text-decoration: none;
+}
+
+.gc-lfg-chat__bubble.is-mine .gc-lfg-chat__bubble-sender,
+.gc-lfg-chat__bubble.is-mine .gc-lfg-chat__bubble-date {
+  text-align: right;
+}
+
+.gc-lfg-chat__bubble-meta {
+  margin: 0 0 0.15rem;
+  color: rgb(160 170 200 / 72%);
+  font-size: 0.68rem;
+  line-height: 1.2;
+}
+
+.gc-lfg-chat__bubble-text {
+  margin: 0;
+  color: #f4f7ff;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.gc-lfg-chat__poster-picker {
+  margin: 0.35rem 0.75rem 0;
+}
+
+.gc-lfg-chat__bubble-date {
+  display: block;
+  margin-top: 0.2rem;
+  color: rgb(150 160 190 / 70%);
+  font-size: 0.68rem;
+}
+
+.gc-lfg-chat__composer {
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 0;
+}
+
+:host ::ng-deep .gc-lfg-chat__composer > .header,
+:host ::ng-deep .gc-lfg-chat__composer .scrollable {
+  display: none;
+}
+
+.gc-lfg-chat__muted,
+.gc-lfg-chat__login-hint,
+.gc-lfg-chat__cooldown {
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+  border-top: 1px solid rgb(255 255 255 / 8%);
+  color: rgb(170 180 210 / 85%);
+  font-size: 0.85rem;
+}
+
+:host ::ng-deep .gc-lfg-chat__muted {
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+  border-top: 1px solid rgb(255 255 255 / 8%);
+  color: rgb(170 180 210 / 85%);
+  font-size: 0.85rem;
+}
+
+.gc-lfg-chat__hint {
+  margin: 0;
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+  color: rgb(160 170 200 / 72%);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.gc-lfg-chat__hint--compact {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.78rem;
+}
+
+.gc-lfg-chat__jump {
+  appearance: none;
+  position: absolute;
+  left: 50%;
+  bottom: 4.15rem;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--gc-accent) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gc-surface-1, #121826) 88%, var(--gc-accent));
+  color: #f4f7ff;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 0.35rem 1rem rgb(0 0 0 / 28%);
+}
+
+.gc-lfg-chat__jump-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  padding: 0 0.25rem;
+  border-radius: 999px;
+  background: var(--gc-accent);
+  color: #0b111c;
+  font-size: 0.7rem;
+  line-height: 1.15rem;
+  text-align: center;
+}

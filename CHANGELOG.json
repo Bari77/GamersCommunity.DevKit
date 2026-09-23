@@ -1,5 +1,22 @@
 [
   {
+    "version": "0.8.42",
+    "date": "2026-09-23",
+    "summary": "entity-row et shell LFG chat partagés (gc-ui + gc-widgets).",
+    "changes": [
+      {
+        "package": "gc-ui",
+        "kind": "added",
+        "text": "gc-entity-row (slots rowVisual / rowTrailing / rowSubtitleLeading / rowFacts)."
+      },
+      {
+        "package": "gc-widgets",
+        "kind": "added",
+        "text": "gc-lfg-chat shell (thread, composer, poster picker, slots leading/meta/needsSheet/publishError)."
+      }
+    ]
+  },
+  {
     "version": "0.8.41",
     "date": "2026-09-23",
     "summary": "Shell media joueur et mur d'entité partagés (gc-sdk + gc-widgets).",

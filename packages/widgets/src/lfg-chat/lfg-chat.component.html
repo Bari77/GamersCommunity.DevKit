@@ -1,0 +1,146 @@
+<section class="gc-lfg-chat">
+  <header class="gc-lfg-chat__header">
+    <h2 class="gc-lfg-chat__title gc-display">{{ title() }}</h2>
+    @if (isLive()) {
+      <span class="gc-lfg-chat__live">{{ resolvedLabels.live }}</span>
+    }
+  </header>
+
+  @if (!isLive() && offlineMessage(); as offline) {
+    <p
+      class="gc-lfg-chat__offline"
+      [class.is-connecting]="offlineConnecting()"
+      role="status"
+    >
+      {{ offline }}
+    </p>
+  }
+
+  <div class="gc-lfg-chat__thread" [attr.aria-busy]="loading() ? 'true' : null">
+    @if (loading()) {
+      <div class="gc-lfg-chat__messages gc-lfg-chat__messages--skeleton">
+        @for (row of messagePlaceholders; track row) {
+          <article class="gc-lfg-chat__bubble gc-lfg-chat__bubble--skeleton">
+            <gc-skeleton class="gc-lfg-chat__bubble-avatar" width="1.7rem" height="1.7rem" shape="circle" />
+            <div class="gc-lfg-chat__bubble-body">
+              <gc-skeleton width="4rem" height="0.72rem" />
+              <gc-skeleton width="9.5rem" height="0.88rem" />
+              <gc-skeleton width="3rem" height="0.68rem" />
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      @if (loadingOlder()) {
+        <p class="gc-lfg-chat__hint gc-lfg-chat__hint--compact">{{ resolvedLabels.loadingOlder }}</p>
+      }
+
+      <div #viewport class="gc-lfg-chat__messages" (scroll)="onViewportScroll()">
+        @if (messages().length === 0) {
+          <p class="gc-lfg-chat__empty">{{ resolvedLabels.empty }}</p>
+        }
+        @for (message of messages(); track message.publicId) {
+          <article class="gc-lfg-chat__bubble" [class.is-mine]="message.isMine">
+            @if (leadingSlot(); as leading) {
+              <ng-container
+                [ngTemplateOutlet]="leading.template"
+                [ngTemplateOutletContext]="{ $implicit: message }"
+              />
+            } @else if (message.avatarUrl) {
+              <img class="gc-lfg-chat__bubble-avatar" [src]="message.avatarUrl" alt="" />
+            } @else {
+              <span class="gc-lfg-chat__bubble-avatar gc-lfg-chat__bubble-avatar--fallback" aria-hidden="true">
+                {{ message.initial }}
+              </span>
+            }
+            <div class="gc-lfg-chat__bubble-body">
+              @if (message.senderLink; as link) {
+                <a class="gc-lfg-chat__bubble-sender" [routerLink]="link">{{ message.handleLabel }}</a>
+              } @else {
+                <span class="gc-lfg-chat__bubble-sender gc-lfg-chat__bubble-sender--static">
+                  {{ message.handleLabel }}
+                </span>
+              }
+              @if (metaSlot(); as meta) {
+                <ng-container
+                  [ngTemplateOutlet]="meta.template"
+                  [ngTemplateOutletContext]="{ $implicit: message }"
+                />
+              } @else if (message.metaParts?.length) {
+                <p class="gc-lfg-chat__bubble-meta">
+                  @for (part of message.metaParts; track $index; let last = $last) {
+                    <span>{{ part }}</span>
+                    @if (!last) {
+                      <span aria-hidden="true"> · </span>
+                    }
+                  }
+                </p>
+              }
+              <p class="gc-lfg-chat__bubble-text">{{ message.body }}</p>
+              <time class="gc-lfg-chat__bubble-date">{{ message.creationDate | date: "short" }}</time>
+            </div>
+          </article>
+        }
+      </div>
+
+      @if (pendingBelowCount() > 0) {
+        <button type="button" class="gc-lfg-chat__jump" (click)="jumpToLatest()">
+          {{ resolvedLabels.newMessages }}
+          <span class="gc-lfg-chat__jump-count">{{ pendingBelowCount() }}</span>
+        </button>
+      }
+
+      @if (showPosterPicker() && posterOptions().length > 1) {
+        <nb-select
+          class="gc-lfg-chat__poster-picker"
+          [placeholder]="resolvedLabels.posterPickerPlaceholder"
+          [selected]="selectedPosterId()"
+          (selectedChange)="selectPoster.emit($event)"
+        >
+          @for (poster of posterOptions(); track poster.publicId) {
+            <nb-option [value]="poster.publicId">{{ poster.handleLabel }}</nb-option>
+          }
+        </nb-select>
+      }
+
+      <ng-content select="[gcLfgChatPublishError]" />
+
+      @switch (composerState()) {
+        @case ("muted") {
+          <p class="gc-lfg-chat__muted">{{ resolvedLabels.muted }}</p>
+        }
+        @case ("noPoster") {
+          <p class="gc-lfg-chat__hint">{{ resolvedLabels.noPoster }}</p>
+        }
+        @case ("cooldown") {
+          <p class="gc-lfg-chat__cooldown" role="status">
+            <span>{{ resolvedLabels.cooldown }}</span>
+            {{ cooldownSeconds() }}s
+            <span>{{ resolvedLabels.cooldownHint }}</span>
+          </p>
+        }
+        @case ("ready") {
+          <nb-chat class="gc-lfg-chat__composer" status="basic">
+            <nb-chat-form
+              [dropFiles]="false"
+              [messagePlaceholder]="resolvedLabels.composePlaceholder"
+              (send)="onChatSend($event)"
+            ></nb-chat-form>
+          </nb-chat>
+        }
+        @case ("pickPoster") {
+          <p class="gc-lfg-chat__hint">{{ resolvedLabels.pickPoster }}</p>
+        }
+        @case ("needsSheet") {
+          <ng-content select="[gcLfgChatNeedsSheet]" />
+        }
+        @case ("login") {
+          <p class="gc-lfg-chat__login-hint">
+            <a [href]="resolvedLabels.loginHref">{{ resolvedLabels.login }}</a>
+            <span>{{ resolvedLabels.loginHint }}</span>
+          </p>
+        }
+      }
+    }
+  </div>
+</section>
