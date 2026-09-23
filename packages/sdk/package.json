@@ -1,6 +1,6 @@
 {
   "name": "@bari77/gc-sdk",
-  "version": "0.8.37",
+  "version": "0.8.38",
   "description": "Shared types, HTTP helpers, and game-remote kernel for GamersCommunity fronts",
   "type": "module",
   "main": "./src/index.ts",
