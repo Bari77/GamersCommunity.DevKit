@@ -1,20 +1,15 @@
 {
   "name": "@bari77/gc-ui",
-  "version": "0.8.39",
+  "version": "0.8.40",
   "description": "Dumb, data-agnostic UI primitives shared by the GamersCommunity shell and game remotes",
   "type": "module",
   "sideEffects": false,
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
   "exports": {
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
     }
   },
-  "files": [
-    "src"
-  ],
   "scripts": {
     "build": "ng-packagr -p ng-package.json"
   },

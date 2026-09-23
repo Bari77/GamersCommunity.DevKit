@@ -1,5 +1,17 @@
 [
   {
+    "version": "0.8.40",
+    "date": "2026-09-23",
+    "summary": "gc-ui publie bien le FESM (plus de files:src qui vidait le tarball).",
+    "changes": [
+      {
+        "package": "gc-ui",
+        "kind": "fixed",
+        "text": "Retrait de files:[src] et des champs main/types source qui faisaient publier un paquet sans fesm2022."
+      }
+    ]
+  },
+  {
     "version": "0.8.39",
     "date": "2026-09-23",
     "summary": "DevGateway consomme Core IRabbitRpcClient ; republie l'image après le kernel gc-sdk.",
