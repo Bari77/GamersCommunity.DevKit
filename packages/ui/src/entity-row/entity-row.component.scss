@@ -172,11 +172,17 @@
   }
 }
 
+/* Projected [rowFacts] is a single wrapper; flatten it so pills share this flex row. */
+:host ::ng-deep .gc-entity-row__facts > [rowFacts] {
+  display: contents;
+}
+
 /* Projected fact pills (e.g. WoW icons) keep the same chrome. */
 :host ::ng-deep .gc-entity-row__fact {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.3rem;
+  flex-shrink: 0;
   padding: 0.1rem 0.5rem;
   border-radius: 999px;
   background: rgb(255 255 255 / 6%);

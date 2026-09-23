@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.0.2",
+    "date": "2026-09-24",
+    "summary": "gc-entity-row : pastilles facts alignées en rangée avec la projection rowFacts.",
+    "changes": [
+      {
+        "package": "gc-ui",
+        "kind": "fixed",
+        "text": "Le wrapper [rowFacts] utilise display: contents pour que les .gc-entity-row__fact restent côte à côte dans la rangée flex."
+      }
+    ]
+  },
+  {
     "version": "1.0.1",
     "date": "2026-09-24",
     "summary": "Kernel federation-safe : plus de providedIn root sur les services SDK qui dépendent de GC_ENVIRONMENT.",
