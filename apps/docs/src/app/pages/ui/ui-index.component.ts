@@ -28,7 +28,7 @@ import { sectionImportSnippet } from '../../shared/snippets';
                     aucun n'embarque de traduction : les libellés visibles se passent en entrée, ce qui laisse
                     l'application maîtresse de son i18n ;
                 </li>
-                <li>aucun ne dépend de Nebular, seul <code>&#64;angular/router</code> est requis par le fil d'Ariane.</li>
+                <li>aucun ne dépend de Nebular, seul <code>&#64;angular/router</code> est requis par le fil d'Ariane et la ligne d'entité.</li>
             </ul>
 
             <h2>Import</h2>

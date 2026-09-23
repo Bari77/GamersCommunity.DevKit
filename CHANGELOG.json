@@ -1,5 +1,32 @@
 [
   {
+    "version": "1.0.0",
+    "date": "2026-09-23",
+    "summary": "Première version majeure stable : shells T4–T5 documentés, SemVer lockstep.",
+    "changes": [
+      {
+        "package": "docs",
+        "kind": "added",
+        "text": "Pages gc-entity-row, gc-entity-wall, gc-lfg-chat et player media."
+      },
+      {
+        "package": "gc-ui",
+        "kind": "added",
+        "text": "gc-entity-row (rails home) — déjà en 0.8.42, documenté en 1.0.0."
+      },
+      {
+        "package": "gc-widgets",
+        "kind": "added",
+        "text": "gc-entity-wall, gc-lfg-chat, player-media — documentés côté site."
+      },
+      {
+        "package": "devkit",
+        "kind": "changed",
+        "text": "Passage en 1.0.0 : contrat SemVer lockstep pour tous les @bari77/*."
+      }
+    ]
+  },
+  {
     "version": "0.8.42",
     "date": "2026-09-23",
     "summary": "entity-row et shell LFG chat partagés (gc-ui + gc-widgets).",

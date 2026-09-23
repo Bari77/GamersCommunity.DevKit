@@ -4,6 +4,7 @@
 
 Every `@bari77/gc-*` package shares one version, driven by the tag. A `vX.Y.Z` tag publishes all
 seven packages at `X.Y.Z`, even the ones whose content did not change — same model as `@angular/*`.
+From **1.0.0** onward the lockstep version follows SemVer (breaking changes bump the major).
 
 Consequences:
 

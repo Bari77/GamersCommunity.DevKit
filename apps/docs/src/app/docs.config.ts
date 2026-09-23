@@ -115,7 +115,7 @@ export const docsSections: DocsSection[] = [
         package: PACKAGES.ui,
         breadcrumb: 'Composants UI',
         summary:
-            "Primitives sans logique métier : fil d'Ariane, squelettes, modale, invite de décision, mur d'incitation et éditeur HTML riche.",
+            "Primitives sans logique métier : fil d'Ariane, squelettes, modale, invite de décision, mur d'incitation, ligne d'entité et éditeur HTML riche.",
         pages: [
             {
                 path: '',
@@ -132,6 +132,16 @@ export const docsSections: DocsSection[] = [
                 typeSymbols: ['Breadcrumb'],
                 load: () =>
                     import('./pages/ui/breadcrumb-page.component').then((m) => m.BreadcrumbPageComponent),
+            },
+            {
+                path: 'entity-row',
+                label: 'Entity row',
+                selector: 'gc-entity-row',
+                summary: "Ligne de rail d'accueil avec accent, visuel projeté, pastilles et date.",
+                symbols: ['EntityRowComponent'],
+                typeSymbols: ['EntityRowFact'],
+                load: () =>
+                    import('./pages/ui/entity-row-page.component').then((m) => m.EntityRowPageComponent),
             },
             {
                 path: 'skeleton',
@@ -236,7 +246,7 @@ export const docsSections: DocsSection[] = [
         package: PACKAGES.widgets,
         breadcrumb: 'Widgets',
         summary:
-            'Le tableau de bord personnalisable : pages, grille redimensionnable, catalogue et modale de réglages.',
+            'Tableau de bord personnalisable, murs d’entité, chat LFG et médias joueur partagés entre remotes.',
         pages: [
             {
                 path: '',
@@ -266,6 +276,46 @@ export const docsSections: DocsSection[] = [
                 symbols: ['LinkListComponent', 'MediaGalleryComponent', 'TwitchEmbedComponent'],
                 typeSymbols: ['GcGalleryItem', 'GcLink'],
                 load: () => import('./pages/widgets/built-in-page.component').then((m) => m.BuiltInPageComponent),
+            },
+            {
+                path: 'entity-wall',
+                label: 'Entity wall',
+                selector: 'gc-entity-wall',
+                summary: 'Mur équipe/guilde avec file de modération et slots composer/edit.',
+                symbols: [
+                    'EntityWallComponent',
+                    'EntityWallComposerDirective',
+                    'EntityWallEditDirective',
+                    'EntityWallExtrasDirective',
+                ],
+                typeSymbols: ['EntityWallPost', 'EntityWallLabels'],
+                load: () =>
+                    import('./pages/widgets/entity-wall-page.component').then((m) => m.EntityWallPageComponent),
+            },
+            {
+                path: 'lfg-chat',
+                label: 'LFG chat',
+                selector: 'gc-lfg-chat',
+                summary: 'Shell de chat LFG / recrutement (scroll, composer, poster-as).',
+                symbols: [
+                    'LfgChatComponent',
+                    'LfgChatLeadingDirective',
+                    'LfgChatMetaDirective',
+                    'LfgChatNeedsSheetDirective',
+                    'LfgChatPublishErrorDirective',
+                ],
+                typeSymbols: ['LfgChatMessage', 'LfgChatLabels', 'LfgChatComposerState'],
+                load: () => import('./pages/widgets/lfg-chat-page.component').then((m) => m.LfgChatPageComponent),
+            },
+            {
+                path: 'player-media',
+                label: 'Player media',
+                selector: 'gc-player-media-manager',
+                summary: 'Manager joueur et admin staff pour photos / vidéos de fiche.',
+                symbols: ['PlayerMediaManagerComponent', 'PlayerMediaAdminComponent'],
+                typeSymbols: ['PlayerMediaManagerLabels', 'PlayerMediaAdminLabels'],
+                load: () =>
+                    import('./pages/widgets/player-media-page.component').then((m) => m.PlayerMediaPageComponent),
             },
             {
                 path: 'persistence',

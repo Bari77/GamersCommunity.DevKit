@@ -20,10 +20,10 @@ import { lockstepSnippet } from '../../shared/snippets';
             <h2>Ce qu'il faut savoir avant d'intégrer</h2>
 
             <p>
-                Les packages publient du <strong>TypeScript source</strong>, pas un bundle compilé. Leur
-                <code>package.json</code> pointe <code>main</code> et <code>types</code> vers
-                <code>./src/index.ts</code>, et c'est l'application consommatrice qui les compile avec son propre
-                compilateur Angular.
+                La plupart des packages publient du <strong>TypeScript source</strong>
+                (<code>main</code> / <code>types</code> vers <code>./src/index.ts</code>) : l'application consommatrice
+                les compile avec son propre Angular. Exception : <code>&#64;bari77/gc-ui</code> publie un bundle
+                <strong>FESM</strong> (ng-packagr) pour rester compatible avec la fédération Native Federation.
             </p>
 
             <p>Trois conséquences pratiques :</p>
@@ -48,7 +48,8 @@ import { lockstepSnippet } from '../../shared/snippets';
             <p>
                 Tous les packages <code>&#64;bari77/*</code> avancent en <strong>lockstep</strong> : une publication
                 pousse la même version pour l'ensemble, même si un seul package a changé. Il faut donc les monter
-                ensemble côté consommateur.
+                ensemble côté consommateur. Depuis <strong>1.0.0</strong>, le versionnage suit SemVer de façon
+                explicite (breaking = majeur).
             </p>
 
             <gcd-code language="json" label="package.json de l'application" [code]="lockstepSnippet" />

@@ -16,5 +16,8 @@
   "engines": {
     "node": ">=20"
   },
+  "overrides": {
+    "@angular/cdk": "21.0.6"
+  },
   "license": "UNLICENSED"
 }
