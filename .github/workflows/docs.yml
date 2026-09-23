@@ -8,6 +8,7 @@ on:
       - "apps/docs/**"
       # The site reads its version and API surface from the packages themselves.
       - "packages/**"
+      - "CHANGELOG.json"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/docs.yml"
