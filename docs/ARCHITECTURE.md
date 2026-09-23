@@ -44,6 +44,7 @@ Shared Angular pieces for every game remote (do not copy LoL/WoW twins):
 - `BaseService`, `PromiseUtils`, `ResourceUtils`
 - `PlatformSessionService`, `PlatformGamesService`
 - `GameMembershipStore` + `provideGameRemoteKernel(...)`
+- Player media data layer: `PlayerMediaService` / `PlayerMediaStore` / `PlayerMediaStores`
 
 Wire once in the remote `app.config.ts`:
 
@@ -59,13 +60,22 @@ providers: [
       apiUrl: environment.apiUrl,
       assetsBaseUrl: environment.assetsBaseUrl,
     },
-    membership: { gameId: MY_GAME_ID, gameUrl: MY_GAME_URL },
+    membership: {
+      gameId: MY_GAME_ID,
+      gameUrl: MY_GAME_URL,
+      apiSegment: "mygame", // Gateway path, e.g. leagueoflegends
+    },
     playerSheetApi: PlayersService,
   }),
 ]
 ```
 
 `PlayersService` must expose `resolve(platformUserPublicId)` and `load({ platformUserId, platformUserPublicId })`. Keep `node_modules/@bari77/gc-sdk/src/**/*.ts` in `tsconfig.app.json` `include` so Angular compiles the source package. Add `@bari77/gc-sdk` to the Native Federation `skip` list (same reason as `gc-widgets`: raw TypeScript + Angular DI must not go through the federation package bundler).
+
+## Media + entity wall (`@bari77/gc-widgets`)
+
+- `gc-player-media-admin` / `gc-player-media-manager` — pass i18n via `[labels]`; provide `PlayerMediaStores` on the player sheet.
+- `gc-entity-wall` — queue + feed shell; project composer with `gcEntityWallComposer`, edit/extras via `ng-template gcEntityWallEdit` / `gcEntityWallExtras`.
 
 ## Game team onboarding
 

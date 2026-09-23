@@ -1,0 +1,166 @@
+@let copy = resolvedLabels;
+@let editTpl = editSlot()?.template;
+@let extrasTpl = extrasSlot()?.template;
+
+@if (canModerate()) {
+  <nb-card class="gc-entity-wall__queue">
+    <nb-card-header class="gc-entity-wall__queue-header">
+      <span>{{ copy.queue }}</span>
+      @if (loadingPending()) {
+        <gc-skeleton width="1.5rem" height="0.8rem" />
+      } @else {
+        <span class="gc-entity-wall__badge">{{ pendingCount }}</span>
+      }
+    </nb-card-header>
+    <nb-card-body>
+      @if (loadingPending()) {
+        <gc-skeleton-text [lines]="2" />
+      } @else {
+        <ul class="gc-entity-wall__posts">
+          @for (post of pending(); track post.publicId) {
+            <li class="gc-entity-wall__post gc-entity-wall__post--pending">
+              <header class="gc-entity-wall__post-head">
+                @if (post.isContactable()) {
+                  <a class="gc-entity-wall__author" [routerLink]="['/users', post.authorPlatformUserPublicId]">
+                    {{ post.authorHandleLabel() }}
+                  </a>
+                } @else {
+                  <span class="gc-entity-wall__author">{{ post.authorHandleLabel() }}</span>
+                }
+                <time class="gc-entity-wall__date">{{ post.creationDate | date: "short" }}</time>
+              </header>
+
+              @if (editingId() === post.publicId && editTpl) {
+                <ng-container *ngTemplateOutlet="editTpl; context: { $implicit: post }" />
+              } @else {
+                <gc-rich-content class="gc-entity-wall__body" [html]="post.body" />
+                @if (extrasTpl) {
+                  <ng-container *ngTemplateOutlet="extrasTpl; context: { $implicit: post }" />
+                }
+                <footer class="gc-entity-wall__actions">
+                  @if (isAuthor(post)) {
+                    <button nbButton ghost size="small" status="basic" type="button" (click)="startEdit(post)">
+                      <span>{{ copy.edit }}</span>
+                    </button>
+                  }
+                  <button
+                    nbButton
+                    ghost
+                    size="small"
+                    status="success"
+                    type="button"
+                    (click)="moderateClick.emit({ post, approve: true })"
+                  >
+                    <span>{{ copy.approve }}</span>
+                  </button>
+                  <button
+                    nbButton
+                    ghost
+                    size="small"
+                    status="danger"
+                    type="button"
+                    (click)="moderateClick.emit({ post, approve: false })"
+                  >
+                    <span>{{ copy.reject }}</span>
+                  </button>
+                </footer>
+              }
+            </li>
+          } @empty {
+            <li class="gc-entity-wall__empty">{{ copy.queueEmpty }}</li>
+          }
+        </ul>
+      }
+    </nb-card-body>
+  </nb-card>
+}
+
+<nb-card>
+  <nb-card-header>{{ copy.title }}</nb-card-header>
+  <nb-card-body>
+    @if (canPublish()) {
+      <div class="gc-entity-wall__composer">
+        <ng-content select="[gcEntityWallComposer]" />
+        @if (queuedNotice()) {
+          <p class="gc-entity-wall__notice" role="status">{{ copy.queued }}</p>
+        }
+      </div>
+    }
+
+    <ul class="gc-entity-wall__posts">
+      @if (loading()) {
+        @for (placeholder of postPlaceholders; track placeholder) {
+          <li class="gc-entity-wall__post gc-entity-wall__post--skeleton" aria-busy="true">
+            <header class="gc-entity-wall__post-head">
+              <gc-skeleton width="9rem" height="0.9rem" />
+              <gc-skeleton width="5rem" height="0.75rem" />
+            </header>
+            <gc-skeleton-text [lines]="2" />
+          </li>
+        }
+      } @else {
+        @for (post of posts(); track post.publicId) {
+          <li class="gc-entity-wall__post">
+            <header class="gc-entity-wall__post-head">
+              @if (post.isContactable()) {
+                <a class="gc-entity-wall__author" [routerLink]="['/users', post.authorPlatformUserPublicId]">
+                  {{ post.authorHandleLabel() }}
+                </a>
+              } @else {
+                <span class="gc-entity-wall__author">{{ post.authorHandleLabel() }}</span>
+              }
+              <time class="gc-entity-wall__date">{{ post.creationDate | date: "short" }}</time>
+            </header>
+
+            @if (editingId() === post.publicId && editTpl) {
+              <ng-container *ngTemplateOutlet="editTpl; context: { $implicit: post }" />
+            } @else {
+              <gc-rich-content class="gc-entity-wall__body" [html]="post.body" />
+              @if (extrasTpl) {
+                <ng-container *ngTemplateOutlet="extrasTpl; context: { $implicit: post }" />
+              }
+              @if (isAuthor(post) || canDelete(post)) {
+                <footer class="gc-entity-wall__actions">
+                  @if (isAuthor(post)) {
+                    <button nbButton ghost size="small" status="basic" type="button" (click)="startEdit(post)">
+                      <span>{{ copy.edit }}</span>
+                    </button>
+                  }
+                  @if (canDelete(post)) {
+                    <button
+                      nbButton
+                      ghost
+                      size="small"
+                      status="danger"
+                      type="button"
+                      (click)="removeClick.emit(post)"
+                    >
+                      <span>{{ copy.delete }}</span>
+                    </button>
+                  }
+                </footer>
+              }
+            }
+          </li>
+        } @empty {
+          <li class="gc-entity-wall__empty">{{ copy.empty }}</li>
+        }
+      }
+    </ul>
+
+    @if (hasMore() && !loading()) {
+      <div class="gc-entity-wall__more">
+        <button
+          nbButton
+          ghost
+          status="basic"
+          type="button"
+          [disabled]="loadingMore()"
+          (click)="loadMoreClick.emit()"
+        >
+          <span>{{ copy.loadMore }}</span>
+        </button>
+      </div>
+    }
+  </nb-card-body>
+</nb-card>

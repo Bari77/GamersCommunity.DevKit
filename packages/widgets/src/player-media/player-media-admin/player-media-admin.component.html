@@ -1,0 +1,97 @@
+@let media = store();
+@let copy = resolvedLabels();
+
+<section class="gc-player-media-admin">
+  <form class="gc-player-media-admin__form" (ngSubmit)="add()">
+    <input
+      nbInput
+      fieldSize="small"
+      type="url"
+      [placeholder]="urlPlaceholder()"
+      [attr.aria-label]="urlPlaceholder()"
+      [ngModel]="url()"
+      (ngModelChange)="url.set($event)"
+      [ngModelOptions]="{ standalone: true }"
+    />
+    <input
+      nbInput
+      fieldSize="small"
+      type="text"
+      maxlength="150"
+      [placeholder]="copy.captionPlaceholder"
+      [ngModel]="caption()"
+      (ngModelChange)="caption.set($event)"
+      [ngModelOptions]="{ standalone: true }"
+    />
+    <nb-checkbox [checked]="share()" (checkedChange)="share.set($event)">
+      <span>{{ copy.share }}</span>
+    </nb-checkbox>
+    <button nbButton size="small" status="primary" type="submit" [disabled]="!canAdd()">
+      <span>{{ copy.add }}</span>
+    </button>
+  </form>
+
+  @if (media.errorCode(); as code) {
+    <p class="gc-player-media-admin__error" role="alert">
+      @switch (code) {
+        @case ("URL_INVALID") {
+          <span>{{ copy.errorUrl }}</span>
+        }
+        @case ("TOO_MANY_ITEMS") {
+          <span>{{ copy.errorTooMany }}</span>
+        }
+        @default {
+          <span>{{ copy.errorUnknown }}</span>
+        }
+      }
+    </p>
+  }
+
+  @if (items().length === 0) {
+    <p class="gc-player-media-admin__empty">{{ copy.empty }}</p>
+  } @else {
+    <ul class="gc-player-media-admin__list">
+      @for (item of items(); track item.publicId) {
+        <li class="gc-player-media-admin__row">
+          <input
+            nbInput
+            fieldSize="small"
+            type="url"
+            [value]="item.url"
+            [attr.aria-label]="urlPlaceholder()"
+            [disabled]="media.saving()"
+            (change)="editUrl(item, $event)"
+          />
+          <input
+            nbInput
+            fieldSize="small"
+            type="text"
+            maxlength="150"
+            [placeholder]="copy.captionPlaceholder"
+            [value]="item.caption ?? ''"
+            [disabled]="media.saving()"
+            (change)="editCaption(item, $event)"
+          />
+          <nb-checkbox
+            [checked]="item.share"
+            [disabled]="media.saving()"
+            (checkedChange)="media.toggleShare(item)"
+          >
+            <span>{{ copy.share }}</span>
+          </nb-checkbox>
+          <button
+            nbButton
+            ghost
+            size="tiny"
+            status="danger"
+            type="button"
+            [disabled]="media.saving()"
+            (click)="media.remove(item.publicId)"
+          >
+            <span>{{ copy.remove }}</span>
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</section>

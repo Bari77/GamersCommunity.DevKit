@@ -8,25 +8,44 @@ export type { GcLink } from './components/link-list/link-list.component';
 export { MediaGalleryComponent } from './components/media-gallery/media-gallery.component';
 export { TwitchEmbedComponent } from './components/twitch-embed/twitch-embed.component';
 
+export {
+  DEFAULT_PLAYER_MEDIA_ADMIN_LABELS,
+  DEFAULT_PLAYER_MEDIA_MANAGER_LABELS,
+  type PlayerMediaAdminLabels,
+  type PlayerMediaManagerLabels,
+} from './player-media/labels';
+export { PlayerMediaAdminComponent } from './player-media/player-media-admin/player-media-admin.component';
+export { PlayerMediaManagerComponent } from './player-media/player-media-manager/player-media-manager.component';
+
+export {
+  DEFAULT_ENTITY_WALL_LABELS,
+  EntityWallComponent,
+  EntityWallComposerDirective,
+  EntityWallEditDirective,
+  EntityWallExtrasDirective,
+  type EntityWallLabels,
+  type EntityWallPost,
+} from './entity-wall/entity-wall.component';
+
 export { WidgetDefDirective } from './widget-def.directive';
 export { WidgetDefRegistry } from './widget-def.registry';
 export type { WidgetTemplateContext, WidgetTemplateDef } from './widget-template';
 export { WidgetEditBarComponent } from './widget-edit-bar/widget-edit-bar.component';
 export {
-    GC_LINKS_WIDGET,
-    GC_PHOTOS_WIDGET,
-    GC_TWITCH_WIDGET,
-    GC_VIDEOS_WIDGET,
-    WIDGET_DRAG_HANDLE_CLASS,
-    WidgetGridComponent,
+  GC_LINKS_WIDGET,
+  GC_PHOTOS_WIDGET,
+  GC_TWITCH_WIDGET,
+  GC_VIDEOS_WIDGET,
+  WIDGET_DRAG_HANDLE_CLASS,
+  WidgetGridComponent,
 } from './widget-grid/widget-grid.component';
 export type { WidgetPosition } from './widget-grid/widget-grid.component';
 export { WidgetNavComponent } from './widget-nav/widget-nav.component';
 export type {
-    WidgetPageMove,
-    WidgetPageRename,
-    WidgetPageVisibilityChange,
-    WidgetPageVisibilityOption,
+  WidgetPageMove,
+  WidgetPageRename,
+  WidgetPageVisibilityChange,
+  WidgetPageVisibilityOption,
 } from './widget-nav/widget-nav.component';
 export { WidgetPickerComponent } from './widget-picker/widget-picker.component';
 export { WidgetSelectComponent } from './widget-select/widget-select.component';

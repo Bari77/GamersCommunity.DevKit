@@ -2,10 +2,12 @@ import { InjectionToken } from "@angular/core";
 import { Observable } from "rxjs";
 
 export interface GameMembershipConfig {
-  /** Stable id used in localStorage keys (e.g. `leagueoflegends`). */
+  /** Stable id used in localStorage keys (e.g. `league-of-legends`). */
   gameId: string;
   /** Route prefix without trailing slash (e.g. `/league-of-legends`). */
   gameUrl: string;
+  /** Gateway microservice path segment without slashes (e.g. `leagueoflegends`). */
+  apiSegment: string;
 }
 
 export interface GameSheetResolveResult {

@@ -1,0 +1,45 @@
+.gc-player-media-manager {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.gc-player-media-manager__gallery-skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+  gap: 0.6rem;
+  pointer-events: none;
+}
+
+.gc-player-media-manager__gallery-skeleton gc-skeleton {
+  aspect-ratio: 1;
+}
+
+.gc-player-media-manager__streams--skeleton {
+  pointer-events: none;
+}
+
+.gc-player-media-manager__empty {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.6;
+}
+
+.gc-player-media-manager__streams {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  gap: 0.75rem;
+}
+
+.gc-player-media-manager__stream {
+  margin: 0;
+  min-height: 12rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.gc-player-media-manager__stream figcaption {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}

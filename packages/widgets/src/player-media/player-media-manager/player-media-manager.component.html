@@ -1,0 +1,38 @@
+@let copy = resolvedLabels();
+
+<section class="gc-player-media-manager">
+  @if (store().loading()) {
+    @if (kind() === "stream") {
+      <div class="gc-player-media-manager__streams gc-player-media-manager__streams--skeleton" aria-busy="true">
+        <gc-skeleton width="100%" height="12rem" radius="0.5rem" />
+      </div>
+    } @else {
+      <div class="gc-player-media-manager__gallery-skeleton" aria-busy="true">
+        @for (placeholder of galleryPlaceholders; track placeholder) {
+          <gc-skeleton width="100%" height="100%" radius="0.5rem" />
+        }
+      </div>
+    }
+  } @else if (kind() === "stream") {
+    @if (items().length === 0) {
+      <p class="gc-player-media-manager__empty">{{ copy.emptyStream }}</p>
+    } @else {
+      <div class="gc-player-media-manager__streams">
+        @for (item of items(); track item.publicId) {
+          <figure class="gc-player-media-manager__stream">
+            <gc-twitch-embed [channel]="item.url" />
+            @if (item.caption) {
+              <figcaption>{{ item.caption }}</figcaption>
+            }
+          </figure>
+        }
+      </div>
+    }
+  } @else {
+    <gc-media-gallery
+      [items]="galleryItems()"
+      [kind]="kind() === 'video' ? 'video' : 'photo'"
+      [emptyLabel]="emptyLabel()"
+    />
+  }
+</section>

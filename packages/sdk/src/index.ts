@@ -50,6 +50,17 @@ export {
   type GamePlayerSheetApi,
   type GameSheetResolveResult,
 } from "./membership/tokens";
+export type {
+  PlayerMediaCreateRequestDto,
+  PlayerMediaDto,
+  PlayerMediaKind,
+  PlayerMediaListRequestDto,
+  PlayerMediaUpdateRequestDto,
+} from "./media/player-media.dto";
+export { PlayerMedia, type PlayerMediaGalleryItem } from "./media/player-media.model";
+export { PlayerMediaService } from "./media/player-media.service";
+export { PlayerMediaStore } from "./media/player-media.store";
+export { PlayerMediaStores } from "./media/player-media-stores";
 export { PlatformGamesService, type PlatformGame } from "./platform/platform-games.service";
 export {
   PlatformSessionService,
