@@ -78,8 +78,14 @@ Put the same `provideGameRemoteKernel(...)` on a parent route of the exported `*
 
 **Federation:** do **not** use `providedIn: "root"` for game or SDK services that need the kernel.
 Register game services on that same route `providers` array. `provideGameRemoteKernel` registers
-the SDK ones (`PlatformSessionService`, `GameMembershipStore`, `PlayerMediaService`, …).
-`PlayersService` must expose `resolve(platformUserPublicId)` and `load({ platformUserId, platformUserPublicId })`. Keep `node_modules/@bari77/gc-sdk/src/**/*.ts` in `tsconfig.app.json` `include` so Angular compiles the source package. Add `@bari77/gc-sdk` to the Native Federation `skip` list (same reason as `gc-widgets`: raw TypeScript + Angular DI must not go through the federation package bundler).
+the SDK ones (`PlatformSessionService`, `GameMembershipStore`, `PlayerMediaService`, …) **and**
+the `playerSheetApi` class (so `GAME_PLAYER_SHEET_API` / `useExisting` resolves even when a
+playground `App` injects membership at root). Listing `PlayersService` again on the route array is
+harmless. `PlayersService` must expose `resolve(platformUserPublicId)` and
+`load({ platformUserId, platformUserPublicId })`. Keep `node_modules/@bari77/gc-sdk/src/**/*.ts` in
+`tsconfig.app.json` `include` so Angular compiles the source package. Add `@bari77/gc-sdk` to the
+Native Federation `skip` list (same reason as `gc-widgets`: raw TypeScript + Angular DI must not go
+through the federation package bundler).
 
 ## Media + entity wall (`@bari77/gc-widgets`)
 

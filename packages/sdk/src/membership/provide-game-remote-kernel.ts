@@ -26,11 +26,15 @@ export interface GameRemoteKernelOptions {
  *
  * SDK services are **not** `providedIn: "root"` (host root has no game tokens). Game-owned
  * services that need the kernel must likewise be listed on those route `providers` only.
+ *
+ * `playerSheetApi` is registered here (not only via `useExisting`) so a playground `App` that
+ * injects `GameMembershipStore` at root does not hit NG0201 before route providers load.
  */
 export function provideGameRemoteKernel(options: GameRemoteKernelOptions): EnvironmentProviders {
   return makeEnvironmentProviders([
     { provide: GC_ENVIRONMENT, useValue: options.environment },
     { provide: GAME_MEMBERSHIP_CONFIG, useValue: options.membership },
+    options.playerSheetApi,
     { provide: GAME_PLAYER_SHEET_API, useExisting: options.playerSheetApi },
     PlatformSessionService,
     PlatformGamesService,
