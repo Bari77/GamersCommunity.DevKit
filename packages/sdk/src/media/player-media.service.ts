@@ -17,7 +17,7 @@ const RESOURCE: Record<PlayerMediaKind, string> = {
   stream: "PlayerStreams",
 };
 
-@Injectable({ providedIn: "root" })
+@Injectable()
 export class PlayerMediaService extends BaseService {
   public constructor() {
     const config = inject(GAME_MEMBERSHIP_CONFIG);

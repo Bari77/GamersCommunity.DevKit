@@ -19,16 +19,13 @@ export interface GameRemoteKernelOptions {
 }
 
 /**
- * Registers tokens required by `BaseService`, `PlatformGamesService`, and `GameMembershipStore`.
+ * Registers `GC_ENVIRONMENT` / membership tokens and the SDK services that depend on them.
  *
- * Call from the remote `app.config.ts` (standalone playground) **and** from the parent
- * `providers` of the exported federation routes. Under Module Federation the shell never runs
- * the remote bootstrap, and `providedIn: "root"` services resolve against the **host** root —
- * so this helper also re-provides the SDK services that need `GC_ENVIRONMENT` / membership
- * tokens, shadowing the empty host root for the remote route tree.
+ * Call from the remote `app.config.ts` (standalone) **and** on the parent `providers` of the
+ * exported federation routes — the Platform shell never runs the remote bootstrap.
  *
- * Game-owned `BaseService` subclasses that use `providedIn: "root"` must likewise be listed on
- * those same route `providers` (see WoW / LoL `*Routes`).
+ * SDK services are **not** `providedIn: "root"` (host root has no game tokens). Game-owned
+ * services that need the kernel must likewise be listed on those route `providers` only.
  */
 export function provideGameRemoteKernel(options: GameRemoteKernelOptions): EnvironmentProviders {
   return makeEnvironmentProviders([

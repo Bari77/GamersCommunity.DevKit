@@ -1,6 +1,6 @@
 {
   "name": "@bari77/gc-msw",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MSW helpers to mock GamersCommunity gateway routes",
   "type": "module",
   "main": "./src/index.ts",

@@ -20,7 +20,7 @@ export interface PlatformSession {
   activeMute: { reason: string; endDate: string } | null;
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable()
 export class PlatformSessionService extends BaseService {
   public constructor() {
     super("/platform/users");

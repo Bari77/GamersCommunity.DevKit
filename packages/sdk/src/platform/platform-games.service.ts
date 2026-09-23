@@ -28,7 +28,7 @@ export interface PlatformGame {
   available: boolean;
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable()
 export class PlatformGamesService {
   private readonly http = inject(HttpClient);
   private readonly env = inject(GC_ENVIRONMENT);

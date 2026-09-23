@@ -1,5 +1,22 @@
 [
   {
+    "version": "1.0.1",
+    "date": "2026-09-24",
+    "summary": "Kernel federation-safe : plus de providedIn root sur les services SDK qui dépendent de GC_ENVIRONMENT.",
+    "changes": [
+      {
+        "package": "gc-sdk",
+        "kind": "fixed",
+        "text": "PlatformSessionService, PlatformGamesService, GameMembershipStore et PlayerMediaService ne sont plus providedIn root ; provideGameRemoteKernel les enregistre sur l'injecteur remote (standalone + Module Federation)."
+      },
+      {
+        "package": "devkit",
+        "kind": "changed",
+        "text": "ARCHITECTURE : les services jeu qui ont besoin du kernel se déclarent uniquement sur les providers des routes fédérées."
+      }
+    ]
+  },
+  {
     "version": "1.0.0",
     "date": "2026-09-23",
     "summary": "Première version majeure stable : shells T4–T5 documentés, SemVer lockstep.",

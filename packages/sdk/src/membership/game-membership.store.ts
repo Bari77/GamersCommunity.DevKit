@@ -18,7 +18,7 @@ const NO_SHEET: GameSheetResolveResult = { playerPublicId: null, hasSheet: false
  * Browsing stays anonymous: nothing here writes to the back. The sheet only ever comes
  * into existence through {@link createSheet}, on an explicit user action.
  */
-@Injectable({ providedIn: "root" })
+@Injectable()
 export class GameMembershipStore {
   public readonly session = computed(() => this.sessionResource.value());
   public readonly isAuthenticated = computed(() => this.session() !== null);

@@ -76,10 +76,9 @@ providers: [
 Put the same `provideGameRemoteKernel(...)` on a parent route of the exported `*Routes` array
 (`path: ""`, `providers: […]`, `children: […]`) so every remote page inherits it.
 
-**Federation:** do **not** use `providedIn: "root"` for game services that need the kernel.
-Register them on that same route `providers` array. Host root has no `GC_ENVIRONMENT`;
-`provideGameRemoteKernel` already re-provides the SDK services (`PlatformSessionService`,
-`GameMembershipStore`, …) for the same reason.
+**Federation:** do **not** use `providedIn: "root"` for game or SDK services that need the kernel.
+Register game services on that same route `providers` array. `provideGameRemoteKernel` registers
+the SDK ones (`PlatformSessionService`, `GameMembershipStore`, `PlayerMediaService`, …).
 `PlayersService` must expose `resolve(platformUserPublicId)` and `load({ platformUserId, platformUserPublicId })`. Keep `node_modules/@bari77/gc-sdk/src/**/*.ts` in `tsconfig.app.json` `include` so Angular compiles the source package. Add `@bari77/gc-sdk` to the Native Federation `skip` list (same reason as `gc-widgets`: raw TypeScript + Angular DI must not go through the federation package bundler).
 
 ## Media + entity wall (`@bari77/gc-widgets`)

@@ -1,6 +1,6 @@
 {
   "name": "@bari77/gc-workspace-editor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI and standalone editor for default player workspace layouts in GamersCommunity game fronts",
   "type": "module",
   "bin": {
@@ -43,7 +43,7 @@
     "typescript": "~5.9.2"
   },
   "peerDependencies": {
-    "@bari77/gc-widgets": "^1.0.0"
+    "@bari77/gc-widgets": "^1.0.1"
   },
   "overrides": {
     "@angular/build": "21.2.15"

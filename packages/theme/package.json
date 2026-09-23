@@ -1,6 +1,6 @@
 {
   "name": "@bari77/gc-theme",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Shared GamersCommunity design tokens and global styles",
   "exports": {
     ".": "./src/global.scss",
