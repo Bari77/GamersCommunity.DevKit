@@ -46,7 +46,10 @@ Shared Angular pieces for every game remote (do not copy LoL/WoW twins):
 - `GameMembershipStore` + `provideGameRemoteKernel(...)`
 - Player media data layer: `PlayerMediaService` / `PlayerMediaStore` / `PlayerMediaStores`
 
-Wire once in the remote `app.config.ts`:
+Wire once in the remote `app.config.ts` **and** on the exported federation routes
+(`worldOfWarcraftRoutes` / `leagueOfLegendsRoutes` / …): the Platform shell only loads those
+routes — it never runs the remote `bootstrap` / `app.config`, so `GC_ENVIRONMENT` would otherwise
+be missing under federation.
 
 ```ts
 import { provideGameRemoteKernel } from "@bari77/gc-sdk";
@@ -70,6 +73,8 @@ providers: [
 ]
 ```
 
+Put the same `provideGameRemoteKernel(...)` on a parent route of the exported `*Routes` array
+(`path: ""`, `providers: […]`, `children: […]`) so every remote page inherits it.
 `PlayersService` must expose `resolve(platformUserPublicId)` and `load({ platformUserId, platformUserPublicId })`. Keep `node_modules/@bari77/gc-sdk/src/**/*.ts` in `tsconfig.app.json` `include` so Angular compiles the source package. Add `@bari77/gc-sdk` to the Native Federation `skip` list (same reason as `gc-widgets`: raw TypeScript + Angular DI must not go through the federation package bundler).
 
 ## Media + entity wall (`@bari77/gc-widgets`)
