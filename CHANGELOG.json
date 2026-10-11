@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.0.3",
+    "date": "2026-10-11",
+    "summary": "gc-playground : personas de session mock (portrait stable + localStorage par gameKey).",
+    "changes": [
+      {
+        "package": "gc-playground",
+        "kind": "added",
+        "text": "PlaygroundPersona, mockPortraitUrl et resolveActivePersona / get|setActivePersonaId pour un persona actif par gameKey (localStorage)."
+      }
+    ]
+  },
+  {
     "version": "1.0.2",
     "date": "2026-09-24",
     "summary": "gc-entity-row : pastilles facts alignées en rangée avec la projection rowFacts.",
@@ -11,6 +23,7 @@
       }
     ]
   },
+
   {
     "version": "1.0.1",
     "date": "2026-09-24",
