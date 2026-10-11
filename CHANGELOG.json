@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.0.4",
+    "date": "2026-10-11",
+    "summary": "gc-playground : helpers personas exportés depuis le barrel principal (compatible Native Federation).",
+    "changes": [
+      {
+        "package": "gc-playground",
+        "kind": "fixed",
+        "text": "PlaygroundPersona, mockPortraitUrl et resolveActivePersona / get|setActivePersonaId vivent dans index.ts pour que le bundler federation des shared packages résolve correctement le module."
+      }
+    ]
+  },
+  {
     "version": "1.0.3",
     "date": "2026-10-11",
     "summary": "gc-playground : personas de session mock (portrait stable + localStorage par gameKey).",
@@ -11,6 +23,7 @@
       }
     ]
   },
+
   {
     "version": "1.0.2",
     "date": "2026-09-24",
