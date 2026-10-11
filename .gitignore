@@ -85,3 +85,7 @@ secrets.json
 coverage/
 *.lcov
 .nyc_output/
+
+.pack-*/
+*.tgz
+
