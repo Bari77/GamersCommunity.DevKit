@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.0.5",
+    "date": "2026-10-11",
+    "summary": "gc-widgets : deep-link des pages workspace via ?page= (retour navigateur + partage de lien).",
+    "changes": [
+      {
+        "package": "gc-widgets",
+        "kind": "added",
+        "text": "activePageId en model sur gc-widget-workspace, plus bindWorkspacePageQuery() pour synchroniser l'onglet avec ?page= (replaceUrl, omit home)."
+      }
+    ]
+  },
+  {
     "version": "1.0.4",
     "date": "2026-10-11",
     "summary": "gc-playground : helpers personas exportés depuis le barrel principal (compatible Native Federation).",

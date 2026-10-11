@@ -1,3 +1,10 @@
+export {
+    WORKSPACE_HOME_PAGE_ID,
+    WORKSPACE_PAGE_QUERY_PARAM,
+    bindWorkspacePageQuery,
+} from './workspace-page-query';
+export type { WorkspacePageQueryOptions } from './workspace-page-query';
+
 export type WidgetSettings = Record<string, unknown>;
 
 /** One placed widget. Several instances can share the same `type`. */

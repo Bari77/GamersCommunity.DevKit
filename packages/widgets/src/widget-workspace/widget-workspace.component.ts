@@ -128,11 +128,16 @@ export class WidgetWorkspaceComponent {
 
     public readonly editing = model(false);
 
+    /**
+     * Active workspace page id. Hosts can two-way bind this to `?page=` (see
+     * `bindWorkspacePageQuery`) so browser history and shared links restore the tab.
+     */
+    public readonly activePageId = model<string | null>(null);
+
     public readonly save = output<WidgetWorkspace>();
 
     protected readonly pickerOpen = signal(false);
     protected readonly configuringId = signal<string | null>(null);
-    protected readonly activePageId = signal<string | null>(null);
 
     private readonly registry = inject(WidgetDefRegistry);
 

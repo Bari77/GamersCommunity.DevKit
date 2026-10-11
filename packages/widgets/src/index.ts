@@ -66,3 +66,9 @@ export type { WidgetSelectOption } from './widget-select/widget-select.component
 export { WidgetSettingsDefDirective } from './widget-settings-def.directive';
 export { WIDGET_TITLE_KEY, WidgetSettingsComponent } from './widget-settings/widget-settings.component';
 export { WidgetWorkspaceComponent } from './widget-workspace/widget-workspace.component';
+export {
+    WORKSPACE_HOME_PAGE_ID,
+    WORKSPACE_PAGE_QUERY_PARAM,
+    bindWorkspacePageQuery,
+} from './workspace-page-query';
+export type { WorkspacePageQueryOptions } from './workspace-page-query';
