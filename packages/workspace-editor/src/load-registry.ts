@@ -53,7 +53,7 @@ function readBundledRegistry(outfile: string): Promise<GameWorkspaceRegistry> {
     });
 }
 
-function bundleCatalogModule(gameRoot: string, moduleRel: string): Promise<GameWorkspaceRegistry> {
+async function bundleCatalogModule(gameRoot: string, moduleRel: string): Promise<GameWorkspaceRegistry> {
     const modulePath = resolve(gameRoot, moduleRel);
     const tempDir = mkdtempSync(join(tmpdir(), 'gc-workspace-'));
     const outfile = join(tempDir, 'catalog.mjs');
@@ -72,7 +72,8 @@ function bundleCatalogModule(gameRoot: string, moduleRel: string): Promise<GameW
             external: ['@angular/*', '@nebular/*', '@bari77/*', 'rxjs', 'rxjs/*', 'zone.js'],
         });
 
-        return readBundledRegistry(outfile);
+        // Await before finally: otherwise rmSync deletes catalog.mjs before import resolves (ENOENT).
+        return await readBundledRegistry(outfile);
     } finally {
         rmSync(tempDir, { recursive: true, force: true });
     }

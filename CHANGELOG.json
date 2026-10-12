@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.0.6",
+    "date": "2026-10-12",
+    "summary": "gc-workspace-editor : validate ne plante plus sur ENOENT catalog.mjs.",
+    "changes": [
+      {
+        "package": "gc-workspace-editor",
+        "kind": "fixed",
+        "text": "await du bundle catalog avant rmSync du dossier temp (sinon import async lit un fichier déjà supprimé)."
+      }
+    ]
+  },
+  {
     "version": "1.0.5",
     "date": "2026-10-11",
     "summary": "gc-widgets : deep-link des pages workspace via ?page= (retour navigateur + partage de lien).",
