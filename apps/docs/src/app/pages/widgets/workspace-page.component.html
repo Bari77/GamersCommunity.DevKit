@@ -1,0 +1,121 @@
+<gcd-page
+    lead="Le tableau de bord complet : rail de pages, grille redimensionnable, catalogue et modale de réglages, assemblés autour d'un brouillon local."
+>
+    <p>
+        Passez en mode édition pour déplacer un widget par son en-tête, le redimensionner par son coin, en ajouter
+        depuis le catalogue ou gérer les pages. Rien n'est envoyé nulle part tant que vous n'enregistrez pas.
+    </p>
+
+    <gcd-demo title="Démonstration vivante" [html]="demoHtml" [ts]="demoTs" [bare]="true">
+        <div class="gcd-workspace-frame">
+            <gc-widget-workspace
+                [workspace]="workspace()"
+                [catalog]="catalog"
+                [canEdit]="true"
+                [saving]="saving()"
+                [(editing)]="editing"
+                navLabel="Pages du profil"
+                addPageLabel="Nouvelle page"
+                removePageLabel="Supprimer la page"
+                moveUpLabel="Monter"
+                moveDownLabel="Descendre"
+                addWidgetLabel="Ajouter un widget"
+                editLabel="Modifier"
+                cancelLabel="Annuler"
+                saveLabel="Enregistrer"
+                emptyPageLabel="Cette page n'a pas encore de widget."
+                hintLabel="Glissez un widget par son en-tête pour le déplacer, ou par son coin pour le redimensionner."
+                newPageTitle="Nouvelle page"
+                settingsLabel="Réglages du widget"
+                editDataLabel="Éditer les données"
+                removeWidgetLabel="Retirer le widget"
+                widgetTitleLabel="Titre du widget"
+                widgetTitleHint="Laissez vide pour masquer l'en-tête."
+                doneLabel="Terminé"
+                (save)="onSave($event)"
+            >
+                <ng-template
+                    gcWidget="notes"
+                    gcWidgetEditable
+                    let-settings
+                    let-editingData="editingData"
+                    let-stopDataEdit="stopDataEdit"
+                    let-updateSettings="updateSettings"
+                >
+                    <gcd-demo-note
+                        [html]="text(settings, 'body')"
+                        [editing]="!!editingData"
+                        (save)="updateSettings?.({ ...settings, body: $event }); stopDataEdit?.()"
+                        (cancel)="stopDataEdit?.()"
+                    />
+                </ng-template>
+
+                <ng-template
+                    gcWidget="links"
+                    gcWidgetEditable
+                    let-settings
+                    let-editingData="editingData"
+                    let-stopDataEdit="stopDataEdit"
+                    let-updateSettings="updateSettings"
+                >
+                    <gc-link-list
+                        [links]="links(settings)"
+                        emptyLabel="Aucun lien pour l'instant."
+                        addLabel="Ajouter"
+                        saveLabel="Enregistrer"
+                        cancelLabel="Annuler"
+                        [editing]="!!editingData"
+                        (linksChange)="updateSettings?.({ ...settings, links: $event }); stopDataEdit?.()"
+                        (cancel)="stopDataEdit?.()"
+                    />
+                </ng-template>
+            </gc-widget-workspace>
+        </div>
+    </gcd-demo>
+
+    <h2>Assemblage minimal</h2>
+
+    <p>
+        Deux entrées sont obligatoires : le workspace committé et le catalogue. Tout le reste a une valeur par défaut.
+    </p>
+
+    <gcd-code language="html" [code]="minimalSnippet" />
+
+    <h2>Le cycle d'enregistrement</h2>
+
+    <p>
+        Le composant émet un workspace normalisé et attend que l'appelant le persiste, puis republie la valeur
+        committée. Traiter l'échec revient simplement à ne rien republier.
+    </p>
+
+    <gcd-code language="typescript" [code]="saveSnippet" />
+
+    <h2>Entrées principales</h2>
+
+    <gcd-api heading="Données et comportement" [rows]="coreInputs" />
+
+    <gcd-api heading="Mise en page de la grille" [rows]="layoutInputs" />
+
+    <h2>Libellés</h2>
+
+    <p>
+        Aucun texte n'est traduit par le package : chaque libellé visible est une entrée, avec une valeur anglaise par
+        défaut. C'est ce qui permet à l'application de rester maîtresse de son i18n.
+    </p>
+
+    <gcd-api heading="Libellés" [rows]="labelInputs" />
+
+    <h2>Sorties</h2>
+
+    <gcd-api [rows]="outputs" [showDefault]="false" />
+
+    <div class="gcd-note">
+        <p>
+            <code>editing</code>
+            est un
+            <code>model()</code>
+            : la barre d'édition le bascule elle-même, mais l'application peut aussi le piloter, par exemple pour
+            rouvrir l'édition après un échec d'enregistrement.
+        </p>
+    </div>
+</gcd-page>

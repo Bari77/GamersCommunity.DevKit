@@ -1,58 +1,58 @@
 {
-  "name": "@bari77/gc-playground",
-  "version": "2.0.1",
-  "description": "Playground / mocks bootstrap for GamersCommunity game fronts",
-  "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
-  "exports": {
-    ".": "./src/index.ts",
-    "./ui": "./src/ui.ts"
-  },
-  "files": [
-    "src"
-  ],
-  "scripts": {
-    "build": "tsc -p tsconfig.json --noEmit"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Bari77/GamersCommunity.DevKit.git"
-  },
-  "dependencies": {
-    "@bari77/gc-sdk": "*"
-  },
-  "peerDependencies": {
-    "@angular/animations": "^21.0.0",
-    "@angular/core": "^21.0.0",
-    "@angular/platform-browser": "^21.0.0",
-    "@nebular/eva-icons": "^17.0.0",
-    "@nebular/theme": "^17.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@angular/animations": {
-      "optional": true
+    "name": "@bari77/gc-playground",
+    "version": "2.1.0",
+    "description": "Playground / mocks bootstrap for GamersCommunity game fronts",
+    "type": "module",
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "exports": {
+        ".": "./src/index.ts",
+        "./ui": "./src/ui.ts"
     },
-    "@nebular/eva-icons": {
-      "optional": true
+    "files": [
+        "src"
+    ],
+    "scripts": {
+        "build": "tsc -p tsconfig.json --noEmit"
     },
-    "@nebular/theme": {
-      "optional": true
-    }
-  },
-  "devDependencies": {
-    "@angular/animations": "21.2.22",
-    "@angular/cdk": "21.0.6",
-    "@angular/common": "21.2.22",
-    "@angular/core": "21.2.22",
-    "@angular/platform-browser": "21.2.22",
-    "@angular/router": "21.2.22",
-    "@nebular/eva-icons": "17.0.0",
-    "@nebular/theme": "17.0.0",
-    "typescript": "^5.8.0"
-  },
-  "license": "UNLICENSED"
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Bari77/GamersCommunity.DevKit.git"
+    },
+    "dependencies": {
+        "@bari77/gc-sdk": "*"
+    },
+    "peerDependencies": {
+        "@angular/animations": "^21.0.0",
+        "@angular/core": "^21.0.0",
+        "@angular/platform-browser": "^21.0.0",
+        "@nebular/eva-icons": "^17.0.0",
+        "@nebular/theme": "^17.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@angular/animations": {
+            "optional": true
+        },
+        "@nebular/eva-icons": {
+            "optional": true
+        },
+        "@nebular/theme": {
+            "optional": true
+        }
+    },
+    "devDependencies": {
+        "@angular/animations": "21.2.22",
+        "@angular/cdk": "21.0.6",
+        "@angular/common": "21.2.22",
+        "@angular/core": "21.2.22",
+        "@angular/platform-browser": "21.2.22",
+        "@angular/router": "21.2.22",
+        "@nebular/eva-icons": "17.0.0",
+        "@nebular/theme": "17.0.0",
+        "typescript": "^5.8.0"
+    },
+    "license": "UNLICENSED"
 }

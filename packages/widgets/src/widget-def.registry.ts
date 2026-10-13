@@ -1,5 +1,5 @@
-import { DestroyRef, Injectable, Signal, inject, signal } from '@angular/core';
-import { WidgetTemplateDef } from './widget-template';
+import { computed, DestroyRef, Injectable, Signal, inject, signal } from "@angular/core";
+import { WidgetTemplateDef } from "./widget-template-def";
 
 /**
  * Collects the widget templates of one workspace through dependency injection.
@@ -12,26 +12,26 @@ import { WidgetTemplateDef } from './widget-template';
  */
 @Injectable()
 export class WidgetDefRegistry {
-    private readonly widgets = signal<readonly WidgetTemplateDef[]>([]);
-    private readonly settings = signal<readonly WidgetTemplateDef[]>([]);
+    public readonly widgetDefs: Signal<readonly WidgetTemplateDef[]> = computed(() => this.$widgets());
+    public readonly settingsDefs: Signal<readonly WidgetTemplateDef[]> = computed(() => this.$settings());
 
-    public readonly widgetDefs: Signal<readonly WidgetTemplateDef[]> = this.widgets.asReadonly();
-    public readonly settingsDefs: Signal<readonly WidgetTemplateDef[]> = this.settings.asReadonly();
+    private readonly $widgets = signal<readonly WidgetTemplateDef[]>([]);
+    private readonly $settings = signal<readonly WidgetTemplateDef[]>([]);
 
     public registerWidget(def: WidgetTemplateDef): void {
-        this.widgets.update((current) => [...current, def]);
+        this.$widgets.update((current) => [...current, def]);
     }
 
     public unregisterWidget(def: WidgetTemplateDef): void {
-        this.widgets.update((current) => current.filter((item) => item !== def));
+        this.$widgets.update((current) => current.filter((item) => item !== def));
     }
 
     public registerSettings(def: WidgetTemplateDef): void {
-        this.settings.update((current) => [...current, def]);
+        this.$settings.update((current) => [...current, def]);
     }
 
     public unregisterSettings(def: WidgetTemplateDef): void {
-        this.settings.update((current) => current.filter((item) => item !== def));
+        this.$settings.update((current) => current.filter((item) => item !== def));
     }
 }
 
@@ -42,13 +42,13 @@ export class WidgetDefRegistry {
  * finds no registry and simply stays unregistered, which keeps `gc-widget-grid` usable
  * on its own with its own content query.
  */
-export function registerWidgetTemplateDef(def: WidgetTemplateDef, kind: 'widget' | 'settings'): void {
+export function registerWidgetTemplateDef(def: WidgetTemplateDef, kind: "widget" | "settings"): void {
     const registry = inject(WidgetDefRegistry, { optional: true });
     if (!registry) {
         return;
     }
 
-    if (kind === 'widget') {
+    if (kind === "widget") {
         registry.registerWidget(def);
         inject(DestroyRef).onDestroy(() => registry.unregisterWidget(def));
         return;

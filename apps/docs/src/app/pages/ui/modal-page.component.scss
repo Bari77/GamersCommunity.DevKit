@@ -1,0 +1,21 @@
+.gcd-demo-button {
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--gc-accent);
+    border-radius: 0.35rem;
+    background: transparent;
+    color: var(--gc-accent);
+    font: inherit;
+    font-size: 0.8125rem;
+    cursor: pointer;
+}
+
+.gcd-modal-title {
+    margin: 0 0 0.6rem;
+    font-size: 1.1rem;
+}
+
+.gcd-modal-text {
+    margin: 0 0 1rem;
+    font-size: 0.875rem;
+    color: #c9d4ea;
+}

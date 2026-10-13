@@ -1,791 +1,823 @@
 [
-  {
-    "version": "2.0.1",
-    "date": "2026-10-13",
-    "summary": "gc-widgets : peerDependencies @bari77/* en * pour le lockstep majeur.",
-    "changes": [
-      {
-        "package": "gc-widgets",
-        "kind": "fixed",
-        "text": "Peers gc-sdk/gc-ui passés de ^1.0.2 à * (aligné msw/playground) pour éviter ERESOLVE sur v2."
-      }
-    ]
-  },
-  {
-    "version": "2.0.0",
-    "date": "2026-10-13",
-    "summary": "gc-sdk BaseService : réponses structurées via modèles fromDto ; scalaires typés ; plus de postJson/getJson.",
-    "changes": [
-      {
-        "package": "gc-sdk",
-        "kind": "changed",
-        "text": "BREAKING: retire getJson/postJson/putJson. Utiliser post/getOne/postList + modèles, ou postBool/postNumber/postString/postVoid."
-      }
-    ]
-  },
-  {
-    "version": "1.1.1",
-    "date": "2026-10-13",
-    "summary": "gc-sdk : retire l’alias BaseService.get qui collisionnait avec les services métier (HomeFeed).",
-    "changes": [
-      {
-        "package": "gc-sdk",
-        "kind": "fixed",
-        "text": "Suppression de l’alias get → getOne. Utiliser getOne / getJson uniquement."
-      }
-    ]
-  },
-  {
-    "version": "1.1.0",
-    "date": "2026-10-13",
-    "summary": "gc-sdk : helpers HTTP bruts (postJson, delete, postList) pour supprimer this.http dans les Fronts.",
-    "changes": [
-      {
-        "package": "gc-sdk",
-        "kind": "added",
-        "text": "BaseService: getJson / postJson / putJson / delete / postList, alias get → getOne. PlayerMediaService utilise les helpers. (SemVer minor — API additive, rétrocompatible.)"
-      }
-    ]
-  },
-  {
-    "version": "1.0.6",
-    "date": "2026-10-12",
-    "summary": "gc-workspace-editor : validate ne plante plus sur ENOENT catalog.mjs.",
-    "changes": [
-      {
-        "package": "gc-workspace-editor",
-        "kind": "fixed",
-        "text": "await du bundle catalog avant rmSync du dossier temp (sinon import async lit un fichier déjà supprimé)."
-      }
-    ]
-  },
-  {
-    "version": "1.0.5",
-    "date": "2026-10-11",
-    "summary": "gc-widgets : deep-link des pages workspace via ?page= (retour navigateur + partage de lien).",
-    "changes": [
-      {
-        "package": "gc-widgets",
-        "kind": "added",
-        "text": "activePageId en model sur gc-widget-workspace, plus bindWorkspacePageQuery() pour synchroniser l'onglet avec ?page= (replaceUrl, omit home)."
-      }
-    ]
-  },
-  {
-    "version": "1.0.4",
-    "date": "2026-10-11",
-    "summary": "gc-playground : helpers personas exportés depuis le barrel principal (compatible Native Federation).",
-    "changes": [
-      {
-        "package": "gc-playground",
-        "kind": "fixed",
-        "text": "PlaygroundPersona, mockPortraitUrl et resolveActivePersona / get|setActivePersonaId vivent dans index.ts pour que le bundler federation des shared packages résolve correctement le module."
-      }
-    ]
-  },
-  {
-    "version": "1.0.3",
-    "date": "2026-10-11",
-    "summary": "gc-playground : personas de session mock (portrait stable + localStorage par gameKey).",
-    "changes": [
-      {
-        "package": "gc-playground",
-        "kind": "added",
-        "text": "PlaygroundPersona, mockPortraitUrl et resolveActivePersona / get|setActivePersonaId pour un persona actif par gameKey (localStorage)."
-      }
-    ]
-  },
+    {
+        "version": "2.1.0",
+        "date": "2026-10-13",
+        "summary": "Nouveau paquet gc-lint : règles ESLint + Prettier communes à tous les Fronts ; libs DevKit alignées sur ces règles.",
+        "changes": [
+            {
+                "package": "gc-lint",
+                "kind": "added",
+                "text": "gcAngular({ prefix, remote }) (flat config ESLint) + config Prettier partagée + règles gc/one-type-per-file, gc/filename-kebab-case, gc/private-state-signals, gc/no-provided-in-root."
+            },
+            {
+                "package": "gc-sdk",
+                "kind": "changed",
+                "text": "Stores player-media / game-membership : état exposé en Signal lecture seule (computed) au lieu de WritableSignal ; écriture via les méthodes du store. Un type par fichier (exports du barrel inchangés)."
+            },
+            {
+                "package": "gc-widgets",
+                "kind": "changed",
+                "text": "WidgetDefRegistry : signaux internes privés exposés via computed ; un type par fichier (exports du barrel inchangés)."
+            },
+            {
+                "package": "gc-ui",
+                "kind": "fixed",
+                "text": "Un type par fichier, return types explicites, rich-editor sans style inline (classe gc-rich-editor__underline)."
+            },
+            {
+                "package": "gc-workspace-editor",
+                "kind": "fixed",
+                "text": "Peer @bari77/gc-widgets en * (aligné lockstep) pour éviter ERESOLVE sur v2 ; imports relatifs en .js (NodeNext)."
+            }
+        ]
+    },
+    {
+        "version": "2.0.1",
+        "date": "2026-10-13",
+        "summary": "gc-widgets : peerDependencies @bari77/* en * pour le lockstep majeur.",
+        "changes": [
+            {
+                "package": "gc-widgets",
+                "kind": "fixed",
+                "text": "Peers gc-sdk/gc-ui passés de ^1.0.2 à * (aligné msw/playground) pour éviter ERESOLVE sur v2."
+            }
+        ]
+    },
+    {
+        "version": "2.0.0",
+        "date": "2026-10-13",
+        "summary": "gc-sdk BaseService : réponses structurées via modèles fromDto ; scalaires typés ; plus de postJson/getJson.",
+        "changes": [
+            {
+                "package": "gc-sdk",
+                "kind": "changed",
+                "text": "BREAKING: retire getJson/postJson/putJson. Utiliser post/getOne/postList + modèles, ou postBool/postNumber/postString/postVoid."
+            }
+        ]
+    },
+    {
+        "version": "1.1.1",
+        "date": "2026-10-13",
+        "summary": "gc-sdk : retire l’alias BaseService.get qui collisionnait avec les services métier (HomeFeed).",
+        "changes": [
+            {
+                "package": "gc-sdk",
+                "kind": "fixed",
+                "text": "Suppression de l’alias get → getOne. Utiliser getOne / getJson uniquement."
+            }
+        ]
+    },
+    {
+        "version": "1.1.0",
+        "date": "2026-10-13",
+        "summary": "gc-sdk : helpers HTTP bruts (postJson, delete, postList) pour supprimer this.http dans les Fronts.",
+        "changes": [
+            {
+                "package": "gc-sdk",
+                "kind": "added",
+                "text": "BaseService: getJson / postJson / putJson / delete / postList, alias get → getOne. PlayerMediaService utilise les helpers. (SemVer minor — API additive, rétrocompatible.)"
+            }
+        ]
+    },
+    {
+        "version": "1.0.6",
+        "date": "2026-10-12",
+        "summary": "gc-workspace-editor : validate ne plante plus sur ENOENT catalog.mjs.",
+        "changes": [
+            {
+                "package": "gc-workspace-editor",
+                "kind": "fixed",
+                "text": "await du bundle catalog avant rmSync du dossier temp (sinon import async lit un fichier déjà supprimé)."
+            }
+        ]
+    },
+    {
+        "version": "1.0.5",
+        "date": "2026-10-11",
+        "summary": "gc-widgets : deep-link des pages workspace via ?page= (retour navigateur + partage de lien).",
+        "changes": [
+            {
+                "package": "gc-widgets",
+                "kind": "added",
+                "text": "activePageId en model sur gc-widget-workspace, plus bindWorkspacePageQuery() pour synchroniser l'onglet avec ?page= (replaceUrl, omit home)."
+            }
+        ]
+    },
+    {
+        "version": "1.0.4",
+        "date": "2026-10-11",
+        "summary": "gc-playground : helpers personas exportés depuis le barrel principal (compatible Native Federation).",
+        "changes": [
+            {
+                "package": "gc-playground",
+                "kind": "fixed",
+                "text": "PlaygroundPersona, mockPortraitUrl et resolveActivePersona / get|setActivePersonaId vivent dans index.ts pour que le bundler federation des shared packages résolve correctement le module."
+            }
+        ]
+    },
+    {
+        "version": "1.0.3",
+        "date": "2026-10-11",
+        "summary": "gc-playground : personas de session mock (portrait stable + localStorage par gameKey).",
+        "changes": [
+            {
+                "package": "gc-playground",
+                "kind": "added",
+                "text": "PlaygroundPersona, mockPortraitUrl et resolveActivePersona / get|setActivePersonaId pour un persona actif par gameKey (localStorage)."
+            }
+        ]
+    },
 
-  {
-    "version": "1.0.2",
-    "date": "2026-09-24",
-    "summary": "gc-entity-row : pastilles facts alignées en rangée avec la projection rowFacts.",
-    "changes": [
-      {
-        "package": "gc-ui",
-        "kind": "fixed",
-        "text": "Le wrapper [rowFacts] utilise display: contents pour que les .gc-entity-row__fact restent côte à côte dans la rangée flex."
-      }
-    ]
-  },
+    {
+        "version": "1.0.2",
+        "date": "2026-09-24",
+        "summary": "gc-entity-row : pastilles facts alignées en rangée avec la projection rowFacts.",
+        "changes": [
+            {
+                "package": "gc-ui",
+                "kind": "fixed",
+                "text": "Le wrapper [rowFacts] utilise display: contents pour que les .gc-entity-row__fact restent côte à côte dans la rangée flex."
+            }
+        ]
+    },
 
-  {
-    "version": "1.0.1",
-    "date": "2026-09-24",
-    "summary": "Kernel federation-safe : plus de providedIn root sur les services SDK qui dépendent de GC_ENVIRONMENT.",
-    "changes": [
-      {
-        "package": "gc-sdk",
-        "kind": "fixed",
-        "text": "PlatformSessionService, PlatformGamesService, GameMembershipStore et PlayerMediaService ne sont plus providedIn root ; provideGameRemoteKernel les enregistre sur l'injecteur remote (standalone + Module Federation)."
-      },
-      {
-        "package": "devkit",
-        "kind": "changed",
-        "text": "ARCHITECTURE : les services jeu qui ont besoin du kernel se déclarent uniquement sur les providers des routes fédérées."
-      }
-    ]
-  },
-  {
-    "version": "1.0.0",
-    "date": "2026-09-23",
-    "summary": "Première version majeure stable : shells T4–T5 documentés, SemVer lockstep.",
-    "changes": [
-      {
-        "package": "docs",
-        "kind": "added",
-        "text": "Pages gc-entity-row, gc-entity-wall, gc-lfg-chat et player media."
-      },
-      {
-        "package": "gc-ui",
-        "kind": "added",
-        "text": "gc-entity-row (rails home) — déjà en 0.8.42, documenté en 1.0.0."
-      },
-      {
-        "package": "gc-widgets",
-        "kind": "added",
-        "text": "gc-entity-wall, gc-lfg-chat, player-media — documentés côté site."
-      },
-      {
-        "package": "devkit",
-        "kind": "changed",
-        "text": "Passage en 1.0.0 : contrat SemVer lockstep pour tous les @bari77/*."
-      }
-    ]
-  },
-  {
-    "version": "0.8.42",
-    "date": "2026-09-23",
-    "summary": "entity-row et shell LFG chat partagés (gc-ui + gc-widgets).",
-    "changes": [
-      {
-        "package": "gc-ui",
-        "kind": "added",
-        "text": "gc-entity-row (slots rowVisual / rowTrailing / rowSubtitleLeading / rowFacts)."
-      },
-      {
-        "package": "gc-widgets",
-        "kind": "added",
-        "text": "gc-lfg-chat shell (thread, composer, poster picker, slots leading/meta/needsSheet/publishError)."
-      }
-    ]
-  },
-  {
-    "version": "0.8.41",
-    "date": "2026-09-23",
-    "summary": "Shell media joueur et mur d'entité partagés (gc-sdk + gc-widgets).",
-    "changes": [
-      {
-        "package": "gc-sdk",
-        "kind": "added",
-        "text": "PlayerMediaService/Store/Stores + apiSegment sur GAME_MEMBERSHIP_CONFIG."
-      },
-      {
-        "package": "gc-widgets",
-        "kind": "added",
-        "text": "gc-player-media-admin/manager et gc-entity-wall (slots composer/edit/extras), peers Nebular/gc-sdk."
-      }
-    ]
-  },
-  {
-    "version": "0.8.40",
-    "date": "2026-09-23",
-    "summary": "gc-ui publie bien le FESM (plus de files:src qui vidait le tarball).",
-    "changes": [
-      {
-        "package": "gc-ui",
-        "kind": "fixed",
-        "text": "Retrait de files:[src] et des champs main/types source qui faisaient publier un paquet sans fesm2022."
-      }
-    ]
-  },
-  {
-    "version": "0.8.39",
-    "date": "2026-09-23",
-    "summary": "DevGateway consomme Core IRabbitRpcClient ; republie l'image après le kernel gc-sdk.",
-    "changes": [
-      {
-        "package": "devkit",
-        "kind": "fixed",
-        "text": "Suppression du twin DevGateway.Messaging.RabbitRpcClient (ambigu avec Core) ; DI sur IRabbitRpcClient."
-      }
-    ]
-  },
-  {
-    "version": "0.8.38",
-    "date": "2026-09-23",
-    "summary": "Corrige le build ng-packagr de gc-ui (exports) pour republier le kernel gc-sdk.",
-    "changes": [
-      {
-        "package": "gc-ui",
-        "kind": "fixed",
-        "text": "exports[\".\"] est un objet (types/default) pour que ng-packagr puisse écrire le manifeste FESM."
-      },
-      {
-        "package": "gc-sdk",
-        "kind": "added",
-        "text": "Kernel remote jeu (0.8.36+) : membership, session, BaseService, provideGameRemoteKernel."
-      }
-    ]
-  },
-  {
-    "version": "0.8.37",
-    "date": "2026-09-23",
-    "summary": "gc-sdk kernel : DtoConvertibleClass compatible avec les modèles métier des remotes.",
-    "changes": [
-      {
-        "package": "gc-sdk",
-        "kind": "fixed",
-        "text": "DtoConvertibleClass n'exige plus de constructeur unknown[] (casse l'assignabilité des classes fromDto). Documente le skip Native Federation pour gc-sdk."
-      }
-    ]
-  },
-  {
-    "version": "0.8.36",
-    "date": "2026-09-23",
-    "summary": "gc-sdk embarque le kernel Angular des remotes jeu (membership, session, BaseService).",
-    "changes": [
-      {
-        "package": "gc-sdk",
-        "kind": "added",
-        "text": "GameMembershipStore, PlatformSessionService, PlatformGamesService, BaseService, PromiseUtils/ResourceUtils, et provideGameRemoteKernel (tokens GC_ENVIRONMENT / GAME_MEMBERSHIP_CONFIG / GAME_PLAYER_SHEET_API)."
-      }
-    ]
-  },
-  {
-    "version": "0.8.35",
-    "date": "2026-09-23",
-    "summary": "gc-ui est une lib Angular compilée, partageable en singleton Native Federation.",
-    "changes": [
-      {
-        "package": "gc-ui",
-        "kind": "changed",
-        "text": "Le package n'expédie plus du TypeScript source : ng-packagr produit un FESM. Shell et remotes peuvent le partager sans NG0912 ni skip."
-      }
-    ]
-  },
-  {
-    "version": "0.8.34",
-    "date": "2026-09-22",
-    "summary": "gc-create-game ne réécrit plus les tokens Angular/Babel « template ».",
-    "changes": [
-      {
-        "package": "gc-create-game",
-        "kind": "fixed",
-        "text": "templateUrl, ng-template, template: et @babel/template ne sont plus remplacés par l'id du jeu ; package-lock.json n'est plus réécrit au mot « template »."
-      }
-    ]
-  },
-  {
-    "version": "0.8.33",
-    "date": "2026-09-22",
-    "summary": "gc-create-game publie enfin son binaire, et accepte un repo GitHub déjà créé.",
-    "changes": [
-      {
-        "package": "gc-create-game",
-        "kind": "fixed",
-        "text": "Le CLI bin/gc-create-game.mjs est versionné : npx @bari77/gc-create-game retrouve la commande (elle était ignorée par le .gitignore .NET bin/)."
-      },
-      {
-        "package": "gc-create-game",
-        "kind": "changed",
-        "text": "Un dossier déjà présent n'est plus refusé s'il ne contient que .git et un README stub (create-repo GitHub). Lancer le CLI depuis le repo ou son parent fonctionne."
-      }
-    ]
-  },
-  {
-    "version": "0.8.32",
-    "date": "2026-09-21",
-    "summary": "Les combos Nebular tiennent dans leur colonne, et une classe partagée aligne icône et libellé.",
-    "changes": [
-      {
-        "package": "gc-theme",
-        "kind": "fixed",
-        "text": "nb-select n'impose plus le min-width: 13rem de Cosmic : le bouton reste à 100% de sa cellule de grille."
-      },
-      {
-        "package": "gc-theme",
-        "kind": "added",
-        "text": "Classe .gc-select-option pour aligner une icône et un texte dans un nb-option, y compris dans l'overlay."
-      },
-      {
-        "package": "docs",
-        "kind": "added",
-        "text": "Entrée .gc-select-option dans la page des utilitaires du thème."
-      }
-    ]
-  },
-  {
-    "version": "0.8.31",
-    "date": "2026-09-19",
-    "summary": "La modale de configuration d'un widget couvre tout le viewport, et le header de la doc affiche la version du CHANGELOG.",
-    "changes": [
-      {
-        "package": "gc-ui",
-        "kind": "fixed",
-        "text": "gc-modal s'attache à document.body à l'ouverture, pour que position:fixed ne soit plus coincé dans une fiche ou une animation .gc-enter."
-      },
-      {
-        "package": "gc-ui",
-        "kind": "changed",
-        "text": "Z-index par défaut de la modale porté à 2000, au-dessus du chrome de page."
-      },
-      {
-        "package": "gc-theme",
-        "kind": "fixed",
-        "text": "L'animation .gc-enter se termine sur transform: none. translateY(0) créait encore un containing block pour les overlays fixed."
-      },
-      {
-        "package": "gc-widgets",
-        "kind": "added",
-        "text": "Entrée canConfigure sur gc-widget-workspace : crayon et roue hors mise en page, sans donner le layout (officiers de guilde)."
-      },
-      {
-        "package": "docs",
-        "kind": "fixed",
-        "text": "Le badge de version du header lit CHANGELOG.json, plus le package.json de gc-ui laissé en retard après un tag."
-      }
-    ]
-  },
-  {
-    "version": "0.8.30",
-    "date": "2026-09-19",
-    "summary": "La roue ouvre une modale de réglages, le crayon édite le contenu dans le widget, et le rich-text propose H2/H3.",
-    "changes": [
-      {
-        "package": "gc-widgets",
-        "kind": "changed",
-        "text": "La roue crantée ouvre une modale gc-modal (titre et champs d'instance), plus une carte empilée au-dessus de la grille."
-      },
-      {
-        "package": "gc-widgets",
-        "kind": "changed",
-        "text": "Le crayon remplace le contenu du widget par son éditeur interne (editingData / stopDataEdit). Un second clic annule. Les listes et le texte ne passent plus par le formulaire de champs."
-      },
-      {
-        "package": "gc-widgets",
-        "kind": "added",
-        "text": "Édition sur place fournie pour gc-links, gc-twitch, gc-photos et gc-videos, même sans gabarit hôte."
-      },
-      {
-        "package": "gc-widgets",
-        "kind": "added",
-        "text": "Infobulles en overlay (gcTooltip) sur les actions du widget, à la place de l'attribut title natif."
-      },
-      {
-        "package": "gc-ui",
-        "kind": "added",
-        "text": "Boutons H2 et H3 dans la barre de gc-rich-editor (mode complet)."
-      },
-      {
-        "package": "gc-ui",
-        "kind": "changed",
-        "text": "Les titres h2/h3 se distinguent du paragraphe en édition comme à l'affichage."
-      },
-      {
-        "package": "docs",
-        "kind": "changed",
-        "text": "Concepts, Workspace et Widgets fournis : crayon vs roue, types built-in, titres dans la barre d'outils."
-      }
-    ]
-  },
-  {
-    "version": "0.8.29",
-    "date": "2026-09-19",
-    "summary": "Chaque widget s'édite au survol, avec un crayon à côté de la roue crantée.",
-    "changes": [
-      {
-        "package": "gc-widgets",
-        "kind": "added",
-        "text": "Crayon au survol hors mise en page : il ouvre les réglages, ou l'édition sur place si le gabarit est marqué gcWidgetEditable."
-      },
-      {
-        "package": "gc-widgets",
-        "kind": "added",
-        "text": "Contexte de gabarit editingData / stopDataEdit, et entrée editDataLabel (infobulle du crayon)."
-      },
-      {
-        "package": "docs",
-        "kind": "added",
-        "text": "Le crayon au survol et gcWidgetEditable sont documentés dans Concepts, Catalogue et Workspace."
-      }
-    ]
-  },
-  {
-    "version": "0.8.28",
-    "date": "2026-09-19",
-    "summary": "Le texte riche rend la même chose partout, quelle que soit la page qui l'accueille.",
-    "changes": [
-      {
-        "package": "gc-ui",
-        "kind": "fixed",
-        "text": "Plus d'anneau de focus autour de l'éditeur : le contour que le navigateur pose via :focus-visible sur un contenteditable est neutralisé."
-      },
-      {
-        "package": "gc-ui",
-        "kind": "fixed",
-        "text": "Interlignes revenus à la normale. ProseMirror et le contenu innerHTML sont créés hors d'Angular, donc hors de portée des styles encapsulés : les deux composants passent en ViewEncapsulation.None, avec des sélecteurs préfixés."
-      },
-      {
-        "package": "gc-ui",
-        "kind": "added",
-        "text": "Typographie partagée entre gc-rich-editor et gc-rich-content : un brouillon s'affiche comme le contenu enregistré, et les marges, listes, titres et liens ne dépendent plus ni du navigateur ni de la page hôte."
-      },
-      {
-        "package": "gc-ui",
-        "kind": "fixed",
-        "text": "Le premier bloc d'un contenu n'a plus de marge haute, et les titres ont les mêmes marges en édition qu'en affichage."
-      },
-      {
-        "package": "docs",
-        "kind": "added",
-        "text": "Page Rich text : éditeur complet, mode compact, rendu HTML et HTML produit en direct."
-      },
-      {
-        "package": "docs",
-        "kind": "added",
-        "text": "Journal des versions, alimenté par CHANGELOG.json et reprise dans les notes de release GitHub."
-      },
-      {
-        "package": "docs",
-        "kind": "changed",
-        "text": "Exemples débarrassés du vocabulaire propre à World of Warcraft, et styles de prose confinés pour que les démos rendent comme dans une application consommatrice."
-      }
-    ]
-  },
-  {
-    "version": "0.8.27",
-    "date": "2026-09-18",
-    "summary": "Première tentative de correction de l'espacement et du focus de l'éditeur — sans effet, les sélecteurs n'atteignaient pas ProseMirror. Corrigé en 0.8.28.",
-    "changes": [
-      {
-        "package": "gc-ui",
-        "kind": "fixed",
-        "text": "Marges des paragraphes et anneau de focus de gc-rich-editor."
-      }
-    ]
-  },
-  {
-    "version": "0.8.26",
-    "date": "2026-09-18",
-    "summary": "L'éditeur riche s'accorde aux surfaces sombres.",
-    "changes": [
-      {
-        "package": "gc-ui",
-        "kind": "fixed",
-        "text": "Valeurs de repli sombres (--gc-surface-*) au lieu des couleurs claires de Nebular quand les variables de thème sont absentes."
-      }
-    ]
-  },
-  {
-    "version": "0.8.25",
-    "date": "2026-09-18",
-    "summary": "Édition de texte riche pour les champs libres du site et des jeux.",
-    "changes": [
-      {
-        "package": "gc-ui",
-        "kind": "added",
-        "text": "gc-rich-editor : éditeur TipTap avec gras, italique, souligné, listes, lien, couleurs, mode compact et limite en caractères de texte brut."
-      },
-      {
-        "package": "gc-ui",
-        "kind": "added",
-        "text": "gc-rich-content : affichage du HTML stocké, repassé par DOMPurify avec la même liste blanche que le sanitizer du Core."
-      },
-      {
-        "package": "gc-ui",
-        "kind": "added",
-        "text": "isRichHtmlBlank et stripRichHtmlPlainText, pour traiter un brouillon vide et extraire le texte brut."
-      }
-    ]
-  },
-  {
-    "version": "0.8.24",
-    "date": "2026-09-15",
-    "summary": "Correction d'empilement dans le playground.",
-    "changes": [
-      {
-        "package": "gc-widgets",
-        "kind": "fixed",
-        "text": "Le rail de pages reste sous l'en-tête du playground."
-      }
-    ]
-  },
-  {
-    "version": "0.8.23",
-    "date": "2026-09-15",
-    "summary": "Réglages de widgets plus lisibles.",
-    "changes": [
-      {
-        "package": "gc-widgets",
-        "kind": "fixed",
-        "text": "Le select compact laisse de la place entre son libellé et son indication."
-      },
-      {
-        "package": "gc-widgets",
-        "kind": "fixed",
-        "text": "La liaison d'hôte du mode aperçu n'écrase plus le signal d'entrée du workspace."
-      }
-    ]
-  },
-  {
-    "version": "0.8.22",
-    "date": "2026-09-14",
-    "summary": "L'éditeur de workspace montre à quoi ressemblera la page.",
-    "changes": [
-      {
-        "package": "gc-widgets",
-        "kind": "added",
-        "text": "Données d'exemple rendues dans le mode aperçu de l'éditeur de workspace."
-      }
-    ]
-  },
-  {
-    "version": "0.8.21",
-    "date": "2026-09-14",
-    "summary": "Correction de visibilité des pages en cours d'édition.",
-    "changes": [
-      {
-        "package": "gc-widgets",
-        "kind": "fixed",
-        "text": "Une page réapparaît dès qu'on touche à son nom ou à son audience."
-      }
-    ]
-  },
-  {
-    "version": "0.8.20",
-    "date": "2026-09-14",
-    "summary": "Navigation de workspace repensée.",
-    "changes": [
-      {
-        "package": "gc-widgets",
-        "kind": "changed",
-        "text": "Chaque page du workspace devient une carte détourée dans la navigation."
-      }
-    ]
-  },
-  {
-    "version": "0.8.19",
-    "date": "2026-09-14",
-    "summary": "L'éditeur de workspace compile ce que le front du jeu utilise.",
-    "changes": [
-      {
-        "package": "gc-workspace-editor",
-        "kind": "fixed",
-        "text": "Compilation de tous les packages source @bari77 utilisés par le front du jeu."
-      }
-    ]
-  },
-  {
-    "version": "0.8.18",
-    "date": "2026-09-14",
-    "summary": "Résolution des chemins TypeScript du front du jeu.",
-    "changes": [
-      {
-        "package": "gc-workspace-editor",
-        "kind": "fixed",
-        "text": "Le compilateur Angular reçoit les paths du tsconfig du front du jeu."
-      }
-    ]
-  },
-  {
-    "version": "0.8.17",
-    "date": "2026-09-14",
-    "summary": "Correction du select de widgets.",
-    "changes": [
-      {
-        "package": "gc-widgets",
-        "kind": "fixed",
-        "text": "Le panneau du select survit au clic sur une option."
-      }
-    ]
-  },
-  {
-    "version": "0.8.16",
-    "date": "2026-09-14",
-    "summary": "Plusieurs mises en page par jeu, et un select maison.",
-    "changes": [
-      {
-        "package": "gc-workspace-editor",
-        "kind": "added",
-        "text": "Détection des layouts présents dans config/ et bascule entre eux depuis l'éditeur."
-      },
-      {
-        "package": "gc-widgets",
-        "kind": "added",
-        "text": "Select stylé et styles de contrôles partagés entre les widgets."
-      }
-    ]
-  },
-  {
-    "version": "0.8.15",
-    "date": "2026-09-13",
-    "summary": "Ordre d'enregistrement des gabarits assoupli.",
-    "changes": [
-      {
-        "package": "gc-widgets",
-        "kind": "fixed",
-        "text": "Un gabarit de widget peut s'enregistrer avant que son type ne soit lié."
-      }
-    ]
-  },
-  {
-    "version": "0.8.14",
-    "date": "2026-09-12",
-    "summary": "Une page de workspace peut viser un public.",
-    "changes": [
-      {
-        "package": "gc-widgets",
-        "kind": "added",
-        "text": "Audience d'une page de workspace, choisie dans l'éditeur."
-      }
-    ]
-  },
-  {
-    "version": "0.8.13",
-    "date": "2026-09-11",
-    "summary": "Gabarits déclarés dans un hôte projeté.",
-    "changes": [
-      {
-        "package": "gc-widgets",
-        "kind": "fixed",
-        "text": "Résolution des gabarits de widgets déclarés dans un hôte projeté."
-      }
-    ]
-  },
-  {
-    "version": "0.8.12",
-    "date": "2026-09-11",
-    "summary": "Libellés de catalogue lisibles dans l'éditeur.",
-    "changes": [
-      {
-        "package": "gc-workspace-editor",
-        "kind": "fixed",
-        "text": "Les métadonnées $localize sont retirées des libellés de catalogue."
-      }
-    ]
-  },
-  {
-    "version": "0.8.11",
-    "date": "2026-09-11",
-    "summary": "L'éditeur rend comme le front du jeu.",
-    "changes": [
-      {
-        "package": "gc-workspace-editor",
-        "kind": "fixed",
-        "text": "Rendu de l'éditeur aligné sur celui du front du jeu."
-      }
-    ]
-  },
-  {
-    "version": "0.8.10",
-    "date": "2026-09-11",
-    "summary": "L'application de l'éditeur sort de node_modules.",
-    "changes": [
-      {
-        "package": "gc-workspace-editor",
-        "kind": "fixed",
-        "text": "L'application de l'éditeur est préparée hors de node_modules."
-      }
-    ]
-  },
-  {
-    "version": "0.8.9",
-    "date": "2026-09-11",
-    "summary": "Sources de widgets compilées par l'éditeur Vite.",
-    "changes": [
-      {
-        "package": "gc-workspace-editor",
-        "kind": "fixed",
-        "text": "Compilation des sources de widgets du DevKit dans l'éditeur Vite."
-      }
-    ]
-  },
-  {
-    "version": "0.8.8",
-    "date": "2026-09-11",
-    "summary": "Alias Sass et tsconfig Angular de l'éditeur.",
-    "changes": [
-      {
-        "package": "gc-workspace-editor",
-        "kind": "fixed",
-        "text": "Alias Sass de gc-theme et tsconfig Angular corrigés."
-      }
-    ]
-  },
-  {
-    "version": "0.8.7",
-    "date": "2026-09-11",
-    "summary": "gc-theme résolu depuis le jeu.",
-    "changes": [
-      {
-        "package": "gc-workspace-editor",
-        "kind": "fixed",
-        "text": "L'import de gc-theme est résolu depuis le node_modules du jeu."
-      }
-    ]
-  },
-  {
-    "version": "0.8.6",
-    "date": "2026-09-11",
-    "summary": "Éditeur de workspace en ligne de commande, et site de documentation.",
-    "changes": [
-      {
-        "package": "gc-workspace-editor",
-        "kind": "added",
-        "text": "CLI gc-workspace pour éditer les layouts de plusieurs cibles."
-      },
-      {
-        "package": "docs",
-        "kind": "added",
-        "text": "Site de documentation des composants, publié sur GitHub Pages et dérivé d'une configuration unique."
-      }
-    ]
-  },
-  {
-    "version": "0.8.2",
-    "date": "2026-09-10",
-    "summary": "Fil d'Ariane, et versions alignées sur un seul numéro.",
-    "changes": [
-      {
-        "package": "gc-ui",
-        "kind": "added",
-        "text": "gc-breadcrumb, construit à partir des données de l'arbre de routes actif."
-      },
-      {
-        "package": "devkit",
-        "kind": "changed",
-        "text": "Tous les packages @bari77 partagent une version, documentée dans docs/RELEASE.md."
-      }
-    ]
-  },
-  {
-    "version": "0.8.1",
-    "date": "2026-09-10",
-    "summary": "Un dossier par composant.",
-    "changes": [
-      {
-        "package": "gc-ui",
-        "kind": "changed",
-        "text": "Composants éclatés en dossiers dédiés avec fichiers html, scss et ts séparés."
-      },
-      {
-        "package": "gc-widgets",
-        "kind": "changed",
-        "text": "Même découpage que gc-ui."
-      }
-    ]
-  },
-  {
-    "version": "0.8.0",
-    "date": "2026-09-09",
-    "summary": "Naissance de @bari77/gc-ui.",
-    "changes": [
-      {
-        "package": "gc-ui",
-        "kind": "added",
-        "text": "Premières primitives sans logique métier : gc-skeleton, gc-skeleton-text, gc-modal, gc-decision-prompt et gc-create-wall."
-      }
-    ]
-  }
+    {
+        "version": "1.0.1",
+        "date": "2026-09-24",
+        "summary": "Kernel federation-safe : plus de providedIn root sur les services SDK qui dépendent de GC_ENVIRONMENT.",
+        "changes": [
+            {
+                "package": "gc-sdk",
+                "kind": "fixed",
+                "text": "PlatformSessionService, PlatformGamesService, GameMembershipStore et PlayerMediaService ne sont plus providedIn root ; provideGameRemoteKernel les enregistre sur l'injecteur remote (standalone + Module Federation)."
+            },
+            {
+                "package": "devkit",
+                "kind": "changed",
+                "text": "ARCHITECTURE : les services jeu qui ont besoin du kernel se déclarent uniquement sur les providers des routes fédérées."
+            }
+        ]
+    },
+    {
+        "version": "1.0.0",
+        "date": "2026-09-23",
+        "summary": "Première version majeure stable : shells T4–T5 documentés, SemVer lockstep.",
+        "changes": [
+            {
+                "package": "docs",
+                "kind": "added",
+                "text": "Pages gc-entity-row, gc-entity-wall, gc-lfg-chat et player media."
+            },
+            {
+                "package": "gc-ui",
+                "kind": "added",
+                "text": "gc-entity-row (rails home) — déjà en 0.8.42, documenté en 1.0.0."
+            },
+            {
+                "package": "gc-widgets",
+                "kind": "added",
+                "text": "gc-entity-wall, gc-lfg-chat, player-media — documentés côté site."
+            },
+            {
+                "package": "devkit",
+                "kind": "changed",
+                "text": "Passage en 1.0.0 : contrat SemVer lockstep pour tous les @bari77/*."
+            }
+        ]
+    },
+    {
+        "version": "0.8.42",
+        "date": "2026-09-23",
+        "summary": "entity-row et shell LFG chat partagés (gc-ui + gc-widgets).",
+        "changes": [
+            {
+                "package": "gc-ui",
+                "kind": "added",
+                "text": "gc-entity-row (slots rowVisual / rowTrailing / rowSubtitleLeading / rowFacts)."
+            },
+            {
+                "package": "gc-widgets",
+                "kind": "added",
+                "text": "gc-lfg-chat shell (thread, composer, poster picker, slots leading/meta/needsSheet/publishError)."
+            }
+        ]
+    },
+    {
+        "version": "0.8.41",
+        "date": "2026-09-23",
+        "summary": "Shell media joueur et mur d'entité partagés (gc-sdk + gc-widgets).",
+        "changes": [
+            {
+                "package": "gc-sdk",
+                "kind": "added",
+                "text": "PlayerMediaService/Store/Stores + apiSegment sur GAME_MEMBERSHIP_CONFIG."
+            },
+            {
+                "package": "gc-widgets",
+                "kind": "added",
+                "text": "gc-player-media-admin/manager et gc-entity-wall (slots composer/edit/extras), peers Nebular/gc-sdk."
+            }
+        ]
+    },
+    {
+        "version": "0.8.40",
+        "date": "2026-09-23",
+        "summary": "gc-ui publie bien le FESM (plus de files:src qui vidait le tarball).",
+        "changes": [
+            {
+                "package": "gc-ui",
+                "kind": "fixed",
+                "text": "Retrait de files:[src] et des champs main/types source qui faisaient publier un paquet sans fesm2022."
+            }
+        ]
+    },
+    {
+        "version": "0.8.39",
+        "date": "2026-09-23",
+        "summary": "DevGateway consomme Core IRabbitRpcClient ; republie l'image après le kernel gc-sdk.",
+        "changes": [
+            {
+                "package": "devkit",
+                "kind": "fixed",
+                "text": "Suppression du twin DevGateway.Messaging.RabbitRpcClient (ambigu avec Core) ; DI sur IRabbitRpcClient."
+            }
+        ]
+    },
+    {
+        "version": "0.8.38",
+        "date": "2026-09-23",
+        "summary": "Corrige le build ng-packagr de gc-ui (exports) pour republier le kernel gc-sdk.",
+        "changes": [
+            {
+                "package": "gc-ui",
+                "kind": "fixed",
+                "text": "exports[\".\"] est un objet (types/default) pour que ng-packagr puisse écrire le manifeste FESM."
+            },
+            {
+                "package": "gc-sdk",
+                "kind": "added",
+                "text": "Kernel remote jeu (0.8.36+) : membership, session, BaseService, provideGameRemoteKernel."
+            }
+        ]
+    },
+    {
+        "version": "0.8.37",
+        "date": "2026-09-23",
+        "summary": "gc-sdk kernel : DtoConvertibleClass compatible avec les modèles métier des remotes.",
+        "changes": [
+            {
+                "package": "gc-sdk",
+                "kind": "fixed",
+                "text": "DtoConvertibleClass n'exige plus de constructeur unknown[] (casse l'assignabilité des classes fromDto). Documente le skip Native Federation pour gc-sdk."
+            }
+        ]
+    },
+    {
+        "version": "0.8.36",
+        "date": "2026-09-23",
+        "summary": "gc-sdk embarque le kernel Angular des remotes jeu (membership, session, BaseService).",
+        "changes": [
+            {
+                "package": "gc-sdk",
+                "kind": "added",
+                "text": "GameMembershipStore, PlatformSessionService, PlatformGamesService, BaseService, PromiseUtils/ResourceUtils, et provideGameRemoteKernel (tokens GC_ENVIRONMENT / GAME_MEMBERSHIP_CONFIG / GAME_PLAYER_SHEET_API)."
+            }
+        ]
+    },
+    {
+        "version": "0.8.35",
+        "date": "2026-09-23",
+        "summary": "gc-ui est une lib Angular compilée, partageable en singleton Native Federation.",
+        "changes": [
+            {
+                "package": "gc-ui",
+                "kind": "changed",
+                "text": "Le package n'expédie plus du TypeScript source : ng-packagr produit un FESM. Shell et remotes peuvent le partager sans NG0912 ni skip."
+            }
+        ]
+    },
+    {
+        "version": "0.8.34",
+        "date": "2026-09-22",
+        "summary": "gc-create-game ne réécrit plus les tokens Angular/Babel « template ».",
+        "changes": [
+            {
+                "package": "gc-create-game",
+                "kind": "fixed",
+                "text": "templateUrl, ng-template, template: et @babel/template ne sont plus remplacés par l'id du jeu ; package-lock.json n'est plus réécrit au mot « template »."
+            }
+        ]
+    },
+    {
+        "version": "0.8.33",
+        "date": "2026-09-22",
+        "summary": "gc-create-game publie enfin son binaire, et accepte un repo GitHub déjà créé.",
+        "changes": [
+            {
+                "package": "gc-create-game",
+                "kind": "fixed",
+                "text": "Le CLI bin/gc-create-game.mjs est versionné : npx @bari77/gc-create-game retrouve la commande (elle était ignorée par le .gitignore .NET bin/)."
+            },
+            {
+                "package": "gc-create-game",
+                "kind": "changed",
+                "text": "Un dossier déjà présent n'est plus refusé s'il ne contient que .git et un README stub (create-repo GitHub). Lancer le CLI depuis le repo ou son parent fonctionne."
+            }
+        ]
+    },
+    {
+        "version": "0.8.32",
+        "date": "2026-09-21",
+        "summary": "Les combos Nebular tiennent dans leur colonne, et une classe partagée aligne icône et libellé.",
+        "changes": [
+            {
+                "package": "gc-theme",
+                "kind": "fixed",
+                "text": "nb-select n'impose plus le min-width: 13rem de Cosmic : le bouton reste à 100% de sa cellule de grille."
+            },
+            {
+                "package": "gc-theme",
+                "kind": "added",
+                "text": "Classe .gc-select-option pour aligner une icône et un texte dans un nb-option, y compris dans l'overlay."
+            },
+            {
+                "package": "docs",
+                "kind": "added",
+                "text": "Entrée .gc-select-option dans la page des utilitaires du thème."
+            }
+        ]
+    },
+    {
+        "version": "0.8.31",
+        "date": "2026-09-19",
+        "summary": "La modale de configuration d'un widget couvre tout le viewport, et le header de la doc affiche la version du CHANGELOG.",
+        "changes": [
+            {
+                "package": "gc-ui",
+                "kind": "fixed",
+                "text": "gc-modal s'attache à document.body à l'ouverture, pour que position:fixed ne soit plus coincé dans une fiche ou une animation .gc-enter."
+            },
+            {
+                "package": "gc-ui",
+                "kind": "changed",
+                "text": "Z-index par défaut de la modale porté à 2000, au-dessus du chrome de page."
+            },
+            {
+                "package": "gc-theme",
+                "kind": "fixed",
+                "text": "L'animation .gc-enter se termine sur transform: none. translateY(0) créait encore un containing block pour les overlays fixed."
+            },
+            {
+                "package": "gc-widgets",
+                "kind": "added",
+                "text": "Entrée canConfigure sur gc-widget-workspace : crayon et roue hors mise en page, sans donner le layout (officiers de guilde)."
+            },
+            {
+                "package": "docs",
+                "kind": "fixed",
+                "text": "Le badge de version du header lit CHANGELOG.json, plus le package.json de gc-ui laissé en retard après un tag."
+            }
+        ]
+    },
+    {
+        "version": "0.8.30",
+        "date": "2026-09-19",
+        "summary": "La roue ouvre une modale de réglages, le crayon édite le contenu dans le widget, et le rich-text propose H2/H3.",
+        "changes": [
+            {
+                "package": "gc-widgets",
+                "kind": "changed",
+                "text": "La roue crantée ouvre une modale gc-modal (titre et champs d'instance), plus une carte empilée au-dessus de la grille."
+            },
+            {
+                "package": "gc-widgets",
+                "kind": "changed",
+                "text": "Le crayon remplace le contenu du widget par son éditeur interne (editingData / stopDataEdit). Un second clic annule. Les listes et le texte ne passent plus par le formulaire de champs."
+            },
+            {
+                "package": "gc-widgets",
+                "kind": "added",
+                "text": "Édition sur place fournie pour gc-links, gc-twitch, gc-photos et gc-videos, même sans gabarit hôte."
+            },
+            {
+                "package": "gc-widgets",
+                "kind": "added",
+                "text": "Infobulles en overlay (gcTooltip) sur les actions du widget, à la place de l'attribut title natif."
+            },
+            {
+                "package": "gc-ui",
+                "kind": "added",
+                "text": "Boutons H2 et H3 dans la barre de gc-rich-editor (mode complet)."
+            },
+            {
+                "package": "gc-ui",
+                "kind": "changed",
+                "text": "Les titres h2/h3 se distinguent du paragraphe en édition comme à l'affichage."
+            },
+            {
+                "package": "docs",
+                "kind": "changed",
+                "text": "Concepts, Workspace et Widgets fournis : crayon vs roue, types built-in, titres dans la barre d'outils."
+            }
+        ]
+    },
+    {
+        "version": "0.8.29",
+        "date": "2026-09-19",
+        "summary": "Chaque widget s'édite au survol, avec un crayon à côté de la roue crantée.",
+        "changes": [
+            {
+                "package": "gc-widgets",
+                "kind": "added",
+                "text": "Crayon au survol hors mise en page : il ouvre les réglages, ou l'édition sur place si le gabarit est marqué gcWidgetEditable."
+            },
+            {
+                "package": "gc-widgets",
+                "kind": "added",
+                "text": "Contexte de gabarit editingData / stopDataEdit, et entrée editDataLabel (infobulle du crayon)."
+            },
+            {
+                "package": "docs",
+                "kind": "added",
+                "text": "Le crayon au survol et gcWidgetEditable sont documentés dans Concepts, Catalogue et Workspace."
+            }
+        ]
+    },
+    {
+        "version": "0.8.28",
+        "date": "2026-09-19",
+        "summary": "Le texte riche rend la même chose partout, quelle que soit la page qui l'accueille.",
+        "changes": [
+            {
+                "package": "gc-ui",
+                "kind": "fixed",
+                "text": "Plus d'anneau de focus autour de l'éditeur : le contour que le navigateur pose via :focus-visible sur un contenteditable est neutralisé."
+            },
+            {
+                "package": "gc-ui",
+                "kind": "fixed",
+                "text": "Interlignes revenus à la normale. ProseMirror et le contenu innerHTML sont créés hors d'Angular, donc hors de portée des styles encapsulés : les deux composants passent en ViewEncapsulation.None, avec des sélecteurs préfixés."
+            },
+            {
+                "package": "gc-ui",
+                "kind": "added",
+                "text": "Typographie partagée entre gc-rich-editor et gc-rich-content : un brouillon s'affiche comme le contenu enregistré, et les marges, listes, titres et liens ne dépendent plus ni du navigateur ni de la page hôte."
+            },
+            {
+                "package": "gc-ui",
+                "kind": "fixed",
+                "text": "Le premier bloc d'un contenu n'a plus de marge haute, et les titres ont les mêmes marges en édition qu'en affichage."
+            },
+            {
+                "package": "docs",
+                "kind": "added",
+                "text": "Page Rich text : éditeur complet, mode compact, rendu HTML et HTML produit en direct."
+            },
+            {
+                "package": "docs",
+                "kind": "added",
+                "text": "Journal des versions, alimenté par CHANGELOG.json et reprise dans les notes de release GitHub."
+            },
+            {
+                "package": "docs",
+                "kind": "changed",
+                "text": "Exemples débarrassés du vocabulaire propre à World of Warcraft, et styles de prose confinés pour que les démos rendent comme dans une application consommatrice."
+            }
+        ]
+    },
+    {
+        "version": "0.8.27",
+        "date": "2026-09-18",
+        "summary": "Première tentative de correction de l'espacement et du focus de l'éditeur — sans effet, les sélecteurs n'atteignaient pas ProseMirror. Corrigé en 0.8.28.",
+        "changes": [
+            {
+                "package": "gc-ui",
+                "kind": "fixed",
+                "text": "Marges des paragraphes et anneau de focus de gc-rich-editor."
+            }
+        ]
+    },
+    {
+        "version": "0.8.26",
+        "date": "2026-09-18",
+        "summary": "L'éditeur riche s'accorde aux surfaces sombres.",
+        "changes": [
+            {
+                "package": "gc-ui",
+                "kind": "fixed",
+                "text": "Valeurs de repli sombres (--gc-surface-*) au lieu des couleurs claires de Nebular quand les variables de thème sont absentes."
+            }
+        ]
+    },
+    {
+        "version": "0.8.25",
+        "date": "2026-09-18",
+        "summary": "Édition de texte riche pour les champs libres du site et des jeux.",
+        "changes": [
+            {
+                "package": "gc-ui",
+                "kind": "added",
+                "text": "gc-rich-editor : éditeur TipTap avec gras, italique, souligné, listes, lien, couleurs, mode compact et limite en caractères de texte brut."
+            },
+            {
+                "package": "gc-ui",
+                "kind": "added",
+                "text": "gc-rich-content : affichage du HTML stocké, repassé par DOMPurify avec la même liste blanche que le sanitizer du Core."
+            },
+            {
+                "package": "gc-ui",
+                "kind": "added",
+                "text": "isRichHtmlBlank et stripRichHtmlPlainText, pour traiter un brouillon vide et extraire le texte brut."
+            }
+        ]
+    },
+    {
+        "version": "0.8.24",
+        "date": "2026-09-15",
+        "summary": "Correction d'empilement dans le playground.",
+        "changes": [
+            {
+                "package": "gc-widgets",
+                "kind": "fixed",
+                "text": "Le rail de pages reste sous l'en-tête du playground."
+            }
+        ]
+    },
+    {
+        "version": "0.8.23",
+        "date": "2026-09-15",
+        "summary": "Réglages de widgets plus lisibles.",
+        "changes": [
+            {
+                "package": "gc-widgets",
+                "kind": "fixed",
+                "text": "Le select compact laisse de la place entre son libellé et son indication."
+            },
+            {
+                "package": "gc-widgets",
+                "kind": "fixed",
+                "text": "La liaison d'hôte du mode aperçu n'écrase plus le signal d'entrée du workspace."
+            }
+        ]
+    },
+    {
+        "version": "0.8.22",
+        "date": "2026-09-14",
+        "summary": "L'éditeur de workspace montre à quoi ressemblera la page.",
+        "changes": [
+            {
+                "package": "gc-widgets",
+                "kind": "added",
+                "text": "Données d'exemple rendues dans le mode aperçu de l'éditeur de workspace."
+            }
+        ]
+    },
+    {
+        "version": "0.8.21",
+        "date": "2026-09-14",
+        "summary": "Correction de visibilité des pages en cours d'édition.",
+        "changes": [
+            {
+                "package": "gc-widgets",
+                "kind": "fixed",
+                "text": "Une page réapparaît dès qu'on touche à son nom ou à son audience."
+            }
+        ]
+    },
+    {
+        "version": "0.8.20",
+        "date": "2026-09-14",
+        "summary": "Navigation de workspace repensée.",
+        "changes": [
+            {
+                "package": "gc-widgets",
+                "kind": "changed",
+                "text": "Chaque page du workspace devient une carte détourée dans la navigation."
+            }
+        ]
+    },
+    {
+        "version": "0.8.19",
+        "date": "2026-09-14",
+        "summary": "L'éditeur de workspace compile ce que le front du jeu utilise.",
+        "changes": [
+            {
+                "package": "gc-workspace-editor",
+                "kind": "fixed",
+                "text": "Compilation de tous les packages source @bari77 utilisés par le front du jeu."
+            }
+        ]
+    },
+    {
+        "version": "0.8.18",
+        "date": "2026-09-14",
+        "summary": "Résolution des chemins TypeScript du front du jeu.",
+        "changes": [
+            {
+                "package": "gc-workspace-editor",
+                "kind": "fixed",
+                "text": "Le compilateur Angular reçoit les paths du tsconfig du front du jeu."
+            }
+        ]
+    },
+    {
+        "version": "0.8.17",
+        "date": "2026-09-14",
+        "summary": "Correction du select de widgets.",
+        "changes": [
+            {
+                "package": "gc-widgets",
+                "kind": "fixed",
+                "text": "Le panneau du select survit au clic sur une option."
+            }
+        ]
+    },
+    {
+        "version": "0.8.16",
+        "date": "2026-09-14",
+        "summary": "Plusieurs mises en page par jeu, et un select maison.",
+        "changes": [
+            {
+                "package": "gc-workspace-editor",
+                "kind": "added",
+                "text": "Détection des layouts présents dans config/ et bascule entre eux depuis l'éditeur."
+            },
+            {
+                "package": "gc-widgets",
+                "kind": "added",
+                "text": "Select stylé et styles de contrôles partagés entre les widgets."
+            }
+        ]
+    },
+    {
+        "version": "0.8.15",
+        "date": "2026-09-13",
+        "summary": "Ordre d'enregistrement des gabarits assoupli.",
+        "changes": [
+            {
+                "package": "gc-widgets",
+                "kind": "fixed",
+                "text": "Un gabarit de widget peut s'enregistrer avant que son type ne soit lié."
+            }
+        ]
+    },
+    {
+        "version": "0.8.14",
+        "date": "2026-09-12",
+        "summary": "Une page de workspace peut viser un public.",
+        "changes": [
+            {
+                "package": "gc-widgets",
+                "kind": "added",
+                "text": "Audience d'une page de workspace, choisie dans l'éditeur."
+            }
+        ]
+    },
+    {
+        "version": "0.8.13",
+        "date": "2026-09-11",
+        "summary": "Gabarits déclarés dans un hôte projeté.",
+        "changes": [
+            {
+                "package": "gc-widgets",
+                "kind": "fixed",
+                "text": "Résolution des gabarits de widgets déclarés dans un hôte projeté."
+            }
+        ]
+    },
+    {
+        "version": "0.8.12",
+        "date": "2026-09-11",
+        "summary": "Libellés de catalogue lisibles dans l'éditeur.",
+        "changes": [
+            {
+                "package": "gc-workspace-editor",
+                "kind": "fixed",
+                "text": "Les métadonnées $localize sont retirées des libellés de catalogue."
+            }
+        ]
+    },
+    {
+        "version": "0.8.11",
+        "date": "2026-09-11",
+        "summary": "L'éditeur rend comme le front du jeu.",
+        "changes": [
+            {
+                "package": "gc-workspace-editor",
+                "kind": "fixed",
+                "text": "Rendu de l'éditeur aligné sur celui du front du jeu."
+            }
+        ]
+    },
+    {
+        "version": "0.8.10",
+        "date": "2026-09-11",
+        "summary": "L'application de l'éditeur sort de node_modules.",
+        "changes": [
+            {
+                "package": "gc-workspace-editor",
+                "kind": "fixed",
+                "text": "L'application de l'éditeur est préparée hors de node_modules."
+            }
+        ]
+    },
+    {
+        "version": "0.8.9",
+        "date": "2026-09-11",
+        "summary": "Sources de widgets compilées par l'éditeur Vite.",
+        "changes": [
+            {
+                "package": "gc-workspace-editor",
+                "kind": "fixed",
+                "text": "Compilation des sources de widgets du DevKit dans l'éditeur Vite."
+            }
+        ]
+    },
+    {
+        "version": "0.8.8",
+        "date": "2026-09-11",
+        "summary": "Alias Sass et tsconfig Angular de l'éditeur.",
+        "changes": [
+            {
+                "package": "gc-workspace-editor",
+                "kind": "fixed",
+                "text": "Alias Sass de gc-theme et tsconfig Angular corrigés."
+            }
+        ]
+    },
+    {
+        "version": "0.8.7",
+        "date": "2026-09-11",
+        "summary": "gc-theme résolu depuis le jeu.",
+        "changes": [
+            {
+                "package": "gc-workspace-editor",
+                "kind": "fixed",
+                "text": "L'import de gc-theme est résolu depuis le node_modules du jeu."
+            }
+        ]
+    },
+    {
+        "version": "0.8.6",
+        "date": "2026-09-11",
+        "summary": "Éditeur de workspace en ligne de commande, et site de documentation.",
+        "changes": [
+            {
+                "package": "gc-workspace-editor",
+                "kind": "added",
+                "text": "CLI gc-workspace pour éditer les layouts de plusieurs cibles."
+            },
+            {
+                "package": "docs",
+                "kind": "added",
+                "text": "Site de documentation des composants, publié sur GitHub Pages et dérivé d'une configuration unique."
+            }
+        ]
+    },
+    {
+        "version": "0.8.2",
+        "date": "2026-09-10",
+        "summary": "Fil d'Ariane, et versions alignées sur un seul numéro.",
+        "changes": [
+            {
+                "package": "gc-ui",
+                "kind": "added",
+                "text": "gc-breadcrumb, construit à partir des données de l'arbre de routes actif."
+            },
+            {
+                "package": "devkit",
+                "kind": "changed",
+                "text": "Tous les packages @bari77 partagent une version, documentée dans docs/RELEASE.md."
+            }
+        ]
+    },
+    {
+        "version": "0.8.1",
+        "date": "2026-09-10",
+        "summary": "Un dossier par composant.",
+        "changes": [
+            {
+                "package": "gc-ui",
+                "kind": "changed",
+                "text": "Composants éclatés en dossiers dédiés avec fichiers html, scss et ts séparés."
+            },
+            {
+                "package": "gc-widgets",
+                "kind": "changed",
+                "text": "Même découpage que gc-ui."
+            }
+        ]
+    },
+    {
+        "version": "0.8.0",
+        "date": "2026-09-09",
+        "summary": "Naissance de @bari77/gc-ui.",
+        "changes": [
+            {
+                "package": "gc-ui",
+                "kind": "added",
+                "text": "Premières primitives sans logique métier : gc-skeleton, gc-skeleton-text, gc-modal, gc-decision-prompt et gc-create-wall."
+            }
+        ]
+    }
 ]

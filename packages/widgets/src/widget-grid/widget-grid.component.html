@@ -21,7 +21,10 @@
                                     (touchstart)="$event.stopPropagation()"
                                 >
                                     @if (showsDataEdit(item)) {
-                                        <ng-container [ngTemplateOutlet]="dataEditButton" [ngTemplateOutletContext]="{ $implicit: item }" />
+                                        <ng-container
+                                            [ngTemplateOutlet]="dataEditButton"
+                                            [ngTemplateOutletContext]="{ $implicit: item }"
+                                        />
                                     }
                                     <button
                                         type="button"
@@ -55,7 +58,10 @@
                             (touchstart)="$event.stopPropagation()"
                         >
                             @if (showsDataEdit(item)) {
-                                <ng-container [ngTemplateOutlet]="dataEditButton" [ngTemplateOutletContext]="{ $implicit: item }" />
+                                <ng-container
+                                    [ngTemplateOutlet]="dataEditButton"
+                                    [ngTemplateOutletContext]="{ $implicit: item }"
+                                />
                             }
                             <button
                                 type="button"
@@ -83,10 +89,18 @@
                                         (input)="twitchDraft.set(inputValue($event))"
                                     />
                                     <div class="gc-twitch-edit__actions">
-                                        <button type="button" class="gc-twitch-edit__cancel" (click)="stopDataEdit(item.id)">
+                                        <button
+                                            type="button"
+                                            class="gc-twitch-edit__cancel"
+                                            (click)="stopDataEdit(item.id)"
+                                        >
                                             Cancel
                                         </button>
-                                        <button type="button" class="gc-twitch-edit__save" (click)="onBuiltInTwitchSave(item)">
+                                        <button
+                                            type="button"
+                                            class="gc-twitch-edit__save"
+                                            (click)="onBuiltInTwitchSave(item)"
+                                        >
                                             Save
                                         </button>
                                     </div>

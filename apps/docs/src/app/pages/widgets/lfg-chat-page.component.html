@@ -1,0 +1,53 @@
+<gcd-page lead="Shell de chat LFG / recrutement : fil, stick-to-bottom, composer Nebular et sélecteur « poster as ».">
+    <p>
+        Le remote conserve stores, realtime et mapping domaine →
+        <code>LfgChatMessage</code>
+        . Le shell gère le scroll (anciens messages, jump-to-latest) et l’état du composer via
+        <code>composerState</code>
+        .
+    </p>
+
+    <div class="gcd-note">
+        <p>
+            Peers Nebular (
+            <code>NbChatModule</code>
+            ,
+            <code>NbSelectModule</code>
+            ). Pas de démo live dans la doc : branchez-le depuis un remote déjà thématisé.
+        </p>
+    </div>
+
+    <h2>Slots</h2>
+
+    <ul>
+        <li>
+            <code>ng-template gcLfgChatLeading</code>
+            — avatar / blason (
+            <code>$implicit</code>
+            = message) ;
+        </li>
+        <li>
+            <code>ng-template gcLfgChatMeta</code>
+            — ligne méta sous l’émetteur (sinon
+            <code>metaParts</code>
+            ) ;
+        </li>
+        <li>
+            <code>gcLfgChatNeedsSheet</code>
+            — mur « créer une fiche » ;
+        </li>
+        <li>
+            <code>gcLfgChatPublishError</code>
+            — alerte d’erreur de publication.
+        </li>
+    </ul>
+
+    <gcd-code language="html" [code]="usageSnippet" />
+
+    <h2>API</h2>
+
+    <gcd-api heading="Entrées" [rows]="inputs" />
+    <gcd-api heading="Sorties" [rows]="outputs" [showDefault]="false" />
+
+    <gcd-code language="typescript" label="Types message / composer" [code]="typesSnippet" />
+</gcd-page>

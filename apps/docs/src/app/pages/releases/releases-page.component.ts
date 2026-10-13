@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { DOCS_VERSION, REPOSITORY_URL } from '../../docs.config';
-import { KIND_LABELS, releases } from '../../releases';
-import { PageComponent } from '../../shared/page.component';
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { DOCS_VERSION, REPOSITORY_URL } from "../../docs.config";
+import { KIND_LABELS, releases } from "../../releases";
+import { PageComponent } from "../../shared/page.component";
 
 @Component({
-    selector: 'gcd-releases-page',
+    selector: "gcd-releases-page",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [PageComponent],
-    templateUrl: './releases-page.component.html',
-    styleUrl: './releases-page.component.scss',
+    templateUrl: "./releases-page.component.html",
+    styleUrl: "./releases-page.component.scss",
 })
 export class ReleasesPageComponent {
     protected readonly releases = releases;

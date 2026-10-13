@@ -1,36 +1,19 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { WidgetSelectComponent } from '../widget-select/widget-select.component';
-import { WidgetPage } from '../workspace';
-
-export interface WidgetPageRename {
-    id: string;
-    title: string;
-}
-
-export interface WidgetPageMove {
-    id: string;
-    offset: number;
-}
-
-/** One audience the host lets the owner pick from. The first option is the open one. */
-export interface WidgetPageVisibilityOption {
-    value: string;
-    label: string;
-}
-
-export interface WidgetPageVisibilityChange {
-    id: string;
-    visibility: string;
-}
+import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
+import { WidgetSelectComponent } from "../widget-select/widget-select.component";
+import { WidgetPage } from "../widget-page";
+import { WidgetPageRename } from "./widget-page-rename.model";
+import { WidgetPageMove } from "./widget-page-move.model";
+import { WidgetPageVisibilityOption } from "./widget-page-visibility-option.model";
+import { WidgetPageVisibilityChange } from "./widget-page-visibility-change.model";
 
 /** Left rail listing the workspace pages, editable in place by the owner. */
 @Component({
-    selector: 'gc-widget-nav',
+    selector: "gc-widget-nav",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [WidgetSelectComponent],
-    templateUrl: './widget-nav.component.html',
-    styleUrl: './widget-nav.component.scss',
+    templateUrl: "./widget-nav.component.html",
+    styleUrl: "./widget-nav.component.scss",
 })
 export class WidgetNavComponent {
     public readonly pages = input.required<WidgetPage[]>();
@@ -39,20 +22,20 @@ export class WidgetNavComponent {
 
     public readonly editing = input(false);
 
-    public readonly ariaLabel = input('Profile pages');
+    public readonly ariaLabel = input("Profile pages");
 
-    public readonly addLabel = input('New page');
+    public readonly addLabel = input("New page");
 
-    public readonly removeLabel = input('Delete page');
+    public readonly removeLabel = input("Delete page");
 
-    public readonly moveUpLabel = input('Move up');
+    public readonly moveUpLabel = input("Move up");
 
-    public readonly moveDownLabel = input('Move down');
+    public readonly moveDownLabel = input("Move down");
 
     /** Left empty to drop the audience picker entirely. */
     public readonly visibilityOptions = input<WidgetPageVisibilityOption[]>([]);
 
-    public readonly visibilityLabel = input('Who can see this page');
+    public readonly visibilityLabel = input("Who can see this page");
 
     public readonly select = output<string>();
 
@@ -74,7 +57,7 @@ export class WidgetNavComponent {
     }
 
     protected currentVisibility(page: WidgetPage): string {
-        return page.visibility ?? this.visibilityOptions()[0]?.value ?? '';
+        return page.visibility ?? this.visibilityOptions()[0]?.value ?? "";
     }
 
     /** Read mode only flags the pages that are not open to everyone. */

@@ -1,6 +1,6 @@
-import { Directive, TemplateRef, inject, input } from '@angular/core';
-import { registerWidgetTemplateDef } from './widget-def.registry';
-import { WidgetTemplateContext } from './widget-template';
+import { Directive, TemplateRef, inject, input } from "@angular/core";
+import { registerWidgetTemplateDef } from "./widget-def.registry";
+import { WidgetTemplateContext } from "./widget-template";
 
 /**
  * Extra settings UI for one widget *type*, rendered inside the gear modal below the
@@ -8,17 +8,17 @@ import { WidgetTemplateContext } from './widget-template';
  * Content that lives in the host's backend is edited in the widget via `gcWidgetEditable`.
  */
 @Directive({
-    selector: '[gcWidgetSettings]',
+    selector: "[gcWidgetSettings]",
     standalone: true,
 })
 export class WidgetSettingsDefDirective {
     /** Optional for the same reason as `gcWidget`: registration happens before the binding lands. */
-    public readonly type = input('', { alias: 'gcWidgetSettings' });
+    public readonly type = input("", { alias: "gcWidgetSettings" });
 
     public readonly template = inject<TemplateRef<WidgetTemplateContext>>(TemplateRef);
 
     public constructor() {
-        registerWidgetTemplateDef(this, 'settings');
+        registerWidgetTemplateDef(this, "settings");
     }
 
     public static ngTemplateContextGuard(

@@ -1,0 +1,98 @@
+<gcd-page
+    lead="Édition et affichage HTML assaini pour les présentations, les murs de messages et les autres champs libres. Le HTML est toujours repassé côté API par le sanitizer du Core avant stockage."
+>
+    <p>
+        <code>gc-rich-editor</code>
+        s'appuie sur TipTap et limite la longueur en
+        <strong>texte brut</strong>
+        lorsque
+        <code>maxLength</code>
+        est renseigné.
+        <code>gc-rich-content</code>
+        affiche le HTML via DOMPurify avec une liste blanche alignée sur le serveur.
+    </p>
+
+    <p>
+        La barre d'outils couvre le gras, l'italique, le souligné, les titres
+        <code>h2</code>
+        /
+        <code>h3</code>
+        , les listes à puces et numérotées, le lien et six couleurs de texte. Le barré fait aussi partie du schéma : il
+        s'obtient au clavier (
+        <code>~~barré~~</code>
+        ) ou par collage, et survit à l'assainissement.
+    </p>
+
+    <div class="gcd-note">
+        <p>
+            Un module de jeu qui consomme
+            <code>&#64;bari77/gc-ui</code>
+            via la fédération doit aussi déclarer les paquets
+            <code>&#64;tiptap/*</code>
+            et
+            <code>dompurify</code>
+            dans son
+            <code>package.json</code>
+            : ils ne sont pas partagés par la coquille.
+        </p>
+    </div>
+
+    <h2>gc-rich-editor</h2>
+
+    <gcd-demo
+        title="Éditeur complet"
+        description="Gras, italique, souligné, barré, couleurs, lien, listes et titres : le contenu ci-dessous est éditable."
+        [html]="fullEditorHtml"
+        [bare]="true"
+    >
+        <div class="gcd-widget-shell">
+            <p class="gcd-widget-shell__label">Présentation</p>
+            <gc-rich-editor
+                [value]="fullDraft()"
+                (valueChange)="fullDraft.set($event)"
+                [maxLength]="4000"
+                placeholder="Décrivez-vous en quelques lignes…"
+            />
+        </div>
+    </gcd-demo>
+
+    <gcd-demo
+        title="Mode compact"
+        description="Catchphrase ou accroche : barre d'outils réduite."
+        [html]="compactEditorHtml"
+        [bare]="true"
+    >
+        <gc-rich-editor
+            [compact]="true"
+            [value]="compactDraft()"
+            (valueChange)="compactDraft.set($event)"
+            [maxLength]="120"
+            placeholder="Phrase d'accroche"
+        />
+    </gcd-demo>
+
+    <p>Le HTML produit par l'éditeur complet, tel qu'il partirait vers l'API :</p>
+
+    <gcd-code language="html" label="HTML produit" [code]="prettyHtml()" />
+
+    <gcd-api heading="Entrées (gc-rich-editor)" [rows]="editorInputs" />
+
+    <h2>gc-rich-content</h2>
+
+    <gcd-demo title="Rendu HTML" [html]="contentHtml" [bare]="true">
+        <gc-rich-content [html]="previewHtml()" />
+    </gcd-demo>
+
+    <gcd-api heading="Entrées (gc-rich-content)" [rows]="contentInputs" />
+
+    <h2>Utilitaires</h2>
+
+    <gcd-code language="typescript" [code]="utilsSnippet" />
+
+    <p>
+        Vide côté éditeur :
+        <code>{{ blankLabel() }}</code>
+        — texte brut extrait :
+        <code>{{ plainPreview() }}</code>
+    </p>
+</gcd-page>

@@ -1,0 +1,27 @@
+.gcd-demo-button {
+    align-self: flex-start;
+    padding: 0.4rem 0.85rem;
+    border: 1px solid var(--gc-accent);
+    border-radius: 0.35rem;
+    background: transparent;
+    color: var(--gc-accent);
+    font: inherit;
+    font-size: 0.8125rem;
+    cursor: pointer;
+}
+
+.gcd-motion-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.gcd-motion-card {
+    padding: 0.85rem 1.1rem;
+    border: 1px solid var(--gcd-border);
+    border-radius: 0.45rem;
+    background: var(--gc-surface-1);
+    font-size: 0.8125rem;
+    color: #c9d4ea;
+}

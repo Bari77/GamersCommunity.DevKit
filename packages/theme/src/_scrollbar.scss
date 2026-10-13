@@ -1,6 +1,7 @@
 * {
     scrollbar-width: thin;
-    scrollbar-color: color-mix(in srgb, var(--gc-accent) 45%, #4a5678) color-mix(in srgb, var(--gc-surface-1) 80%, transparent);
+    scrollbar-color: color-mix(in srgb, var(--gc-accent) 45%, #4a5678)
+        color-mix(in srgb, var(--gc-surface-1) 80%, transparent);
 }
 
 *::-webkit-scrollbar {

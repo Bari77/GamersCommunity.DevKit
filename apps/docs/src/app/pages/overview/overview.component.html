@@ -1,0 +1,80 @@
+<gcd-page
+    lead="Les briques partagées par la coquille Platform et par les modules de jeu : primitives d'interface, thème et tableau de bord de widgets."
+>
+    <gcd-card-grid [cards]="cards" />
+
+    <h2>Ce qu'il faut savoir avant d'intégrer</h2>
+
+    <p>
+        La plupart des packages publient du
+        <strong>TypeScript source</strong>
+        (
+        <code>main</code>
+        /
+        <code>types</code>
+        vers
+        <code>./src/index.ts</code>
+        ) : l'application consommatrice les compile avec son propre Angular. Exception :
+        <code>&#64;bari77/gc-ui</code>
+        publie un bundle
+        <strong>FESM</strong>
+        (ng-packagr) pour rester compatible avec la fédération Native Federation.
+    </p>
+
+    <p>Trois conséquences pratiques :</p>
+
+    <ul>
+        <li>
+            la version d'Angular de l'application doit satisfaire les
+            <code>peerDependencies</code>
+            des packages, aujourd'hui
+            <code>{{ angularRange }}</code>
+            ;
+        </li>
+        <li>
+            les options strictes du
+            <code>tsconfig</code>
+            de l'application s'appliquent aussi au code des packages, qui est écrit en
+            <code>strict</code>
+            ;
+        </li>
+        <li>
+            une seule copie d'Angular doit exister dans l'arbre de dépendances, sinon l'injection échoue à l'exécution.
+        </li>
+    </ul>
+
+    <h2>Versionnage</h2>
+
+    <p>
+        Tous les packages
+        <code>&#64;bari77/*</code>
+        avancent en
+        <strong>lockstep</strong>
+        : une publication pousse la même version pour l'ensemble, même si un seul package a changé. Il faut donc les
+        monter ensemble côté consommateur. Depuis
+        <strong>1.0.0</strong>
+        , le versionnage suit SemVer de façon explicite (breaking = majeur).
+    </p>
+
+    <gcd-code language="json" label="package.json de l'application" [code]="lockstepSnippet" />
+
+    <h2>Où ces packages sont consommés</h2>
+
+    <p>
+        La coquille
+        <code>Platform.Front</code>
+        et chaque module de jeu (
+        <code>WorldOfWarcraft.Front</code>
+        ,
+        <code>Template.Front</code>
+        ) dépendent des mêmes versions. Les modules de jeu sont chargés par Native Federation dans la coquille : un
+        composant partagé ne doit donc jamais supposer qu'il tourne dans un contexte particulier, ni instancier un thème
+        global.
+    </p>
+
+    <p>
+        Le détail de l'installation, y compris l'authentification GitHub Packages, est sur la page
+        <a routerLink="/installation">Installation</a>
+        .
+    </p>
+</gcd-page>

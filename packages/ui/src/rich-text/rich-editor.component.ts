@@ -10,46 +10,46 @@ import {
     input,
     model,
     viewChild,
-} from '@angular/core';
-import { Editor } from '@tiptap/core';
-import CharacterCount from '@tiptap/extension-character-count';
-import Color from '@tiptap/extension-color';
-import Link from '@tiptap/extension-link';
-import Placeholder from '@tiptap/extension-placeholder';
-import TextStyle from '@tiptap/extension-text-style';
-import Underline from '@tiptap/extension-underline';
-import StarterKit from '@tiptap/starter-kit';
-import { isRichHtmlBlank } from './rich-html.utils';
+} from "@angular/core";
+import { Editor } from "@tiptap/core";
+import CharacterCount from "@tiptap/extension-character-count";
+import Color from "@tiptap/extension-color";
+import Link from "@tiptap/extension-link";
+import Placeholder from "@tiptap/extension-placeholder";
+import TextStyle from "@tiptap/extension-text-style";
+import Underline from "@tiptap/extension-underline";
+import StarterKit from "@tiptap/starter-kit";
+import { isRichHtmlBlank } from "./rich-html.utils";
 
-const SWATCH_COLORS = ['#222b45', '#3366ff', '#00d68f', '#ffaa00', '#ff3d71', '#a855f7'];
+const SWATCH_COLORS = ["#222b45", "#3366ff", "#00d68f", "#ffaa00", "#ff3d71", "#a855f7"];
 
 @Component({
-    selector: 'gc-rich-editor',
+    selector: "gc-rich-editor",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './rich-editor.component.html',
-    styleUrl: './rich-editor.component.scss',
+    templateUrl: "./rich-editor.component.html",
+    styleUrl: "./rich-editor.component.scss",
     /* ProseMirror and its <p> children are created outside Angular, so they never receive the
        content attribute an emulated scope would require. Every selector is namespaced instead. */
     encapsulation: ViewEncapsulation.None,
     host: {
-        '[class.gc-rich-editor-host--disabled]': 'disabled()',
+        "[class.gc-rich-editor-host--disabled]": "disabled()",
     },
 })
 export class RichEditorComponent implements AfterViewInit, OnDestroy {
     /** Shorter toolbar and surface for catchphrases and one-liners. */
     public readonly compact = input(false);
 
-    public readonly placeholder = input('');
+    public readonly placeholder = input("");
 
     /** Limits plain-text length (not HTML byte size). */
     public readonly maxLength = input<number | null>(null);
 
     public readonly disabled = input(false);
 
-    public readonly value = model('');
+    public readonly value = model("");
 
-    protected readonly surface = viewChild.required<ElementRef<HTMLElement>>('surface');
+    protected readonly surface = viewChild.required<ElementRef<HTMLElement>>("surface");
 
     protected readonly swatchColors = SWATCH_COLORS;
 
@@ -69,7 +69,7 @@ export class RichEditorComponent implements AfterViewInit, OnDestroy {
             if (current === html) {
                 return;
             }
-            editor.commands.setContent(html || '', false);
+            editor.commands.setContent(html || "", false);
         });
 
         effect(() => {
@@ -85,7 +85,7 @@ export class RichEditorComponent implements AfterViewInit, OnDestroy {
             if (!this.editor) {
                 return;
             }
-            host.nativeElement.classList.toggle('gc-rich-editor-host--compact', compact);
+            host.nativeElement.classList.toggle("gc-rich-editor-host--compact", compact);
         });
     }
 
@@ -105,17 +105,15 @@ export class RichEditorComponent implements AfterViewInit, OnDestroy {
                     openOnClick: false,
                     autolink: true,
                     linkOnPaste: true,
-                    HTMLAttributes: { rel: 'noopener noreferrer', target: '_blank' },
+                    HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" },
                 }),
                 TextStyle,
                 Color,
                 Placeholder.configure({ placeholder: this.placeholder() }),
-                ...(max != null
-                    ? [CharacterCount.configure({ limit: max, mode: 'textSize' })]
-                    : []),
+                ...(max != null ? [CharacterCount.configure({ limit: max, mode: "textSize" })] : []),
             ],
-            content: this.value() || '',
-            onUpdate: ({ editor }) => {
+            content: this.value() || "",
+            onUpdate: ({ editor }): void => {
                 this.syncingFromModel = true;
                 this.value.set(editor.getHTML());
                 this.syncingFromModel = false;
@@ -126,6 +124,11 @@ export class RichEditorComponent implements AfterViewInit, OnDestroy {
     public ngOnDestroy(): void {
         this.editor?.destroy();
         this.editor = null;
+    }
+
+    /** For parent forms: treat empty editor as blank. */
+    public isBlank(): boolean {
+        return isRichHtmlBlank(this.value());
     }
 
     protected isActive(name: string, attrs?: Record<string, unknown>): boolean {
@@ -165,16 +168,16 @@ export class RichEditorComponent implements AfterViewInit, OnDestroy {
     }
 
     protected setLink(): void {
-        const previous = this.editor?.getAttributes('link')['href'] as string | undefined;
-        const url = window.prompt('URL', previous ?? 'https://');
+        const previous = this.editor?.getAttributes("link")["href"] as string | undefined;
+        const url = window.prompt("URL", previous ?? "https://");
         if (url === null) {
             return;
         }
-        if (url === '') {
-            this.editor?.chain().focus().extendMarkRange('link').unsetLink().run();
+        if (url === "") {
+            this.editor?.chain().focus().extendMarkRange("link").unsetLink().run();
             return;
         }
-        this.editor?.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+        this.editor?.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
     }
 
     protected characters(): number {
@@ -189,13 +192,8 @@ export class RichEditorComponent implements AfterViewInit, OnDestroy {
     protected counterLabel(): string {
         const max = this.maxLength();
         if (max == null) {
-            return '';
+            return "";
         }
         return `${this.characters()} / ${max}`;
-    }
-
-    /** For parent forms: treat empty editor as blank. */
-    public isBlank(): boolean {
-        return isRichHtmlBlank(this.value());
     }
 }

@@ -1,25 +1,21 @@
 export class PromiseUtils {
-  public static waitUntilFalse(
-    getter: () => boolean,
-    intervalMs: number = 50,
-    timeoutMs?: number,
-  ): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const start = Date.now();
+    public static waitUntilFalse(getter: () => boolean, intervalMs: number = 50, timeoutMs?: number): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const start = Date.now();
 
-      const check = (): void => {
-        if (!getter()) {
-          resolve();
-          return;
-        }
-        if (timeoutMs != null && Date.now() - start >= timeoutMs) {
-          reject(new Error("waitUntilFalse timeout"));
-          return;
-        }
-        setTimeout(check, intervalMs);
-      };
+            const check = (): void => {
+                if (!getter()) {
+                    resolve();
+                    return;
+                }
+                if (timeoutMs != null && Date.now() - start >= timeoutMs) {
+                    reject(new Error("waitUntilFalse timeout"));
+                    return;
+                }
+                setTimeout(check, intervalMs);
+            };
 
-      check();
-    });
-  }
+            check();
+        });
+    }
 }

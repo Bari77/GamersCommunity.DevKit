@@ -1,4 +1,6 @@
-import type { WidgetCatalog, WidgetPageVisibilityOption, WidgetWorkspace } from './widget-contract.js';
+import { WidgetCatalog } from "./widget-contract.js";
+import { WidgetWorkspace } from "./widget-workspace.js";
+import { WidgetPageVisibilityOption } from "./widget-page-visibility-option.js";
 
 /** Per-target overrides in the game front `package.json` under `gcWorkspace.targets`. */
 export interface GcWorkspaceTargetConfig {
@@ -9,58 +11,6 @@ export interface GcWorkspaceTargetConfig {
     defaultLayout?: string;
 }
 
-/** Raw `gcWorkspace` block from package.json (supports legacy flat fields). */
-export interface GcWorkspacePackageConfig {
-    defaultTarget?: string;
-    targets?: Record<string, GcWorkspaceTargetConfig>;
-    catalog?: string;
-    registry?: string;
-    defaultLayout?: string;
-}
-
-/** Resolved paths for one workspace target. */
-export interface GcWorkspaceConfig {
-    target: string;
-    catalog: string;
-    registry?: string;
-    defaultLayout: string;
-}
-
-/** One layout JSON found on disk, paired with the target whose catalog describes it. */
-export interface WorkspaceLayoutEntry {
-    /** `${target}:${layout}`, stable enough to drive the editor picker. */
-    id: string;
-    target: string;
-    /** Repo-relative POSIX path, e.g. `config/player/workspace.default.json`. */
-    layout: string;
-    label: string;
-    file: string;
-    isDefault: boolean;
-}
-
-export interface GameWorkspaceRegistry {
-    catalog: WidgetCatalog;
-    columns: number;
-    rowHeight?: number;
-    /** Audiences a page may be restricted to. Omitted leaves every page open to everyone. */
-    pageVisibilityOptions?: WidgetPageVisibilityOption[];
-    loadTemplateHost?: () => Promise<new (...args: unknown[]) => unknown>;
-}
-
 export type { WidgetCatalog, WidgetPageVisibilityOption, WidgetWorkspace };
 
-export type ValidationSeverity = 'error' | 'warning';
-
-export interface ValidationIssue {
-    path: string;
-    message: string;
-    severity: ValidationSeverity;
-}
-
-export interface LoadedWorkspaceContext {
-    gameRoot: string;
-    config: GcWorkspaceConfig;
-    registry: GameWorkspaceRegistry;
-    layout: WidgetWorkspace;
-    layoutPath: string;
-}
+export type ValidationSeverity = "error" | "warning";

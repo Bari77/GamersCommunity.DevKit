@@ -82,7 +82,7 @@
     </div>
 } @else if (items().length === 0) {
     <p class="gc-gallery__empty">{{ emptyLabel() }}</p>
-} @else if (kind() === 'video') {
+} @else if (kind() === "video") {
     <div class="gc-gallery gc-gallery--video">
         @for (video of videos(); track video.url) {
             <figure class="gc-gallery__cell">

@@ -1,27 +1,27 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject, input } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import DOMPurify from 'dompurify';
-import { RICH_HTML_PURIFY_CONFIG } from './rich-html.utils';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, inject, input } from "@angular/core";
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
+import DOMPurify from "dompurify";
+import { RICH_HTML_PURIFY_CONFIG } from "./rich-html.utils";
 
 /** Renders server-sanitized HTML with a client-side DOMPurify pass. */
 @Component({
-    selector: 'gc-rich-content',
+    selector: "gc-rich-content",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `<div class="gc-rich-content" [innerHTML]="safeHtml()"></div>`,
-    styleUrl: './rich-content.component.scss',
+    templateUrl: "./rich-content.component.html",
+    styleUrl: "./rich-content.component.scss",
     /* innerHTML children are inserted outside Angular, so an emulated scope would never reach them. */
     encapsulation: ViewEncapsulation.None,
 })
 export class RichContentComponent {
-    public readonly html = input('', {
-        transform: (value: string | null | undefined): string => value ?? '',
+    public readonly html = input("", {
+        transform: (value: string | null | undefined): string => value ?? "",
     });
-
-    private readonly domSanitizer = inject(DomSanitizer);
 
     protected readonly safeHtml = computed((): SafeHtml => {
         const clean = DOMPurify.sanitize(this.html(), RICH_HTML_PURIFY_CONFIG);
         return this.domSanitizer.bypassSecurityTrustHtml(clean);
     });
+
+    private readonly domSanitizer = inject(DomSanitizer);
 }

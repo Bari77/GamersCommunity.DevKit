@@ -7,11 +7,11 @@ seven packages at `X.Y.Z`, even the ones whose content did not change — same m
 From **1.0.0** onward the lockstep version follows **SemVer** (see table below). Pick the bump from
 the **most severe** change in the release (one breaking API change ⇒ major for the whole lockstep).
 
-| Change kind | Bump | Tag example |
-|-------------|------|-------------|
-| Fix only (no API / contract change) | **patch** (`Z`) | `v1.0.6` → `v1.0.7` |
-| Backward-compatible feature / additive API | **minor** (`Y`, `Z=0`) | `v1.0.6` → `v1.1.0` |
-| Breaking / non-backward-compatible | **major** (`X`, `Y=Z=0`) | `v1.1.0` → `v2.0.0` |
+| Change kind                                | Bump                     | Tag example         |
+| ------------------------------------------ | ------------------------ | ------------------- |
+| Fix only (no API / contract change)        | **patch** (`Z`)          | `v1.0.6` → `v1.0.7` |
+| Backward-compatible feature / additive API | **minor** (`Y`, `Z=0`)   | `v1.0.6` → `v1.1.0` |
+| Breaking / non-backward-compatible         | **major** (`X`, `Y=Z=0`) | `v1.1.0` → `v2.0.0` |
 
 Agents and humans must not bump patch for additive features (e.g. new `BaseService` helpers ⇒ **minor**).
 Removing protected helpers subclasses rely on (e.g. drop `postJson`) ⇒ **major**.
@@ -34,13 +34,13 @@ Pushing a `vX.Y.Z` tag runs `.github/workflows/release.yml`:
 
 1. Pin package versions from the tag, then `npm install` (workspace packages keep `"@bari77/gc-sdk": "*"` in source; the workflow rewrites that to `X.Y.Z` before publish)
 2. Publish npm packages to **GitHub Packages**
-   - `@bari77/gc-sdk`
-   - `@bari77/gc-msw`
-   - `@bari77/gc-playground`
-   - `@bari77/gc-ui`
-   - `@bari77/gc-widgets`
-   - `@bari77/gc-theme`
-   - `@bari77/gc-create-game` (clones `GamersCommunity.Games.Template` at runtime — no template bundled in the package)
+    - `@bari77/gc-sdk`
+    - `@bari77/gc-msw`
+    - `@bari77/gc-playground`
+    - `@bari77/gc-ui`
+    - `@bari77/gc-widgets`
+    - `@bari77/gc-theme`
+    - `@bari77/gc-create-game` (clones `GamersCommunity.Games.Template` at runtime — no template bundled in the package)
 3. Build & push image **`ghcr.io/bari77/gc-devgateway:X.Y.Z`**
 4. Create a **GitHub Release**
 
@@ -55,10 +55,10 @@ the entry for the version **before** pushing its tag:
 
 ```json
 {
-  "version": "1.0.0",
-  "date": "2026-09-23",
-  "summary": "One sentence on what the version is about.",
-  "changes": [{ "package": "gc-ui", "kind": "fixed", "text": "What a consumer will notice." }]
+    "version": "1.0.0",
+    "date": "2026-09-23",
+    "summary": "One sentence on what the version is about.",
+    "changes": [{ "package": "gc-ui", "kind": "fixed", "text": "What a consumer will notice." }]
 }
 ```
 
@@ -93,11 +93,11 @@ npm install
 
 ```json
 {
-  "dependencies": {
-    "@bari77/gc-sdk": "1.0.0",
-    "@bari77/gc-msw": "1.0.0",
-    "@bari77/gc-playground": "1.0.0"
-  }
+    "dependencies": {
+        "@bari77/gc-sdk": "1.0.0",
+        "@bari77/gc-msw": "1.0.0",
+        "@bari77/gc-playground": "1.0.0"
+    }
 }
 ```
 
@@ -123,8 +123,8 @@ npx @bari77/gc-create-game YourGame
 
 ```yaml
 devgateway:
-  image: ghcr.io/bari77/gc-devgateway:latest
-  # or pin: ghcr.io/bari77/gc-devgateway:1.0.0 / DEVGATEWAY_VERSION=1.0.0
+    image: ghcr.io/bari77/gc-devgateway:latest
+    # or pin: ghcr.io/bari77/gc-devgateway:1.0.0 / DEVGATEWAY_VERSION=1.0.0
 ```
 
 ```powershell

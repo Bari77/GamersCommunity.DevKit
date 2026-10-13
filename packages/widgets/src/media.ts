@@ -1,4 +1,4 @@
-import { GC_LINK_NETWORKS } from './link-networks';
+import { GC_LINK_NETWORKS } from "./link-networks";
 
 /** Shape shared by the gallery widgets, whatever backend feeds them. */
 export interface GcGalleryItem {
@@ -9,7 +9,7 @@ export interface GcGalleryItem {
 }
 
 export function embedHostname(): string {
-    return typeof location === 'undefined' ? 'localhost' : location.hostname;
+    return typeof location === "undefined" ? "localhost" : location.hostname;
 }
 
 /** Accepts a channel name or any twitch.tv URL and returns the bare channel. */
@@ -68,25 +68,25 @@ export function videoEmbedUrl(raw: string): string | null {
 
 /** Hosts that do not carry their network key, checked before the key itself. */
 const HOST_ALIASES: Readonly<Record<string, string>> = {
-    'x.com': 'twitter',
-    'bsky.app': 'bluesky',
-    'youtu.be': 'youtube',
-    'fb.com': 'facebook',
-    'steamcommunity.com': 'steam',
-    'steampowered.com': 'steam',
+    "x.com": "twitter",
+    "bsky.app": "bluesky",
+    "youtu.be": "youtube",
+    "fb.com": "facebook",
+    "steamcommunity.com": "steam",
+    "steampowered.com": "steam",
 };
 
 /** Best-effort social network key, used to pick an icon or a colour. */
 export function linkNetwork(url: string): string {
     const host = safeHostname(url);
     if (!host) {
-        return 'link';
+        return "link";
     }
 
     const alias = Object.keys(HOST_ALIASES).find((fragment) => host.includes(fragment));
     return alias
         ? HOST_ALIASES[alias]
-        : (GC_LINK_NETWORKS.find((network) => host.includes(network.key))?.key ?? 'link');
+        : (GC_LINK_NETWORKS.find((network) => host.includes(network.key))?.key ?? "link");
 }
 
 export function linkLabel(url: string): string {
@@ -95,7 +95,7 @@ export function linkLabel(url: string): string {
 
 function safeHostname(url: string): string | null {
     try {
-        return new URL(url.includes('://') ? url : `https://${url}`).hostname.replace(/^www\./, '');
+        return new URL(url.includes("://") ? url : `https://${url}`).hostname.replace(/^www\./, "");
     } catch {
         return null;
     }

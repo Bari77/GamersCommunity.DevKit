@@ -1,9 +1,8 @@
-export {
-    WORKSPACE_HOME_PAGE_ID,
-    WORKSPACE_PAGE_QUERY_PARAM,
-    bindWorkspacePageQuery,
-} from './workspace-page-query';
-export type { WorkspacePageQueryOptions } from './workspace-page-query';
+import { WidgetPage } from "./widget-page";
+import { WidgetWorkspace } from "./widget-workspace";
+
+export { WORKSPACE_HOME_PAGE_ID, WORKSPACE_PAGE_QUERY_PARAM, bindWorkspacePageQuery } from "./workspace-page-query";
+export type { WorkspacePageQueryOptions } from "./workspace-page-query";
 
 export type WidgetSettings = Record<string, unknown>;
 
@@ -18,31 +17,11 @@ export interface WidgetInstance {
     settings: WidgetSettings;
 }
 
-export interface WidgetPage {
-    id: string;
-    title: string;
-    icon?: string;
-    /** Locked pages cannot be renamed nor removed by the owner. */
-    locked?: boolean;
-    /**
-     * Audience allowed to open the page. The codes are the host's own, declared through
-     * `pageVisibilityOptions`; undefined means the page is open to everyone. Hiding a page is the
-     * host's job, on the server side: this only carries the owner's choice.
-     */
-    visibility?: string;
-    widgets: WidgetInstance[];
-}
-
-export interface WidgetWorkspace {
-    version: number;
-    pages: WidgetPage[];
-}
-
 export const WIDGET_WORKSPACE_VERSION = 2;
 
 export function createId(prefix: string): string {
     const random =
-        typeof crypto !== 'undefined' && 'randomUUID' in crypto
+        typeof crypto !== "undefined" && "randomUUID" in crypto
             ? crypto.randomUUID().slice(0, 8)
             : Math.random().toString(36).slice(2, 10);
     return `${prefix}-${random}`;
@@ -74,7 +53,7 @@ export function normalizeWorkspace(workspace: WidgetWorkspace, columns: number):
             ...page,
             widgets: page.widgets.map((widget) => {
                 const cols = Math.min(Math.max(1, Math.round(widget.cols)), maxCols);
-                const id = seen.has(widget.id) ? createId('w') : widget.id;
+                const id = seen.has(widget.id) ? createId("w") : widget.id;
                 seen.add(id);
 
                 return {
@@ -133,7 +112,7 @@ export function parseWorkspace(
 }
 
 export function addPage(workspace: WidgetWorkspace, title: string): WidgetWorkspace {
-    const page: WidgetPage = { id: createId('page'), title, widgets: [] };
+    const page: WidgetPage = { id: createId("page"), title, widgets: [] };
     return { ...workspace, pages: [...workspace.pages, page] };
 }
 
@@ -170,7 +149,7 @@ export function movePage(workspace: WidgetWorkspace, pageId: string, offset: num
 export function addWidget(
     workspace: WidgetWorkspace,
     pageId: string,
-    widget: Omit<WidgetInstance, 'id' | 'x' | 'y'>,
+    widget: Omit<WidgetInstance, "id" | "x" | "y">,
 ): WidgetWorkspace {
     return mapPages(workspace, (page) => {
         if (page.id !== pageId) {
@@ -180,7 +159,7 @@ export function addWidget(
         const bottom = page.widgets.reduce((row, item) => Math.max(row, item.y + item.rows), 0);
         return {
             ...page,
-            widgets: [...page.widgets, { ...widget, id: createId('w'), x: 0, y: bottom }],
+            widgets: [...page.widgets, { ...widget, id: createId("w"), x: 0, y: bottom }],
         };
     });
 }
@@ -211,7 +190,7 @@ export function updateWidgetSettings(
 export function applyPositions(
     workspace: WidgetWorkspace,
     pageId: string,
-    positions: Pick<WidgetInstance, 'id' | 'x' | 'y' | 'cols' | 'rows'>[],
+    positions: Pick<WidgetInstance, "id" | "x" | "y" | "cols" | "rows">[],
 ): WidgetWorkspace {
     const byId = new Map(positions.map((item) => [item.id, item]));
 
@@ -240,7 +219,7 @@ function mapPages(workspace: WidgetWorkspace, project: (page: WidgetPage) => Wid
 }
 
 function readPages(parsed: unknown): WidgetPage[] {
-    if (typeof parsed !== 'object' || parsed === null) {
+    if (typeof parsed !== "object" || parsed === null) {
         return [];
     }
 
@@ -250,12 +229,12 @@ function readPages(parsed: unknown): WidgetPage[] {
     }
 
     return pages.filter(isRecord).map((page) => ({
-        id: typeof page['id'] === 'string' ? page['id'] : createId('page'),
-        title: typeof page['title'] === 'string' ? page['title'] : '',
-        icon: typeof page['icon'] === 'string' ? page['icon'] : undefined,
-        locked: page['locked'] === true,
-        visibility: typeof page['visibility'] === 'string' ? page['visibility'] : undefined,
-        widgets: Array.isArray(page['widgets']) ? page['widgets'].filter(isRecord).map(readWidget) : [],
+        id: typeof page["id"] === "string" ? page["id"] : createId("page"),
+        title: typeof page["title"] === "string" ? page["title"] : "",
+        icon: typeof page["icon"] === "string" ? page["icon"] : undefined,
+        locked: page["locked"] === true,
+        visibility: typeof page["visibility"] === "string" ? page["visibility"] : undefined,
+        widgets: Array.isArray(page["widgets"]) ? page["widgets"].filter(isRecord).map(readWidget) : [],
     }));
 }
 
@@ -263,13 +242,13 @@ function readPages(parsed: unknown): WidgetPage[] {
 function migrateFlatLayout(parsed: unknown[], fallback: WidgetWorkspace): WidgetPage[] {
     const widgets = parsed.filter(isRecord).map((item) => ({
         ...readWidget(item),
-        type: typeof item['id'] === 'string' ? item['id'] : '',
-        id: createId('w'),
+        type: typeof item["id"] === "string" ? item["id"] : "",
+        id: createId("w"),
     }));
 
     const [first, ...rest] = fallback.pages;
     if (!first) {
-        return [{ id: createId('page'), title: 'Home', widgets }];
+        return [{ id: createId("page"), title: "Home", widgets }];
     }
 
     return [{ ...clonePage(first), widgets }, ...rest.map(clonePage)];
@@ -277,13 +256,13 @@ function migrateFlatLayout(parsed: unknown[], fallback: WidgetWorkspace): Widget
 
 function readWidget(item: Record<string, unknown>): WidgetInstance {
     return {
-        id: typeof item['id'] === 'string' ? item['id'] : createId('w'),
-        type: typeof item['type'] === 'string' ? item['type'] : '',
-        x: toNumber(item['x'], 0),
-        y: toNumber(item['y'], 0),
-        cols: toNumber(item['cols'], 4),
-        rows: toNumber(item['rows'], 3),
-        settings: isRecord(item['settings']) ? { ...item['settings'] } : {},
+        id: typeof item["id"] === "string" ? item["id"] : createId("w"),
+        type: typeof item["type"] === "string" ? item["type"] : "",
+        x: toNumber(item["x"], 0),
+        y: toNumber(item["y"], 0),
+        cols: toNumber(item["cols"], 4),
+        rows: toNumber(item["rows"], 3),
+        settings: isRecord(item["settings"]) ? { ...item["settings"] } : {},
     };
 }
 
@@ -292,5 +271,5 @@ function toNumber(value: unknown, fallback: number): number {
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
-    return typeof value === 'object' && value !== null && !Array.isArray(value);
+    return typeof value === "object" && value !== null && !Array.isArray(value);
 }

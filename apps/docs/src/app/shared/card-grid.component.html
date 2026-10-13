@@ -1,0 +1,8 @@
+<div class="gcd-cards">
+    @for (card of cards(); track card.link) {
+        <a class="gcd-card" [routerLink]="card.link">
+            <h3>{{ card.title }}</h3>
+            <p>{{ card.description }}</p>
+        </a>
+    }
+</div>

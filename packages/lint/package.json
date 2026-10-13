@@ -1,0 +1,35 @@
+{
+    "name": "@bari77/gc-lint",
+    "version": "2.1.0",
+    "description": "Shared ESLint + Prettier rules for GamersCommunity fronts and DevKit packages",
+    "type": "module",
+    "exports": {
+        ".": "./src/index.mjs",
+        "./prettier": "./src/prettier.mjs",
+        "./plugin": "./src/plugin/index.mjs"
+    },
+    "files": [
+        "src",
+        "templates"
+    ],
+    "scripts": {
+        "test": "node --test ./src/plugin/rules.test.mjs"
+    },
+    "dependencies": {
+        "angular-eslint": "^21.0.1",
+        "typescript-eslint": "^8.47.0"
+    },
+    "peerDependencies": {
+        "eslint": "^9.39.0",
+        "prettier": "^3.6.0",
+        "typescript": ">=5.8.0"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Bari77/GamersCommunity.DevKit.git"
+    },
+    "license": "UNLICENSED"
+}

@@ -1,32 +1,26 @@
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
-import { CodeBlockComponent, CodeLanguage } from './code-block.component';
-
-interface DemoTab {
-    id: string;
-    label: string;
-    language: CodeLanguage;
-    code: string;
-}
+import { ChangeDetectionStrategy, Component, computed, input, signal } from "@angular/core";
+import { CodeBlockComponent } from "./code-block.component";
+import { DemoTab } from "./demo-tab.model";
 
 /** Live example framed with the snippets needed to reproduce it. */
 @Component({
-    selector: 'gcd-demo',
+    selector: "gcd-demo",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CodeBlockComponent],
-    templateUrl: './demo.component.html',
-    styleUrl: './demo.component.scss',
+    templateUrl: "./demo.component.html",
+    styleUrl: "./demo.component.scss",
 })
 export class DemoComponent {
-    public readonly title = input('');
+    public readonly title = input("");
 
-    public readonly description = input('');
+    public readonly description = input("");
 
-    public readonly html = input('');
+    public readonly html = input("");
 
-    public readonly ts = input('');
+    public readonly ts = input("");
 
-    public readonly scss = input('');
+    public readonly scss = input("");
 
     /** Lets a demo needing room to breathe drop the centred preview box. */
     public readonly bare = input(false);
@@ -36,13 +30,13 @@ export class DemoComponent {
     protected readonly tabs = computed<DemoTab[]>(() => {
         const tabs: DemoTab[] = [];
         if (this.html()) {
-            tabs.push({ id: 'html', label: 'HTML', language: 'html', code: this.html() });
+            tabs.push({ id: "html", label: "HTML", language: "html", code: this.html() });
         }
         if (this.ts()) {
-            tabs.push({ id: 'ts', label: 'TypeScript', language: 'typescript', code: this.ts() });
+            tabs.push({ id: "ts", label: "TypeScript", language: "typescript", code: this.ts() });
         }
         if (this.scss()) {
-            tabs.push({ id: 'scss', label: 'SCSS', language: 'scss', code: this.scss() });
+            tabs.push({ id: "scss", label: "SCSS", language: "scss", code: this.scss() });
         }
         return tabs;
     });

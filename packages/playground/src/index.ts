@@ -6,10 +6,7 @@ export function shouldUseMocks(env: { useMocks?: boolean }): boolean {
     return env.useMocks === true;
 }
 
-export async function bootstrapMocks(
-    enabled: boolean,
-    startWorker: () => Promise<unknown>,
-): Promise<void> {
+export async function bootstrapMocks(enabled: boolean, startWorker: () => Promise<unknown>): Promise<void> {
     if (!enabled) return;
     await startWorker();
 }

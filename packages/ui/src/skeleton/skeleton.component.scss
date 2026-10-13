@@ -4,7 +4,10 @@
     overflow: hidden;
     vertical-align: middle;
     flex-shrink: 0;
-    background: var(--gc-skeleton-background, color-mix(in srgb, var(--background-basic-color-3, #262b3f) 80%, transparent));
+    background: var(
+        --gc-skeleton-background,
+        color-mix(in srgb, var(--background-basic-color-3, #262b3f) 80%, transparent)
+    );
 }
 
 .gc-skeleton__shimmer {

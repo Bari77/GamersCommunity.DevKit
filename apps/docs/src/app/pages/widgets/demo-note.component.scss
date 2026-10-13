@@ -1,0 +1,42 @@
+.gcd-widget-text {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+}
+
+.gcd-widget-text--empty {
+    opacity: 0.55;
+}
+
+.gcd-widget-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.gcd-widget-edit__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.4rem;
+}
+
+.gcd-widget-edit__cancel,
+.gcd-widget-edit__save {
+    cursor: pointer;
+    padding: 0.4rem 0.85rem;
+    border-radius: 0.5rem;
+    font: inherit;
+    font-size: 0.85rem;
+}
+
+.gcd-widget-edit__cancel {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.04);
+    color: inherit;
+}
+
+.gcd-widget-edit__save {
+    border: 1px solid transparent;
+    background: #3366ff;
+    color: #fff;
+}

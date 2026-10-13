@@ -1,0 +1,18 @@
+@if (editing()) {
+    <div class="gcd-widget-edit">
+        <gc-rich-editor
+            [value]="draft()"
+            (valueChange)="draft.set($event)"
+            [maxLength]="4000"
+            placeholder="Présentez-vous en quelques lignes"
+        />
+        <div class="gcd-widget-edit__actions">
+            <button type="button" class="gcd-widget-edit__cancel" (click)="cancel.emit()">Annuler</button>
+            <button type="button" class="gcd-widget-edit__save" (click)="commit()">Enregistrer</button>
+        </div>
+    </div>
+} @else if (!blank()) {
+    <gc-rich-content [html]="html()" />
+} @else {
+    <p class="gcd-widget-text gcd-widget-text--empty">Aucun texte pour l'instant.</p>
+}

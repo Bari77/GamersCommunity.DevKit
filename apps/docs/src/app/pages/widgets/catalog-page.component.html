@@ -1,0 +1,81 @@
+<gcd-page
+    lead="La déclaration des types de widgets disponibles : ce que propose le sélecteur, la taille de départ et les champs de réglage générés automatiquement."
+>
+    <p>
+        Le catalogue est une simple liste d'objets, sans classe ni enregistrement dynamique. Il se construit donc là où
+        l'application dispose de son contexte, par exemple pour traduire les libellés ou masquer un type selon les
+        droits.
+    </p>
+
+    <gcd-code language="typescript" [code]="catalogSnippet" />
+
+    <h2>Entrée de catalogue</h2>
+
+    <gcd-api [rows]="entry" />
+
+    <h2>Champs de réglage</h2>
+
+    <p>
+        La modale de réglages est générée à partir de
+        <code>fields</code>
+        : il n'y a rien à écrire pour un widget dont les réglages tiennent en quelques champs simples. Deux formes
+        existent.
+    </p>
+
+    <h3>Champ simple</h3>
+
+    <gcd-api [rows]="textField" />
+
+    <h3>Champ répétable</h3>
+
+    <p>
+        Un champ de type
+        <code>list</code>
+        répète un groupe de champs, ce qui permet à un widget de porter un nombre libre d'entrées — des liens, des
+        équipiers, des vidéos.
+    </p>
+
+    <gcd-api [rows]="listField" />
+
+    <gcd-code language="typescript" label="Un champ répétable" [code]="listSnippet" />
+
+    <h2>Réglages sur mesure</h2>
+
+    <p>
+        Quand les champs générés ne suffisent pas, la directive
+        <code>gcWidgetSettings</code>
+        ajoute votre propre interface
+        <strong>sous</strong>
+        les champs générés, pour un type donné. Elle reçoit le même contexte que le gabarit de rendu. Réservez-la aux
+        paramètres d'instance, pas au contenu backend : celui-ci s'édite dans le widget via
+        <code>gcWidgetEditable</code>
+        , voir
+        <a routerLink="/widgets">Concepts</a>
+        .
+    </p>
+
+    <gcd-code language="html" [code]="customSnippet" />
+
+    <h2>Titre du widget</h2>
+
+    <p>
+        Un champ de titre est ajouté à tous les widgets sans avoir à le déclarer. Il est stocké dans les réglages sous
+        la clé exportée
+        <code>WIDGET_TITLE_KEY</code>
+        , et un titre vide masque l'en-tête du widget.
+    </p>
+
+    <h2>Aides</h2>
+
+    <gcd-api [rows]="helpers" [showDefault]="false" />
+
+    <div class="gcd-note">
+        <p>
+            <code>unique</code>
+            refuse une seconde instance
+            <strong>dans tout le workspace</strong>
+            , pas seulement sur la page courante : c'est le bon réglage pour un widget d'identité, mais pas pour une
+            note.
+        </p>
+    </div>
+</gcd-page>

@@ -8,12 +8,7 @@
 
     <label class="gc-settings__field">
         <span>{{ titleLabel() }}</span>
-        <input
-            class="gc-settings__input"
-            type="text"
-            [value]="value('title')"
-            (change)="setValue('title', $event)"
-        />
+        <input class="gc-settings__input" type="text" [value]="value('title')" (change)="setValue('title', $event)" />
         <small>{{ titleHint() }}</small>
     </label>
 

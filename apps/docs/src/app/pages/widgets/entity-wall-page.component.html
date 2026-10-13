@@ -1,0 +1,46 @@
+<gcd-page lead="Mur d'entité (équipe / guilde) : fil de posts, file de modération, composer et actions staff.">
+    <p>
+        Le shell présente les posts et la file d'attente ; le remote garde les stores HTTP, la validation et le
+        formulaire métier. Les libellés passent par
+        <code>labels</code>
+        (i18n côté remote).
+    </p>
+
+    <div class="gcd-note">
+        <p>
+            Peer Nebular (
+            <code>NbButtonModule</code>
+            ,
+            <code>NbCardModule</code>
+            ). La démo interactive n'est pas embarquée ici : branchez-le dans un remote qui fournit déjà le thème.
+        </p>
+    </div>
+
+    <h2>Slots</h2>
+
+    <ul>
+        <li>
+            <code>gcEntityWallComposer</code>
+            — formulaire de publication projeté en haut du mur ;
+        </li>
+        <li>
+            <code>ng-template gcEntityWallEdit</code>
+            — édition d'un post (
+            <code>$implicit</code>
+            = post) ;
+        </li>
+        <li>
+            <code>ng-template gcEntityWallExtras</code>
+            — contenu sous le corps (média, audience…).
+        </li>
+    </ul>
+
+    <gcd-code language="html" [code]="usageSnippet" />
+
+    <h2>API</h2>
+
+    <gcd-api heading="Entrées" [rows]="inputs" />
+    <gcd-api heading="Sorties" [rows]="outputs" [showDefault]="false" />
+
+    <gcd-code language="typescript" label="Type EntityWallPost" [code]="postTypeSnippet" />
+</gcd-page>

@@ -1,21 +1,15 @@
-import changelog from '../../../../CHANGELOG.json';
+import changelog from "../../../../CHANGELOG.json";
+import { Release } from "./release.model";
 
 /** Which part of the DevKit a change lands in, shown as a badge next to the entry. */
-export type ReleaseScope = 'gc-ui' | 'gc-widgets' | 'gc-theme' | 'gc-workspace-editor' | 'docs' | 'devkit';
+export type ReleaseScope = "gc-ui" | "gc-widgets" | "gc-theme" | "gc-workspace-editor" | "docs" | "devkit";
 
-export type ReleaseKind = 'added' | 'changed' | 'fixed';
+export type ReleaseKind = "added" | "changed" | "fixed";
 
 export interface ReleaseChange {
     package: ReleaseScope;
     kind: ReleaseKind;
     text: string;
-}
-
-export interface Release {
-    version: string;
-    date: string;
-    summary: string;
-    changes: ReleaseChange[];
 }
 
 /**
@@ -26,7 +20,7 @@ export interface Release {
 export const releases = changelog as Release[];
 
 export const KIND_LABELS: Record<ReleaseKind, string> = {
-    added: 'Ajout',
-    changed: 'Changement',
-    fixed: 'Correction',
+    added: "Ajout",
+    changed: "Changement",
+    fixed: "Correction",
 };

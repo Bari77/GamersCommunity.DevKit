@@ -1,4 +1,4 @@
-import { NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from "@angular/common";
 import {
     afterNextRender,
     ChangeDetectionStrategy,
@@ -15,7 +15,7 @@ import {
     TemplateRef,
     untracked,
     viewChild,
-} from '@angular/core';
+} from "@angular/core";
 import {
     CompactType,
     DisplayGrid,
@@ -24,24 +24,26 @@ import {
     GridsterItem,
     GridsterItemConfig,
     GridType,
-} from 'angular-gridster2';
-import { findCatalogEntry, WidgetCatalog } from '../catalog';
-import { GcLink, LinkListComponent } from '../components/link-list/link-list.component';
-import { MediaGalleryComponent } from '../components/media-gallery/media-gallery.component';
-import { TwitchEmbedComponent } from '../components/twitch-embed/twitch-embed.component';
-import { GcTooltipDirective } from '../tooltip/gc-tooltip.directive';
-import { WidgetDefDirective } from '../widget-def.directive';
-import { WidgetTemplateContext, WidgetTemplateDef } from '../widget-template';
-import { GcGalleryItem } from '../media';
-import { WidgetInstance, WidgetSettings } from '../workspace';
+} from "angular-gridster2";
+import { findCatalogEntry, WidgetCatalog } from "../catalog";
+import { LinkListComponent } from "../components/link-list/link-list.component";
+import { GcLink } from "../components/link-list/gc-link.model";
+import { MediaGalleryComponent } from "../components/media-gallery/media-gallery.component";
+import { TwitchEmbedComponent } from "../components/twitch-embed/twitch-embed.component";
+import { GcTooltipDirective } from "../tooltip/gc-tooltip.directive";
+import { WidgetDefDirective } from "../widget-def.directive";
+import { WidgetTemplateContext } from "../widget-template";
+import { WidgetTemplateDef } from "../widget-template-def";
+import { GcGalleryItem } from "../media";
+import { WidgetInstance, WidgetSettings } from "../workspace";
 
-export const WIDGET_DRAG_HANDLE_CLASS = 'gc-widget__handle';
+export const WIDGET_DRAG_HANDLE_CLASS = "gc-widget__handle";
 
 /** Widget types the package renders on its own, with no host template. */
-export const GC_TWITCH_WIDGET = 'gc-twitch';
-export const GC_LINKS_WIDGET = 'gc-links';
-export const GC_PHOTOS_WIDGET = 'gc-photos';
-export const GC_VIDEOS_WIDGET = 'gc-videos';
+export const GC_TWITCH_WIDGET = "gc-twitch";
+export const GC_LINKS_WIDGET = "gc-links";
+export const GC_PHOTOS_WIDGET = "gc-photos";
+export const GC_VIDEOS_WIDGET = "gc-videos";
 
 const BUILTIN_DATA_EDITABLE = new Set([GC_LINKS_WIDGET, GC_TWITCH_WIDGET, GC_PHOTOS_WIDGET, GC_VIDEOS_WIDGET]);
 
@@ -56,10 +58,10 @@ type GridWidget = GridsterItemConfig & {
     instance: WidgetInstance;
 };
 
-export type WidgetPosition = Pick<WidgetInstance, 'id' | 'x' | 'y' | 'cols' | 'rows'>;
+export type WidgetPosition = Pick<WidgetInstance, "id" | "x" | "y" | "cols" | "rows">;
 
 @Component({
-    selector: 'gc-widget-grid',
+    selector: "gc-widget-grid",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
@@ -71,8 +73,8 @@ export type WidgetPosition = Pick<WidgetInstance, 'id' | 'x' | 'y' | 'cols' | 'r
         NgTemplateOutlet,
         TwitchEmbedComponent,
     ],
-    templateUrl: './widget-grid.component.html',
-    styleUrl: './widget-grid.component.scss',
+    templateUrl: "./widget-grid.component.html",
+    styleUrl: "./widget-grid.component.scss",
 })
 export class WidgetGridComponent {
     public readonly widgets = input.required<WidgetInstance[]>();
@@ -96,15 +98,15 @@ export class WidgetGridComponent {
 
     public readonly gap = input(12);
 
-    public readonly emptyLabel = input('This page has no widget yet.');
+    public readonly emptyLabel = input("This page has no widget yet.");
 
-    public readonly removeLabel = input('Remove widget');
+    public readonly removeLabel = input("Remove widget");
 
-    public readonly settingsLabel = input('Widget settings');
+    public readonly settingsLabel = input("Widget settings");
 
-    public readonly editDataLabel = input('Edit data');
+    public readonly editDataLabel = input("Edit data");
 
-    public readonly unknownLabel = input('This widget is not available.');
+    public readonly unknownLabel = input("This widget is not available.");
 
     /** Emitted on every move or resize; positions only, never settings. */
     public readonly positionsChange = output<WidgetPosition[]>();
@@ -124,14 +126,7 @@ export class WidgetGridComponent {
     protected readonly photosType = GC_PHOTOS_WIDGET;
     protected readonly videosType = GC_VIDEOS_WIDGET;
     protected readonly items = signal<GridWidget[]>([]);
-    private readonly editingDataId = signal<string | null>(null);
-    protected readonly twitchDraft = signal('');
-
-    private readonly host = inject(ElementRef<HTMLElement>);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly gridsterRef = viewChild(Gridster);
-    private readonly ownDefs = contentChildren(WidgetDefDirective, { descendants: true });
-    private lastEmitted = '';
+    protected readonly twitchDraft = signal("");
 
     protected readonly options = computed<GridsterConfig>(() => {
         const editing = this.editing();
@@ -161,19 +156,27 @@ export class WidgetGridComponent {
                 enabled: editing,
                 handles: { s: true, e: true, se: true, n: false, w: false, ne: false, sw: false, nw: false },
             },
-            initCallback: () => this.syncGridDimensions(),
-            gridSizeChangedCallback: () => this.syncGridDimensions(),
-            itemValidateCallback: (item) => this.validateItem(item),
-            itemChangeCallback: () => {
+            initCallback: (): void => this.syncGridDimensions(),
+            gridSizeChangedCallback: (): void => this.syncGridDimensions(),
+            itemValidateCallback: (item): boolean => this.validateItem(item),
+            itemChangeCallback: (): void => {
                 this.syncGridDimensions();
                 this.emitPositions();
             },
-            itemResizeCallback: () => {
+            itemResizeCallback: (): void => {
                 this.syncGridDimensions();
                 this.emitPositions();
             },
         };
     });
+
+    private readonly editingDataId = signal<string | null>(null);
+
+    private readonly host = inject(ElementRef<HTMLElement>);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly gridsterRef = viewChild(Gridster);
+    private readonly ownDefs = contentChildren(WidgetDefDirective, { descendants: true });
+    private lastEmitted = "";
 
     public constructor() {
         afterNextRender(() => {
@@ -243,7 +246,7 @@ export class WidgetGridComponent {
         }
 
         if (item.type === this.twitchType) {
-            this.twitchDraft.set(this.asText(item.settings['channel']));
+            this.twitchDraft.set(this.asText(item.settings["channel"]));
         }
 
         this.editingDataId.set(item.id);
@@ -256,7 +259,7 @@ export class WidgetGridComponent {
     }
 
     protected asText(value: unknown): string {
-        return typeof value === 'string' ? value : '';
+        return typeof value === "string" ? value : "";
     }
 
     protected inputValue(event: Event): string {
@@ -272,16 +275,16 @@ export class WidgetGridComponent {
     }
 
     protected twitchChannel(settings: WidgetSettings): string {
-        const channel = this.asText(settings['channel']);
+        const channel = this.asText(settings["channel"]);
         if (channel) {
             return channel;
         }
 
-        return this.preview() ? 'shroud' : '';
+        return this.preview() ? "shroud" : "";
     }
 
     protected linkItems(settings: WidgetSettings): GcLink[] {
-        const links = this.asLinks(settings['links']);
+        const links = this.asLinks(settings["links"]);
         if (links.length > 0) {
             return links;
         }
@@ -291,9 +294,9 @@ export class WidgetGridComponent {
         }
 
         return [
-            { url: 'https://discord.gg/example', label: 'Discord' },
-            { url: 'https://www.youtube.com/@gamerscommunity', label: 'YouTube' },
-            { url: 'https://www.twitch.tv/shroud', label: 'Twitch' },
+            { url: "https://discord.gg/example", label: "Discord" },
+            { url: "https://www.youtube.com/@gamerscommunity", label: "YouTube" },
+            { url: "https://www.twitch.tv/shroud", label: "Twitch" },
         ];
     }
 
@@ -316,7 +319,7 @@ export class WidgetGridComponent {
     }
 
     protected galleryItems(settings: WidgetSettings): GcGalleryItem[] {
-        const items = this.asGallery(settings['items']);
+        const items = this.asGallery(settings["items"]);
         if (items.length > 0) {
             return items;
         }
@@ -326,24 +329,30 @@ export class WidgetGridComponent {
         }
 
         return [
-            { url: 'https://picsum.photos/seed/gc-match/640/360', title: 'Match' },
-            { url: 'https://picsum.photos/seed/gc-team/640/360', title: 'Team' },
+            { url: "https://picsum.photos/seed/gc-match/640/360", title: "Match" },
+            { url: "https://picsum.photos/seed/gc-team/640/360", title: "Team" },
         ];
     }
 
     protected showTwitchPreview(settings: WidgetSettings): boolean {
-        return this.preview() && !this.asText(settings['channel']);
+        return this.preview() && !this.asText(settings["channel"]);
+    }
+
+    protected stopDataEdit(id: string): void {
+        if (this.editingDataId() === id) {
+            this.editingDataId.set(null);
+        }
     }
 
     private toGridWidget(widget: WidgetInstance, catalog: WidgetCatalog, columns: number): GridWidget {
         const entry = findCatalogEntry(catalog, widget.type);
-        const custom = widget.settings['title'];
+        const custom = widget.settings["title"];
         const cols = Math.min(Math.max(1, widget.cols), columns);
 
         return {
             id: widget.id,
             type: widget.type,
-            title: typeof custom === 'string' ? custom.trim() : '',
+            title: typeof custom === "string" ? custom.trim() : "",
             label: entry?.label ?? widget.type,
             settings: widget.settings,
             instance: widget,
@@ -364,12 +373,6 @@ export class WidgetGridComponent {
         return BUILTIN_DATA_EDITABLE.has(type);
     }
 
-    protected stopDataEdit(id: string): void {
-        if (this.editingDataId() === id) {
-            this.editingDataId.set(null);
-        }
-    }
-
     private validateItem(item: GridsterItemConfig): boolean {
         const columns = this.columns();
         const cols = item.cols ?? 1;
@@ -380,13 +383,13 @@ export class WidgetGridComponent {
     /** Keeps gridster visible (setGridSize) while preventing runaway inline width. */
     private syncGridDimensions(): void {
         queueMicrotask(() => {
-            const viewport = this.host.nativeElement.querySelector('.gc-widget-grid__viewport');
-            const gridsterEl = this.host.nativeElement.querySelector('gridster');
+            const viewport = this.host.nativeElement.querySelector(".gc-widget-grid__viewport");
+            const gridsterEl = this.host.nativeElement.querySelector("gridster");
             const width = viewport instanceof HTMLElement ? viewport.clientWidth : this.host.nativeElement.clientWidth;
 
             if (gridsterEl instanceof HTMLElement && width > 0) {
                 gridsterEl.style.width = `${width}px`;
-                gridsterEl.style.maxWidth = '100%';
+                gridsterEl.style.maxWidth = "100%";
             }
 
             this.gridsterRef()?.api?.resize?.();

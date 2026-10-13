@@ -1,5 +1,5 @@
-import { NgComponentOutlet } from '@angular/common';
-import { Component, computed, OnInit, signal, Type } from '@angular/core';
+import { NgComponentOutlet } from "@angular/common";
+import { Component, computed, OnInit, signal, Type } from "@angular/core";
 import {
     serializeWorkspace,
     WidgetCatalog,
@@ -8,18 +8,20 @@ import {
     WidgetSelectOption,
     WidgetWorkspace,
     WidgetWorkspaceComponent,
-} from '@bari77/gc-widgets';
-import { gameWorkspaceRegistries } from 'virtual:game-editor-registry';
-import type { WorkspaceConfigResponse, WorkspaceLayoutEntry, WorkspaceLayoutsResponse } from './workspace-config.types';
+} from "@bari77/gc-widgets";
+import { gameWorkspaceRegistries } from "virtual:game-editor-registry";
+import { WorkspaceConfigResponse } from "./workspace-config.types";
+import { WorkspaceLayoutsResponse } from "./workspace-layouts-response.types";
+import { WorkspaceLayoutEntry } from "./workspace-layout-entry.types";
 
 type GameRegistry = Awaited<ReturnType<(typeof gameWorkspaceRegistries)[string]>>;
 
 @Component({
-    selector: 'gc-workspace-editor-root',
+    selector: "gc-workspace-editor-root",
     standalone: true,
     imports: [NgComponentOutlet, WidgetSelectComponent, WidgetWorkspaceComponent],
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.scss',
+    templateUrl: "./app.component.html",
+    styleUrl: "./app.component.scss",
 })
 export class AppComponent implements OnInit {
     public readonly catalog = signal<WidgetCatalog>([]);
@@ -34,7 +36,7 @@ export class AppComponent implements OnInit {
 
     /** Every layout JSON the CLI scanned, whatever the target it belongs to. */
     public readonly entries = signal<WorkspaceLayoutEntry[]>([]);
-    public readonly currentId = signal('');
+    public readonly currentId = signal("");
 
     /** Declared by the game registry, so the editor offers the same audiences as the live page. */
     public readonly pageVisibilityOptions = signal<WidgetPageVisibilityOption[]>([]);
@@ -42,7 +44,7 @@ export class AppComponent implements OnInit {
     public readonly options = computed<WidgetSelectOption[]>(() =>
         this.entries().map((entry) => ({
             value: entry.id,
-            label: entry.isDefault ? entry.label : `${entry.label} · ${entry.file.replace(/\.json$/, '')}`,
+            label: entry.isDefault ? entry.label : `${entry.label} · ${entry.file.replace(/\.json$/, "")}`,
             hint: entry.layout,
         })),
     );
@@ -55,7 +57,7 @@ export class AppComponent implements OnInit {
 
     public async ngOnInit(): Promise<void> {
         try {
-            const { entries } = await this.get<WorkspaceLayoutsResponse>('/api/layouts');
+            const { entries } = await this.get<WorkspaceLayoutsResponse>("/api/layouts");
             this.entries.set(entries);
 
             const started =
@@ -66,7 +68,7 @@ export class AppComponent implements OnInit {
                 ) ?? entries[0];
 
             if (!started) {
-                throw new Error('No layout JSON found under config/.');
+                throw new Error("No layout JSON found under config/.");
             }
 
             await this.open(started.id);
@@ -128,15 +130,18 @@ export class AppComponent implements OnInit {
         try {
             const query = `target=${encodeURIComponent(entry.target)}&layout=${encodeURIComponent(entry.layout)}`;
             const response = await fetch(`${this.apiUrl}/api/layout?${query}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
                 body: serializeWorkspace(next),
             });
 
             if (!response.ok) {
-                const body = (await response.json()) as { issues?: { path: string; message: string }[]; error?: string };
+                const body = (await response.json()) as {
+                    issues?: { path: string; message: string }[];
+                    error?: string;
+                };
                 if (body.issues?.length) {
-                    throw new Error(body.issues.map((row) => `${row.path}: ${row.message}`).join('\n'));
+                    throw new Error(body.issues.map((row) => `${row.path}: ${row.message}`).join("\n"));
                 }
                 throw new Error(body.error ?? `Save failed (${response.status}).`);
             }

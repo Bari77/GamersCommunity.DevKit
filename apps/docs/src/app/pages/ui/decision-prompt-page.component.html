@@ -1,0 +1,83 @@
+<gcd-page
+    lead="Modale de choix entre un engagement principal et la poursuite sans lui, avec une case « ne plus demander » que l'application est chargée de mémoriser."
+>
+    <p>
+        Le composant s'appuie sur
+        <code>gc-modal</code>
+        et lui ajoute l'ossature d'une décision : un titre, un message, deux boutons et, si besoin, une case de
+        renoncement. Il ne persiste rien lui-même — l'application décide de ce que signifie la case cochée et de
+        l'endroit où elle est stockée.
+    </p>
+
+    <gcd-demo title="Décision simple" [html]="basicHtml" [ts]="basicTs">
+        <button type="button" class="gcd-demo-button" (click)="open.set(true)">Proposer la décision</button>
+
+        <gc-decision-prompt
+            [open]="open()"
+            heading="Créer votre profil ?"
+            message="Vous pourrez suivre votre progression et rejoindre une équipe."
+            primaryLabel="Créer mon profil"
+            secondaryLabel="Plus tard"
+            optOutLabel="Ne plus me le proposer"
+            [(optOut)]="optOut"
+            (primary)="open.set(false)"
+            (secondary)="open.set(false)"
+        />
+
+        <p class="gcd-state">
+            Case « ne plus demander » :
+            <strong>{{ optOut() ? "cochée" : "décochée" }}</strong>
+        </p>
+    </gcd-demo>
+
+    <gcd-demo
+        title="Action principale en cours"
+        description="Pendant que busy est vrai, les boutons sont désactivés, la modale n'est plus renvoyable et le libellé principal est remplacé."
+        [html]="busyHtml"
+    >
+        <button type="button" class="gcd-demo-button" (click)="startBusy()">Lancer une décision longue</button>
+
+        <gc-decision-prompt
+            [open]="busyOpen()"
+            [busy]="busy()"
+            heading="Rejoindre la session ?"
+            message="Votre place sera réservée pendant dix minutes."
+            primaryLabel="Réserver ma place"
+            busyLabel="Réservation…"
+            secondaryLabel="Annuler"
+            (primary)="confirmBusy()"
+            (secondary)="busyOpen.set(false)"
+        />
+    </gcd-demo>
+
+    <h2>API</h2>
+
+    <gcd-api heading="Entrées" [rows]="inputs" />
+
+    <gcd-api heading="Sorties" [rows]="outputs" [showDefault]="false" />
+
+    <h2>Contenu additionnel</h2>
+
+    <p>
+        Le contenu projeté vient s'insérer entre le message et la case de renoncement, ce qui permet de glisser un
+        rappel ou un formulaire court sans réécrire la modale.
+    </p>
+
+    <gcd-code language="html" [code]="projectionSnippet" />
+
+    <div class="gcd-note">
+        <p>
+            Un renvoi par le fond ou par Échap déclenche
+            <code>secondary</code>
+            : traiter cette sortie comme un refus explicite évite de laisser la modale ouverte.
+        </p>
+        <p>
+            <code>optOut</code>
+            est un
+            <code>model()</code>
+            , donc il se lie dans les deux sens avec la syntaxe
+            <code>[(optOut)]</code>
+            .
+        </p>
+    </div>
+</gcd-page>

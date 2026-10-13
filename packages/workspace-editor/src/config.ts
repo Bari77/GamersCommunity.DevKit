@@ -1,40 +1,38 @@
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
-import { posix, resolve } from 'node:path';
-import type {
-    GcWorkspaceConfig,
-    GcWorkspacePackageConfig,
-    GcWorkspaceTargetConfig,
-    WorkspaceLayoutEntry,
-} from './types.js';
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { posix, resolve } from "node:path";
+import { GcWorkspaceTargetConfig } from "./types.js";
+import { WorkspaceLayoutEntry } from "./workspace-layout-entry.js";
+import { GcWorkspacePackageConfig } from "./gc-workspace-package-config.js";
+import { GcWorkspaceConfig } from "./gc-workspace-config.js";
 
-const DEFAULT_TARGET = 'player';
+const DEFAULT_TARGET = "player";
 
 /** Where a game keeps its layout JSONs, one folder per target. */
-const LAYOUT_ROOT = 'config';
+const LAYOUT_ROOT = "config";
 
 const DEFAULT_FEATURE_FOLDER: Record<string, string> = {
-    player: 'players',
-    guild: 'guilds',
-    team: 'teams',
+    player: "players",
+    guild: "guilds",
+    team: "teams",
 };
 
 function toPosix(path: string): string {
-    return path.replace(/\\/g, '/');
+    return path.replace(/\\/g, "/");
 }
 
 /** Raised when the caller names a target or a layout the scan did not find. */
 export class UnknownWorkspaceError extends Error {}
 
 export function readPackageJson(gameRoot: string): Record<string, unknown> {
-    const raw = readFileSync(resolve(gameRoot, 'package.json'), 'utf8');
+    const raw = readFileSync(resolve(gameRoot, "package.json"), "utf8");
     return JSON.parse(raw) as Record<string, unknown>;
 }
 
 export function loadGcWorkspacePackageConfig(gameRoot: string): GcWorkspacePackageConfig {
     const pkg = readPackageJson(gameRoot);
-    const custom = pkg['gcWorkspace'];
+    const custom = pkg["gcWorkspace"];
 
-    if (!custom || typeof custom !== 'object') {
+    if (!custom || typeof custom !== "object") {
         return {
             defaultTarget: DEFAULT_TARGET,
             targets: { [DEFAULT_TARGET]: {} },
@@ -63,10 +61,7 @@ export function listWorkspaceTargets(packageConfig: GcWorkspacePackageConfig): s
 }
 
 /** Resolves catalog/registry/layout paths for a workspace target. */
-export function resolveTargetConfig(
-    packageConfig: GcWorkspacePackageConfig,
-    target: string,
-): GcWorkspaceConfig {
+export function resolveTargetConfig(packageConfig: GcWorkspacePackageConfig, target: string): GcWorkspaceConfig {
     const row = packageConfig.targets?.[target] ?? {};
     const workspaceDir = workspaceDirForTarget(target, row);
 
@@ -84,7 +79,7 @@ function jsonFilesIn(directory: string): string[] {
     }
 
     return readdirSync(directory, { withFileTypes: true })
-        .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
+        .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
         .map((entry) => entry.name)
         .sort();
 }
@@ -160,7 +155,7 @@ export function loadGcWorkspaceConfig(gameRoot: string, target?: string, layout?
 
     if (!targets.includes(targetId)) {
         throw new UnknownWorkspaceError(
-            `Unknown workspace target "${targetId}". Available targets: ${targets.join(', ')}.`,
+            `Unknown workspace target "${targetId}". Available targets: ${targets.join(", ")}.`,
         );
     }
 
@@ -175,7 +170,7 @@ export function loadGcWorkspaceConfig(gameRoot: string, target?: string, layout?
 
     if (!available.includes(requested)) {
         throw new UnknownWorkspaceError(
-            `Unknown layout "${layout}" for target "${targetId}". Available: ${available.join(', ')}.`,
+            `Unknown layout "${layout}" for target "${targetId}". Available: ${available.join(", ")}.`,
         );
     }
 
@@ -183,5 +178,5 @@ export function loadGcWorkspaceConfig(gameRoot: string, target?: string, layout?
 }
 
 export function resolveRegistryPath(config: GcWorkspaceConfig): string {
-    return config.registry ?? config.catalog.replace(/widget-catalog\.ts$/, 'widget-registry.editor.ts');
+    return config.registry ?? config.catalog.replace(/widget-catalog\.ts$/, "widget-registry.editor.ts");
 }

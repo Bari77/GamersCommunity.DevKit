@@ -1,4 +1,4 @@
-@use './rich-text' as rt;
+@use "./rich-text" as rt;
 
 /* Selectors are prefixed with the element name rather than relying on Angular's scope: ProseMirror
    builds its contenteditable at runtime, so the component styles are not encapsulated. The extra
@@ -67,6 +67,10 @@ gc-rich-editor .gc-rich-editor__toolbar button:hover:not(:disabled) {
 gc-rich-editor .gc-rich-editor__toolbar button.is-active {
     background: var(--color-primary-transparent-200, rgba(51, 102, 255, 0.2));
     color: var(--color-primary-default, var(--gc-accent-2, #3dd6ff));
+}
+
+gc-rich-editor .gc-rich-editor__underline {
+    text-decoration: underline;
 }
 
 gc-rich-editor .gc-rich-editor__toolbar button:disabled {

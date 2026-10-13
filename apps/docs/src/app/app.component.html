@@ -1,6 +1,8 @@
 <header class="topbar">
     <button type="button" class="topbar__burger" (click)="toggleMenu()" aria-label="Ouvrir la navigation">
-        <span></span><span></span><span></span>
+        <span></span>
+        <span></span>
+        <span></span>
     </button>
 
     <a class="topbar__brand" routerLink="/" (click)="closeMenu()">
@@ -14,8 +16,9 @@
         routerLinkActive="topbar__version--active"
         (click)="closeMenu()"
         title="Journal des versions"
-        >v{{ version }}</a
     >
+        v{{ version }}
+    </a>
 
     <a class="topbar__repo" [href]="repository" target="_blank" rel="noreferrer">GitHub</a>
 </header>
@@ -34,8 +37,9 @@
                                 routerLinkActive="sidebar__link--active"
                                 [routerLinkActiveOptions]="{ exact: true }"
                                 (click)="closeMenu()"
-                                >{{ link.label }}</a
                             >
+                                {{ link.label }}
+                            </a>
                         </li>
                     }
                 </ul>

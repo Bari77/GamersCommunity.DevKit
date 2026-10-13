@@ -4,7 +4,10 @@
     padding: var(--gc-create-wall-padding, 1.25rem);
     border: 1px dashed var(--gc-create-wall-border-color, var(--border-basic-color-4, #454d75));
     border-radius: var(--gc-create-wall-radius, 0.6rem);
-    background: var(--gc-create-wall-background, color-mix(in srgb, var(--background-basic-color-2, #222b45) 65%, transparent));
+    background: var(
+        --gc-create-wall-background,
+        color-mix(in srgb, var(--background-basic-color-2, #222b45) 65%, transparent)
+    );
 }
 
 :host(.gc-create-wall--block) {

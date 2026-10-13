@@ -1,0 +1,80 @@
+<gcd-page
+    lead="Un workspace est une structure sérialisable, que l'application stocke où elle veut. Le package fournit de quoi le relire sans jamais se casser sur une donnée abîmée."
+>
+    <h2>Écrire</h2>
+
+    <p>
+        La valeur émise par
+        <code>save</code>
+        est déjà normalisée : elle peut partir telle quelle vers le serveur.
+        <code>serializeWorkspace</code>
+        n'est qu'un
+        <code>JSON.stringify</code>
+        nommé, utile pour comparer deux états.
+    </p>
+
+    <gcd-code language="typescript" [code]="writeSnippet" />
+
+    <h2>Relire</h2>
+
+    <p>
+        <code>parseWorkspace</code>
+        est volontairement indulgent : une charge utile absente, illisible ou vide retombe sur le workspace par défaut
+        plutôt que de lever. C'est ce qui permet d'afficher un profil même après une écriture ratée.
+    </p>
+
+    <gcd-code language="typescript" [code]="readSnippet" />
+
+    <p>
+        Le quatrième argument mérite l'attention : en lui passant les types que le build courant connaît, les widgets
+        d'un type retiré sont écartés à la lecture. Sans cela, supprimer un widget du catalogue casserait les pages qui
+        l'utilisaient encore.
+    </p>
+
+    <h2>Normalisation</h2>
+
+    <p>
+        <code>normalizeWorkspace</code>
+        ramène chaque widget dans la grille : largeur bornée au nombre de colonnes, position remise dans les limites,
+        dimensions arrondies et au moins égales à 1, et identifiants dupliqués réattribués. C'est la réparation
+        appliquée après un glissement douteux, une charge utile modifiée à la main ou un changement du nombre de
+        colonnes.
+    </p>
+
+    <h2>Migration depuis la version 1</h2>
+
+    <p>
+        La version 1 stockait un simple tableau plat dont l'
+        <code>id</code>
+        portait le type du widget.
+        <code>parseWorkspace</code>
+        reconnaît cette forme et la reverse dans la première page du workspace par défaut, en conservant les pages
+        suivantes. La constante
+        <code>WIDGET_WORKSPACE_VERSION</code>
+        vaut aujourd'hui
+        <code>2</code>
+        .
+    </p>
+
+    <h2>API</h2>
+
+    <gcd-api heading="Lecture et écriture" [rows]="io" [showDefault]="false" />
+
+    <gcd-api heading="Manipulation" [rows]="mutations" [showDefault]="false" />
+
+    <p>
+        Les fonctions de manipulation sont pures : elles renvoient un nouveau workspace sans modifier celui qu'on leur
+        passe. Le composant s'en sert pour son brouillon, mais elles restent utiles pour préparer un workspace par
+        défaut côté application.
+    </p>
+
+    <gcd-code language="typescript" label="Composer un workspace par défaut" [code]="defaultSnippet" />
+
+    <div class="gcd-note">
+        <p>
+            <code>removePage</code>
+            refuse de supprimer une page verrouillée, ainsi que la dernière page restante : un workspace conserve
+            toujours au moins une page.
+        </p>
+    </div>
+</gcd-page>

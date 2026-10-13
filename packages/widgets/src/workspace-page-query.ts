@@ -1,13 +1,13 @@
-import { effect, inject, signal, untracked, WritableSignal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
-import { map } from 'rxjs';
+import { effect, inject, signal, untracked, WritableSignal } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { ActivatedRoute, Router } from "@angular/router";
+import { map } from "rxjs";
 
 /** Query param used by sheet hosts to deep-link a workspace page. */
-export const WORKSPACE_PAGE_QUERY_PARAM = 'page';
+export const WORKSPACE_PAGE_QUERY_PARAM = "page";
 
 /** Default page id omitted from the URL so share links stay short. */
-export const WORKSPACE_HOME_PAGE_ID = 'home';
+export const WORKSPACE_HOME_PAGE_ID = "home";
 
 export interface WorkspacePageQueryOptions {
     /** Query param name. Defaults to {@link WORKSPACE_PAGE_QUERY_PARAM}. */
@@ -57,7 +57,7 @@ export function bindWorkspacePageQuery(options?: WorkspacePageQueryOptions): Wri
             void router.navigate([], {
                 relativeTo: route,
                 queryParams: { [param]: next },
-                queryParamsHandling: 'merge',
+                queryParamsHandling: "merge",
                 replaceUrl: true,
             });
         });

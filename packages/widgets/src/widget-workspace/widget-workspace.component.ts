@@ -1,20 +1,31 @@
-import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, model, output, signal, TemplateRef, untracked } from '@angular/core';
-import { ModalComponent } from '@bari77/gc-ui';
-import { findCatalogEntry, WidgetCatalog, WidgetCatalogEntry } from '../catalog';
-import { WidgetDefRegistry } from '../widget-def.registry';
-import { WidgetTemplateContext } from '../widget-template';
-import { WidgetEditBarComponent } from '../widget-edit-bar/widget-edit-bar.component';
-import { WidgetGridComponent, WidgetPosition } from '../widget-grid/widget-grid.component';
+import { NgTemplateOutlet } from "@angular/common";
 import {
-    WidgetNavComponent,
-    WidgetPageMove,
-    WidgetPageRename,
-    WidgetPageVisibilityChange,
-    WidgetPageVisibilityOption,
-} from '../widget-nav/widget-nav.component';
-import { WidgetPickerComponent } from '../widget-picker/widget-picker.component';
-import { WidgetSettingsComponent } from '../widget-settings/widget-settings.component';
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    inject,
+    input,
+    model,
+    output,
+    signal,
+    TemplateRef,
+    untracked,
+} from "@angular/core";
+import { ModalComponent } from "@bari77/gc-ui";
+import { findCatalogEntry, WidgetCatalog } from "../catalog";
+import { WidgetCatalogEntry } from "../widget-catalog-entry";
+import { WidgetDefRegistry } from "../widget-def.registry";
+import { WidgetTemplateContext } from "../widget-template";
+import { WidgetEditBarComponent } from "../widget-edit-bar/widget-edit-bar.component";
+import { WidgetGridComponent, WidgetPosition } from "../widget-grid/widget-grid.component";
+import { WidgetNavComponent } from "../widget-nav/widget-nav.component";
+import { WidgetPageVisibilityOption } from "../widget-nav/widget-page-visibility-option.model";
+import { WidgetPageVisibilityChange } from "../widget-nav/widget-page-visibility-change.model";
+import { WidgetPageRename } from "../widget-nav/widget-page-rename.model";
+import { WidgetPageMove } from "../widget-nav/widget-page-move.model";
+import { WidgetPickerComponent } from "../widget-picker/widget-picker.component";
+import { WidgetSettingsComponent } from "../widget-settings/widget-settings.component";
 import {
     addPage,
     addWidget,
@@ -30,10 +41,10 @@ import {
     setPageVisibility,
     updateWidgetSettings,
     WidgetInstance,
-    WidgetPage,
     WidgetSettings,
-    WidgetWorkspace,
-} from '../workspace';
+} from "../workspace";
+import { WidgetWorkspace } from "../widget-workspace";
+import { WidgetPage } from "../widget-page";
 
 /**
  * Whole customisable profile: page rail, widget grid, catalog picker and settings.
@@ -41,7 +52,7 @@ import {
  * the owner in edit mode with their changes intact.
  */
 @Component({
-    selector: 'gc-widget-workspace',
+    selector: "gc-widget-workspace",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
@@ -53,8 +64,8 @@ import {
         WidgetPickerComponent,
         WidgetSettingsComponent,
     ],
-    templateUrl: './widget-workspace.component.html',
-    styleUrl: './widget-workspace.component.scss',
+    templateUrl: "./widget-workspace.component.html",
+    styleUrl: "./widget-workspace.component.scss",
     providers: [WidgetDefRegistry],
 })
 export class WidgetWorkspaceComponent {
@@ -72,7 +83,7 @@ export class WidgetWorkspaceComponent {
     public readonly canConfigure = input<boolean | undefined>(undefined);
 
     /** Sample data mode for the standalone layout editor. */
-    public readonly sampleData = input(false, { alias: 'preview' });
+    public readonly sampleData = input(false, { alias: "preview" });
 
     public readonly saving = input(false);
 
@@ -82,15 +93,15 @@ export class WidgetWorkspaceComponent {
 
     public readonly gap = input(12);
 
-    public readonly navLabel = input('Profile pages');
+    public readonly navLabel = input("Profile pages");
 
-    public readonly addPageLabel = input('New page');
+    public readonly addPageLabel = input("New page");
 
-    public readonly removePageLabel = input('Delete page');
+    public readonly removePageLabel = input("Delete page");
 
-    public readonly moveUpLabel = input('Move up');
+    public readonly moveUpLabel = input("Move up");
 
-    public readonly moveDownLabel = input('Move down');
+    public readonly moveDownLabel = input("Move down");
 
     /**
      * Audiences the owner may pick for a page. The host names them and enforces them; left empty
@@ -98,33 +109,35 @@ export class WidgetWorkspaceComponent {
      */
     public readonly pageVisibilityOptions = input<WidgetPageVisibilityOption[]>([]);
 
-    public readonly pageVisibilityLabel = input('Who can see this page');
+    public readonly pageVisibilityLabel = input("Who can see this page");
 
-    public readonly addWidgetLabel = input('Add a widget');
+    public readonly addWidgetLabel = input("Add a widget");
 
-    public readonly editLabel = input('Edit');
+    public readonly editLabel = input("Edit");
 
-    public readonly cancelLabel = input('Cancel');
+    public readonly cancelLabel = input("Cancel");
 
-    public readonly saveLabel = input('Save');
+    public readonly saveLabel = input("Save");
 
-    public readonly emptyPageLabel = input('This page has no widget yet.');
+    public readonly emptyPageLabel = input("This page has no widget yet.");
 
-    public readonly hintLabel = input('Drag a widget by its header to move it, or its bottom-right corner to resize it.');
+    public readonly hintLabel = input(
+        "Drag a widget by its header to move it, or its bottom-right corner to resize it.",
+    );
 
-    public readonly newPageTitle = input('New page');
+    public readonly newPageTitle = input("New page");
 
-    public readonly settingsLabel = input('Widget settings');
+    public readonly settingsLabel = input("Widget settings");
 
-    public readonly editDataLabel = input('Edit data');
+    public readonly editDataLabel = input("Edit data");
 
-    public readonly removeWidgetLabel = input('Remove widget');
+    public readonly removeWidgetLabel = input("Remove widget");
 
-    public readonly widgetTitleLabel = input('Widget title');
+    public readonly widgetTitleLabel = input("Widget title");
 
-    public readonly widgetTitleHint = input('Leave empty to drop the header.');
+    public readonly widgetTitleHint = input("Leave empty to drop the header.");
 
-    public readonly doneLabel = input('Done');
+    public readonly doneLabel = input("Done");
 
     public readonly editing = model(false);
 
@@ -139,15 +152,8 @@ export class WidgetWorkspaceComponent {
     protected readonly pickerOpen = signal(false);
     protected readonly configuringId = signal<string | null>(null);
 
-    private readonly registry = inject(WidgetDefRegistry);
-
-    protected readonly defs = this.registry.widgetDefs;
-    protected readonly settingsDefs = this.registry.settingsDefs;
-
-    private readonly draft = signal<WidgetWorkspace | null>(null);
-
-    private previousEditing = false;
-    private previousCommitted: WidgetWorkspace | null = null;
+    protected readonly defs = computed(() => this.registry.widgetDefs());
+    protected readonly settingsDefs = computed(() => this.registry.settingsDefs());
 
     protected readonly view = computed(() => this.draft() ?? this.workspace());
 
@@ -170,6 +176,13 @@ export class WidgetWorkspaceComponent {
     });
 
     protected readonly previewActive = computed(() => this.sampleData());
+
+    private readonly registry = inject(WidgetDefRegistry);
+
+    private readonly draft = signal<WidgetWorkspace | null>(null);
+
+    private previousEditing = false;
+    private previousCommitted: WidgetWorkspace | null = null;
 
     public constructor() {
         effect(() => {

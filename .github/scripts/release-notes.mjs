@@ -5,45 +5,45 @@
  *
  * Usage: node .github/scripts/release-notes.mjs 1.0.0
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync } from "node:fs";
 
 const PACKAGES = [
-    'gc-sdk',
-    'gc-msw',
-    'gc-playground',
-    'gc-ui',
-    'gc-widgets',
-    'gc-theme',
-    'gc-workspace-editor',
-    'gc-create-game',
+    "gc-sdk",
+    "gc-msw",
+    "gc-playground",
+    "gc-ui",
+    "gc-widgets",
+    "gc-theme",
+    "gc-workspace-editor",
+    "gc-create-game",
 ];
 
 const version = process.argv[2];
 
 if (!version) {
-    console.error('usage: release-notes.mjs <version>');
+    console.error("usage: release-notes.mjs <version>");
     process.exit(1);
 }
 
-const changelog = JSON.parse(readFileSync(new URL('../../CHANGELOG.json', import.meta.url), 'utf8'));
+const changelog = JSON.parse(readFileSync(new URL("../../CHANGELOG.json", import.meta.url), "utf8"));
 const release = changelog.find((entry) => entry.version === version);
 
 const lines = release
-    ? [release.summary, '', ...release.changes.map((c) => `- **${c.package}** · ${c.kind} — ${c.text}`)]
+    ? [release.summary, "", ...release.changes.map((c) => `- **${c.package}** · ${c.kind} — ${c.text}`)]
     : [`> No CHANGELOG.json entry for ${version}.`];
 
 lines.push(
-    '',
-    '## Packages npm (GitHub Packages)',
+    "",
+    "## Packages npm (GitHub Packages)",
     ...PACKAGES.map((name) => `- \`@bari77/${name}@${version}\``),
-    '',
-    '## Image',
+    "",
+    "## Image",
     `- \`ghcr.io/bari77/gc-devgateway:${version}\``,
-    '',
-    '## Scaffold a game',
-    '```bash',
-    'npx @bari77/gc-create-game YourGame',
-    '```',
+    "",
+    "## Scaffold a game",
+    "```bash",
+    "npx @bari77/gc-create-game YourGame",
+    "```",
 );
 
-console.log(lines.join('\n'));
+console.log(lines.join("\n"));

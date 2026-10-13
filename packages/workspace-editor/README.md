@@ -10,11 +10,11 @@ Layouts are **scanned**, not enumerated: every `*.json` sitting next to a target
 
 Each workspace **target** (`player`, `guild`, `team`, …) maps to a feature scope:
 
-| Target | Feature folder (default) | Registry | Default layout |
-|--------|--------------------------|----------|----------------|
+| Target   | Feature folder (default)              | Registry                                                                             | Default layout                         |
+| -------- | ------------------------------------- | ------------------------------------------------------------------------------------ | -------------------------------------- |
 | `player` | `src/app/features/players/workspace/` | `widget-catalog.ts`, `widget-registry.editor.ts`, `widget-template-host.component.*` | `config/player/workspace.default.json` |
-| `guild` | `src/app/features/guilds/workspace/` | same file names | `config/guild/workspace.default.json` |
-| `team` | `src/app/features/teams/workspace/` | same file names | `config/team/workspace.default.json` |
+| `guild`  | `src/app/features/guilds/workspace/`  | same file names                                                                      | `config/guild/workspace.default.json`  |
+| `team`   | `src/app/features/teams/workspace/`   | same file names                                                                      | `config/team/workspace.default.json`   |
 
 Override the feature folder or any path per target in `package.json` when a game names things differently.
 
@@ -24,22 +24,22 @@ In `package.json`:
 
 ```json
 {
-  "gcWorkspace": {
-    "defaultTarget": "player",
-    "targets": {
-      "player": {},
-      "guild": {}
+    "gcWorkspace": {
+        "defaultTarget": "player",
+        "targets": {
+            "player": {},
+            "guild": {}
+        }
+    },
+    "scripts": {
+        "workspace:validate": "gc-workspace validate --all",
+        "workspace:validate:player": "gc-workspace validate --target player",
+        "workspace:edit": "gc-workspace edit",
+        "workspace:edit:guild": "gc-workspace edit --target guild"
+    },
+    "devDependencies": {
+        "@bari77/gc-workspace-editor": "1.0.0"
     }
-  },
-  "scripts": {
-    "workspace:validate": "gc-workspace validate --all",
-    "workspace:validate:player": "gc-workspace validate --target player",
-    "workspace:edit": "gc-workspace edit",
-    "workspace:edit:guild": "gc-workspace edit --target guild"
-  },
-  "devDependencies": {
-    "@bari77/gc-workspace-editor": "1.0.0"
-  }
 }
 ```
 
@@ -60,24 +60,23 @@ Legacy flat `gcWorkspace.catalog` / `defaultLayout` fields still work and are tr
 ### `widget-catalog.ts` (plain TS, no Angular)
 
 ```typescript
-import type { WidgetCatalog } from '@bari77/gc-widgets';
+import type { WidgetCatalog } from "@bari77/gc-widgets";
 
 export const gameWorkspaceRegistry = {
-  catalog: [ /* WidgetCatalogEntry[] */ ] satisfies WidgetCatalog,
-  columns: 12,
-  rowHeight: 90,
+    catalog: [/* WidgetCatalogEntry[] */] satisfies WidgetCatalog,
+    columns: 12,
+    rowHeight: 90,
 };
 ```
 
 ### `widget-registry.editor.ts` (editor only)
 
 ```typescript
-import { gameWorkspaceRegistry } from './widget-catalog';
+import { gameWorkspaceRegistry } from "./widget-catalog";
 
 export const gameWorkspaceEditorRegistry = {
-  ...gameWorkspaceRegistry,
-  loadTemplateHost: () =>
-    import('./widget-template-host.component').then((m) => m.GameWidgetTemplateHostComponent),
+    ...gameWorkspaceRegistry,
+    loadTemplateHost: () => import("./widget-template-host.component").then((m) => m.GameWidgetTemplateHostComponent),
 };
 ```
 
@@ -97,11 +96,11 @@ gc-workspace edit --layout config/player/workspace.newbie.json
 gc-workspace edit --port 4320
 ```
 
-| Command | Behaviour |
-|---------|-----------|
-| `validate` | Bundles the catalog module in Node, validates JSON, exit code 1 on errors |
-| `validate --all` | Validates every layout of every target |
-| `edit` | Validates the opened layout, starts the save API on `port + 1`, the Vite editor on `port` (4310 by default), writes JSON on Save |
+| Command          | Behaviour                                                                                                                        |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `validate`       | Bundles the catalog module in Node, validates JSON, exit code 1 on errors                                                        |
+| `validate --all` | Validates every layout of every target                                                                                           |
+| `edit`           | Validates the opened layout, starts the save API on `port + 1`, the Vite editor on `port` (4310 by default), writes JSON on Save |
 
 `--target` and `--layout` only pick what the editor opens first; the picker still lists everything
 the scan found.

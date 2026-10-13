@@ -1,32 +1,35 @@
-import { buildSync } from 'esbuild';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
-import { createRequire } from 'node:module';
-import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
-import { pathToFileURL } from 'node:url';
-import { loadGcWorkspaceConfig } from './config.js';
-import type { GameWorkspaceRegistry } from './types.js';
+import { buildSync } from "esbuild";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { createRequire } from "node:module";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
+import { loadGcWorkspaceConfig } from "./config.js";
+import { GameWorkspaceRegistry } from "./game-workspace-registry.js";
+import { LoadedWorkspaceContext } from "./loaded-workspace-context.js";
+import { ValidationIssue } from "./validation-issue.js";
+import { WidgetWorkspace } from "./widget-workspace.js";
 
 /**
  * Catalog labels are `$localize` tagged templates. Installing the game's own Angular runtime
  * strips the metadata blocks exactly like a browser build would, instead of leaking `:@@id:`.
  */
 async function installLocalize(gameRoot: string): Promise<void> {
-    const requireFromGame = createRequire(join(gameRoot, 'package.json'));
+    const requireFromGame = createRequire(join(gameRoot, "package.json"));
 
     try {
-        await import(pathToFileURL(requireFromGame.resolve('@angular/localize/init')).href);
+        await import(pathToFileURL(requireFromGame.resolve("@angular/localize/init")).href);
     } catch {
         // A game front that never calls $localize does not need the global.
     }
 }
 
 function readTsconfigPaths(gameRoot: string): Record<string, string> {
-    const tsconfigPath = resolve(gameRoot, 'tsconfig.json');
-    const raw = JSON.parse(readFileSync(tsconfigPath, 'utf8')) as {
+    const tsconfigPath = resolve(gameRoot, "tsconfig.json");
+    const raw = JSON.parse(readFileSync(tsconfigPath, "utf8")) as {
         compilerOptions?: { paths?: Record<string, string[]>; baseUrl?: string };
     };
-    const baseUrl = resolve(gameRoot, raw.compilerOptions?.baseUrl ?? 'src');
+    const baseUrl = resolve(gameRoot, raw.compilerOptions?.baseUrl ?? "src");
     const paths = raw.compilerOptions?.paths ?? {};
     const alias: Record<string, string> = {};
 
@@ -35,7 +38,7 @@ function readTsconfigPaths(gameRoot: string): Record<string, string> {
         if (!target) {
             continue;
         }
-        alias[key.replace(/\/\*$/, '')] = resolve(baseUrl, target.replace(/\/\*$/, ''));
+        alias[key.replace(/\/\*$/, "")] = resolve(baseUrl, target.replace(/\/\*$/, ""));
     }
 
     return alias;
@@ -43,10 +46,10 @@ function readTsconfigPaths(gameRoot: string): Record<string, string> {
 
 function readBundledRegistry(outfile: string): Promise<GameWorkspaceRegistry> {
     return import(pathToFileURL(outfile).href).then((mod: Record<string, unknown>) => {
-        const registry = (mod['gameWorkspaceRegistry'] ?? mod['default']) as GameWorkspaceRegistry | undefined;
+        const registry = (mod["gameWorkspaceRegistry"] ?? mod["default"]) as GameWorkspaceRegistry | undefined;
 
         if (!registry?.catalog || !registry.columns) {
-            throw new Error('Catalog module must export gameWorkspaceRegistry { catalog, columns, rowHeight? }.');
+            throw new Error("Catalog module must export gameWorkspaceRegistry { catalog, columns, rowHeight? }.");
         }
 
         return registry;
@@ -55,21 +58,21 @@ function readBundledRegistry(outfile: string): Promise<GameWorkspaceRegistry> {
 
 async function bundleCatalogModule(gameRoot: string, moduleRel: string): Promise<GameWorkspaceRegistry> {
     const modulePath = resolve(gameRoot, moduleRel);
-    const tempDir = mkdtempSync(join(tmpdir(), 'gc-workspace-'));
-    const outfile = join(tempDir, 'catalog.mjs');
+    const tempDir = mkdtempSync(join(tmpdir(), "gc-workspace-"));
+    const outfile = join(tempDir, "catalog.mjs");
 
     try {
         buildSync({
             absWorkingDir: gameRoot,
             entryPoints: [modulePath],
             bundle: true,
-            platform: 'node',
-            format: 'esm',
+            platform: "node",
+            format: "esm",
             outfile,
-            logLevel: 'silent',
-            packages: 'external',
+            logLevel: "silent",
+            packages: "external",
             alias: readTsconfigPaths(gameRoot),
-            external: ['@angular/*', '@nebular/*', '@bari77/*', 'rxjs', 'rxjs/*', 'zone.js'],
+            external: ["@angular/*", "@nebular/*", "@bari77/*", "rxjs", "rxjs/*", "zone.js"],
         });
 
         // Await before finally: otherwise rmSync deletes catalog.mjs before import resolves (ENOENT).
@@ -87,14 +90,18 @@ export async function loadGameRegistry(gameRoot: string, catalogRel: string): Pr
 
 export function loadLayoutJson(gameRoot: string, layoutRel: string): unknown {
     const layoutPath = resolve(gameRoot, layoutRel);
-    return JSON.parse(readFileSync(layoutPath, 'utf8')) as unknown;
+    return JSON.parse(readFileSync(layoutPath, "utf8")) as unknown;
 }
 
-export async function loadWorkspaceContext(gameRoot: string, target?: string, layoutRel?: string) {
+export async function loadWorkspaceContext(
+    gameRoot: string,
+    target?: string,
+    layoutRel?: string,
+): Promise<LoadedWorkspaceContext> {
     const config = loadGcWorkspaceConfig(gameRoot, target, layoutRel);
     const registry = await loadGameRegistry(gameRoot, config.catalog);
     const layoutPath = resolve(gameRoot, config.defaultLayout);
-    const layout = loadLayoutJson(gameRoot, config.defaultLayout);
+    const layout = loadLayoutJson(gameRoot, config.defaultLayout) as WidgetWorkspace;
 
     return {
         gameRoot,
@@ -105,9 +112,13 @@ export async function loadWorkspaceContext(gameRoot: string, target?: string, la
     };
 }
 
-export async function validateGameWorkspace(gameRoot: string, target?: string, layoutRel?: string) {
+export async function validateGameWorkspace(
+    gameRoot: string,
+    target?: string,
+    layoutRel?: string,
+): Promise<{ context: LoadedWorkspaceContext; issues: ValidationIssue[] }> {
     const context = await loadWorkspaceContext(gameRoot, target, layoutRel);
-    const { validateWorkspaceLayout } = await import('./validate.js');
+    const { validateWorkspaceLayout } = await import("./validate.js");
     const issues = validateWorkspaceLayout(
         context.layout,
         context.registry.catalog,

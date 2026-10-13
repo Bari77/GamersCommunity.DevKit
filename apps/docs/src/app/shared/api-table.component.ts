@@ -1,21 +1,15 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-
-export interface ApiRow {
-    name: string;
-    type: string;
-    default?: string;
-    description: string;
-}
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
+import { ApiRow } from "./api-row.model";
 
 @Component({
-    selector: 'gcd-api',
+    selector: "gcd-api",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './api-table.component.html',
-    styleUrl: './api-table.component.scss',
+    templateUrl: "./api-table.component.html",
+    styleUrl: "./api-table.component.scss",
 })
 export class ApiTableComponent {
-    public readonly heading = input('');
+    public readonly heading = input("");
 
     public readonly rows = input.required<ApiRow[]>();
 

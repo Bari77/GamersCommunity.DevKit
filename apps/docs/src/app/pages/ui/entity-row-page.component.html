@@ -1,0 +1,81 @@
+<gcd-page
+    lead="Ligne de rail d'accueil : barre d'accent, visuel projeté, titre, sous-titre optionnel, pastilles et date."
+>
+    <p>
+        Conçu pour les listes « derniers joueurs / personnages / guildes / équipes ». Le chrome est partagé ; chaque
+        remote projette son visuel (avatar, emblème, blason) et, si besoin, des pastilles avec icônes via
+        <code>rowFacts</code>
+        .
+    </p>
+
+    <gcd-demo title="Joueur" description="Visuel projeté, sous-titre et description." [html]="playerHtml" [bare]="true">
+        <ul class="demo-list">
+            <li>
+                <gc-entity-row
+                    [link]="['/']"
+                    name="Astra#042"
+                    subtitle="EUW · Mid"
+                    [date]="demoDate"
+                    description="Découvrir sa fiche joueur"
+                    [descriptionMuted]="true"
+                >
+                    <span rowVisual class="demo-avatar" aria-hidden="true">A</span>
+                </gc-entity-row>
+            </li>
+        </ul>
+    </gcd-demo>
+
+    <gcd-demo
+        title="Avec pastilles et niveau"
+        description="Les facts textuels passent en entrée ; le badge et le niveau complètent le titre."
+        [html]="factsHtml"
+        [bare]="true"
+    >
+        <ul class="demo-list">
+            <li>
+                <gc-entity-row
+                    [link]="['/']"
+                    accent="#c41e3a"
+                    name="Thalindra"
+                    subtitle="Priest Discipline"
+                    badge="Main"
+                    [level]="80"
+                    levelLabel="Level"
+                    [date]="demoDate"
+                    [facts]="facts"
+                >
+                    <span rowVisual class="demo-avatar" aria-hidden="true">T</span>
+                </gc-entity-row>
+            </li>
+        </ul>
+    </gcd-demo>
+
+    <h2>Projection</h2>
+
+    <p>
+        Quatre attributs de contenu :
+        <code>rowVisual</code>
+        (obligatoire en pratique),
+        <code>rowSubtitleLeading</code>
+        (icônes avant le sous-titre),
+        <code>rowTrailing</code>
+        et
+        <code>rowFacts</code>
+        (pastilles riches, éventuellement avec icônes de jeu).
+    </p>
+
+    <gcd-code language="html" [code]="projectionSnippet" />
+
+    <h2>API</h2>
+
+    <gcd-api heading="Entrées" [rows]="inputs" />
+
+    <gcd-code language="typescript" label="Type EntityRowFact" [code]="factTypeSnippet" />
+
+    <div class="gcd-note">
+        <p>
+            Aucune dépendance Nebular. Les libellés visibles (badge, levelLabel, facts) restent fournis par l'appelant
+            pour garder le contrôle i18n côté remote.
+        </p>
+    </div>
+</gcd-page>

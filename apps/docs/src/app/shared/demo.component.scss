@@ -38,9 +38,7 @@
     align-items: center;
     justify-content: center;
     padding: 2rem 1.25rem;
-    background:
-        radial-gradient(circle at 20% 0%, rgb(46 230 166 / 6%), transparent 60%),
-        var(--gc-surface-0);
+    background: radial-gradient(circle at 20% 0%, rgb(46 230 166 / 6%), transparent 60%), var(--gc-surface-0);
 }
 
 .demo__preview--bare {

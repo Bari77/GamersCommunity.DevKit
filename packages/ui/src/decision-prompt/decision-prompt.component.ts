@@ -1,34 +1,34 @@
-import { ChangeDetectionStrategy, Component, computed, input, model, output } from '@angular/core';
-import { ModalComponent } from '../modal/modal.component';
+import { ChangeDetectionStrategy, Component, computed, input, model, output } from "@angular/core";
+import { ModalComponent } from "../modal/modal.component";
 
 /**
  * Modal offering a choice between a primary commitment and carrying on without it,
  * with an optional opt-out the host application is responsible for persisting.
  */
 @Component({
-    selector: 'gc-decision-prompt',
+    selector: "gc-decision-prompt",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ModalComponent],
-    templateUrl: './decision-prompt.component.html',
-    styleUrl: './decision-prompt.component.scss',
+    templateUrl: "./decision-prompt.component.html",
+    styleUrl: "./decision-prompt.component.scss",
 })
 export class DecisionPromptComponent {
     public readonly open = input(false);
 
-    public readonly heading = input('');
+    public readonly heading = input("");
 
-    public readonly message = input('');
+    public readonly message = input("");
 
-    public readonly primaryLabel = input('');
+    public readonly primaryLabel = input("");
 
-    public readonly secondaryLabel = input('');
+    public readonly secondaryLabel = input("");
 
     /** Label of the opt-out checkbox. Leave empty to hide it. */
-    public readonly optOutLabel = input('');
+    public readonly optOutLabel = input("");
 
     /** Label replacing the primary one while the primary action is running. */
-    public readonly busyLabel = input('');
+    public readonly busyLabel = input("");
 
     public readonly busy = input(false);
 

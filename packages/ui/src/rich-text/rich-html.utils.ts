@@ -1,4 +1,4 @@
-import type { Config } from 'dompurify';
+import { Config } from "dompurify";
 
 const TAG_RE = /<[^>]+>/g;
 
@@ -14,13 +14,13 @@ export function isRichHtmlBlank(html: string | null | undefined): boolean {
 /** Plain text for previews, search, and character limits. */
 export function stripRichHtmlPlainText(html: string | null | undefined): string {
     if (!html?.trim()) {
-        return '';
+        return "";
     }
-    return html.replace(TAG_RE, ' ').replace(/\s+/g, ' ').trim();
+    return html.replace(TAG_RE, " ").replace(/\s+/g, " ").trim();
 }
 
 export const RICH_HTML_PURIFY_CONFIG: Config = {
-    ALLOWED_TAGS: ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'ul', 'ol', 'li', 'span', 'a', 'h2', 'h3'],
-    ALLOWED_ATTR: ['style', 'href', 'target', 'rel', 'class'],
+    ALLOWED_TAGS: ["p", "br", "strong", "b", "em", "i", "u", "s", "ul", "ol", "li", "span", "a", "h2", "h3"],
+    ALLOWED_ATTR: ["style", "href", "target", "rel", "class"],
     ALLOW_DATA_ATTR: false,
 };

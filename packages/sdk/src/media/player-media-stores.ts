@@ -1,5 +1,5 @@
 import { inject, Injectable, Injector, runInInjectionContext } from "@angular/core";
-import type { PlayerMediaKind } from "./player-media.dto";
+import { PlayerMediaKind } from "./player-media.dto";
 import { PlayerMediaStore } from "./player-media.store";
 
 /**
@@ -9,19 +9,19 @@ import { PlayerMediaStore } from "./player-media.store";
  */
 @Injectable()
 export class PlayerMediaStores {
-  private readonly injector = inject(Injector);
+    private readonly injector = inject(Injector);
 
-  private readonly stores: Record<PlayerMediaKind, PlayerMediaStore> = {
-    photo: this.create(),
-    video: this.create(),
-    stream: this.create(),
-  };
+    private readonly stores: Record<PlayerMediaKind, PlayerMediaStore> = {
+        photo: this.create(),
+        video: this.create(),
+        stream: this.create(),
+    };
 
-  public for(kind: PlayerMediaKind): PlayerMediaStore {
-    return this.stores[kind];
-  }
+    public for(kind: PlayerMediaKind): PlayerMediaStore {
+        return this.stores[kind];
+    }
 
-  private create(): PlayerMediaStore {
-    return runInInjectionContext(this.injector, () => new PlayerMediaStore());
-  }
+    private create(): PlayerMediaStore {
+        return runInInjectionContext(this.injector, () => new PlayerMediaStore());
+    }
 }

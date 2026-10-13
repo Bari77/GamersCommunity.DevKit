@@ -1,6 +1,7 @@
-import { WidgetSettings } from './workspace';
+import { WidgetListField } from "./widget-list-field";
+import { WidgetCatalogEntry } from "./widget-catalog-entry";
 
-export type WidgetFieldType = 'text' | 'url' | 'textarea' | 'number';
+export type WidgetFieldType = "text" | "url" | "textarea" | "number";
 
 export interface WidgetTextField {
     key: string;
@@ -10,30 +11,7 @@ export interface WidgetTextField {
     hint?: string;
 }
 
-/** Repeats `itemFields` so a widget can hold an arbitrary number of entries. */
-export interface WidgetListField {
-    key: string;
-    label: string;
-    type: 'list';
-    addLabel?: string;
-    itemFields: WidgetTextField[];
-}
-
 export type WidgetSettingsField = WidgetTextField | WidgetListField;
-
-export interface WidgetCatalogEntry {
-    type: string;
-    label: string;
-    description?: string;
-    icon?: string;
-    cols: number;
-    rows: number;
-    /** Refuses a second instance anywhere in the workspace. */
-    unique?: boolean;
-    fields?: WidgetSettingsField[];
-    defaultSettings?: WidgetSettings;
-}
-
 export type WidgetCatalog = WidgetCatalogEntry[];
 
 export function findCatalogEntry(catalog: WidgetCatalog, type: string): WidgetCatalogEntry | undefined {
@@ -41,5 +19,5 @@ export function findCatalogEntry(catalog: WidgetCatalog, type: string): WidgetCa
 }
 
 export function isListField(field: WidgetSettingsField): field is WidgetListField {
-    return field.type === 'list';
+    return field.type === "list";
 }

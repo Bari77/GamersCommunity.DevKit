@@ -1,6 +1,7 @@
-import { Route, Routes } from '@angular/router';
-import { DocsPage, DocsSection, docsSections, sectionHeading } from './docs.config';
-import { importSnippet } from './shared/snippets';
+import { Route, Routes } from "@angular/router";
+import { DocsPage, docsSections, sectionHeading } from "./docs.config";
+import { DocsSection } from "./docs-section.model";
+import { importSnippet } from "./shared/snippets";
 
 /** Header metadata carried by every page route and read back by `gcd-page`. */
 export interface DocsPageData {
@@ -14,10 +15,8 @@ function pageRoute(section: DocsSection, page: DocsPage): Route {
     const docs: DocsPageData = {
         eyebrow: page.eyebrow ?? sectionHeading(section),
         heading: page.heading ?? page.label,
-        selector: page.selector ?? '',
-        importSnippet: page.symbols
-            ? importSnippet(section.package ?? '', page.symbols, page.typeSymbols)
-            : '',
+        selector: page.selector ?? "",
+        importSnippet: page.symbols ? importSnippet(section.package ?? "", page.symbols, page.typeSymbols) : "",
     };
 
     return {
@@ -32,7 +31,7 @@ function sectionRoutes(section: DocsSection): Routes {
     if (!section.path) {
         return section.pages.map((page) => ({
             ...pageRoute(section, page),
-            ...(page.path ? {} : { pathMatch: 'full' as const }),
+            ...(page.path ? {} : { pathMatch: "full" as const }),
         }));
     }
 
@@ -45,7 +44,4 @@ function sectionRoutes(section: DocsSection): Routes {
     ];
 }
 
-export const docsRoutes: Routes = [
-    ...docsSections.flatMap(sectionRoutes),
-    { path: '**', redirectTo: '' },
-];
+export const docsRoutes: Routes = [...docsSections.flatMap(sectionRoutes), { path: "**", redirectTo: "" }];

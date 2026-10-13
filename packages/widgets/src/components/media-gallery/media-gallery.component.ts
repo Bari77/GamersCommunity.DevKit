@@ -10,42 +10,42 @@ import {
     signal,
     untracked,
     viewChild,
-} from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { GcGalleryItem, videoEmbedUrl } from '../../media';
+} from "@angular/core";
+import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import { GcGalleryItem, videoEmbedUrl } from "../../media";
 
 @Component({
-    selector: 'gc-media-gallery',
+    selector: "gc-media-gallery",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './media-gallery.component.html',
-    styleUrl: './media-gallery.component.scss',
+    templateUrl: "./media-gallery.component.html",
+    styleUrl: "./media-gallery.component.scss",
 })
 export class MediaGalleryComponent {
     public readonly items = input<GcGalleryItem[]>([]);
 
-    public readonly kind = input<'photo' | 'video'>('photo');
+    public readonly kind = input<"photo" | "video">("photo");
 
-    public readonly emptyLabel = input('Nothing here yet.');
+    public readonly emptyLabel = input("Nothing here yet.");
 
     /** In-place editor: draft the list, then save or cancel. */
     public readonly editing = input(false);
 
-    public readonly addLabel = input('Add');
+    public readonly addLabel = input("Add");
 
-    public readonly saveLabel = input('Save');
+    public readonly saveLabel = input("Save");
 
-    public readonly cancelLabel = input('Cancel');
+    public readonly cancelLabel = input("Cancel");
 
-    public readonly removeLabel = input('Remove');
+    public readonly removeLabel = input("Remove");
 
-    public readonly moveUpLabel = input('Move up');
+    public readonly moveUpLabel = input("Move up");
 
-    public readonly moveDownLabel = input('Move down');
+    public readonly moveDownLabel = input("Move down");
 
-    public readonly titlePlaceholder = input('Caption');
+    public readonly titlePlaceholder = input("Caption");
 
-    public readonly urlPlaceholder = input('https://…');
+    public readonly urlPlaceholder = input("https://…");
 
     public readonly itemsChange = output<GcGalleryItem[]>();
 
@@ -53,24 +53,24 @@ export class MediaGalleryComponent {
 
     protected readonly zoomed = signal<GcGalleryItem | null>(null);
     protected readonly draft = signal<GcGalleryItem[]>([]);
-    protected readonly draftTitle = signal('');
-    protected readonly draftUrl = signal('');
+    protected readonly draftTitle = signal("");
+    protected readonly draftUrl = signal("");
 
     protected readonly canAdd = computed(() => this.draftUrl().trim().length > 0);
-
-    private readonly lightbox = viewChild<ElementRef<HTMLElement>>('lightbox');
-    private readonly sanitizer = inject(DomSanitizer);
 
     protected readonly videos = computed(() =>
         this.items().map((item) => {
             const embed = videoEmbedUrl(item.url);
             return {
                 url: item.url,
-                title: item.title ?? '',
+                title: item.title ?? "",
                 embed: embed ? (this.sanitizer.bypassSecurityTrustResourceUrl(embed) as SafeResourceUrl) : null,
             };
         }),
     );
+
+    private readonly lightbox = viewChild<ElementRef<HTMLElement>>("lightbox");
+    private readonly sanitizer = inject(DomSanitizer);
 
     public constructor() {
         // A gridster item is `transform`ed, which would anchor a fixed-position
@@ -87,8 +87,8 @@ export class MediaGalleryComponent {
             untracked(() => {
                 if (editing) {
                     this.draft.set(this.items().map((item) => ({ ...item })));
-                    this.draftTitle.set('');
-                    this.draftUrl.set('');
+                    this.draftTitle.set("");
+                    this.draftUrl.set("");
                     this.zoomed.set(null);
                 }
             });
@@ -108,15 +108,13 @@ export class MediaGalleryComponent {
 
         const title = this.draftTitle().trim();
         this.draft.update((rows) => [...rows, { url, title: title || null }]);
-        this.draftTitle.set('');
-        this.draftUrl.set('');
+        this.draftTitle.set("");
+        this.draftUrl.set("");
     }
 
-    protected editRow(index: number, key: 'title' | 'url', event: Event): void {
+    protected editRow(index: number, key: "title" | "url", event: Event): void {
         const value = (event.target as HTMLInputElement).value.trim();
-        this.draft.update((rows) =>
-            rows.map((row, position) => (position === index ? { ...row, [key]: value } : row)),
-        );
+        this.draft.update((rows) => rows.map((row, position) => (position === index ? { ...row, [key]: value } : row)));
     }
 
     protected moveRow(index: number, offset: number): void {

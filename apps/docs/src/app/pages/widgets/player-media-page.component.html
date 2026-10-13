@@ -1,0 +1,41 @@
+<gcd-page lead="Administration et gestion des médias joueur (photos / vidéos) branchées sur le kernel gc-sdk.">
+    <p>
+        Deux composants complémentaires :
+        <code>gc-player-media-admin</code>
+        pour la curation staff, et
+        <code>gc-player-media-manager</code>
+        pour le propriétaire de la fiche. Les stores HTTP vivent dans
+        <code>&#64;bari77/gc-sdk</code>
+        (
+        <code>PlayerMediaStore</code>
+        / service) ; le remote ne fait qu’injecter le kernel et passer les libellés i18n.
+    </p>
+
+    <div class="gcd-note">
+        <p>
+            Peers Nebular +
+            <code>&#64;bari77/gc-sdk</code>
+            . La doc se concentre sur le contrat UI ; la configuration membership (
+            <code>apiSegment</code>
+            ) est documentée côté SDK / remotes.
+        </p>
+    </div>
+
+    <h2>gc-player-media-manager</h2>
+
+    <p>Surface joueur : ajout, réordonnancement et suppression de ses propres médias.</p>
+
+    <gcd-code language="html" [code]="managerSnippet" />
+
+    <gcd-api heading="Entrées (manager)" [rows]="managerInputs" />
+
+    <h2>gc-player-media-admin</h2>
+
+    <p>Surface staff : modération / curation des médias d’un joueur ciblé.</p>
+
+    <gcd-code language="html" [code]="adminSnippet" />
+
+    <gcd-api heading="Entrées (admin)" [rows]="adminInputs" />
+
+    <gcd-code language="typescript" label="Libellés" [code]="labelsSnippet" />
+</gcd-page>

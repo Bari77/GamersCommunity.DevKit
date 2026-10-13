@@ -1,28 +1,28 @@
 {
-  "name": "@bari77/gc-create-game",
-  "version": "2.0.1",
-  "description": "Scaffold a new GamersCommunity game repo by cloning Games.Template",
-  "type": "module",
-  "bin": {
-    "gc-create-game": "./bin/gc-create-game.mjs"
-  },
-  "files": [
-    "bin",
-    "src"
-  ],
-  "scripts": {
-    "prepack": "node --input-type=module -e \"import fs from 'node:fs'; fs.accessSync(new URL('./bin/gc-create-game.mjs', import.meta.url))\"",
-    "test": "node --test ./src/rewrite.test.mjs"
-  },
-  "exports": {
-    ".": "./src/index.mjs"
-  },
-  "engines": {
-    "node": ">=20"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "access": "restricted"
-  },
-  "license": "UNLICENSED"
+    "name": "@bari77/gc-create-game",
+    "version": "2.1.0",
+    "description": "Scaffold a new GamersCommunity game repo by cloning Games.Template",
+    "type": "module",
+    "bin": {
+        "gc-create-game": "./bin/gc-create-game.mjs"
+    },
+    "files": [
+        "bin",
+        "src"
+    ],
+    "scripts": {
+        "prepack": "node --input-type=module -e \"import fs from 'node:fs'; fs.accessSync(new URL('./bin/gc-create-game.mjs', import.meta.url))\"",
+        "test": "node --test ./src/rewrite.test.mjs"
+    },
+    "exports": {
+        ".": "./src/index.mjs"
+    },
+    "engines": {
+        "node": ">=20"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com",
+        "access": "restricted"
+    },
+    "license": "UNLICENSED"
 }

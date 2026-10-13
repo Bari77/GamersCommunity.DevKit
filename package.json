@@ -1,23 +1,29 @@
 {
-  "name": "gamerscommunity-devkit",
-  "private": true,
-  "version": "1.0.5",
-  "description": "Development tools and contracts for GamersCommunity game teams",
-  "workspaces": [
-    "packages/*",
-    "apps/*"
-  ],
-  "scripts": {
-    "build": "npm run build --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present",
-    "docs": "npm start --workspace=@bari77/gc-docs",
-    "docs:build": "npm run build:site --workspace=@bari77/gc-docs"
-  },
-  "engines": {
-    "node": ">=20"
-  },
-  "overrides": {
-    "@angular/cdk": "21.0.6"
-  },
-  "license": "UNLICENSED"
+    "name": "gamerscommunity-devkit",
+    "private": true,
+    "version": "1.0.5",
+    "description": "Development tools and contracts for GamersCommunity game teams",
+    "workspaces": [
+        "packages/*",
+        "apps/*"
+    ],
+    "scripts": {
+        "build": "npm run build --workspaces --if-present",
+        "lint": "prettier --check . && eslint .",
+        "lint:fix": "prettier --write . && eslint . --fix",
+        "docs": "npm start --workspace=@bari77/gc-docs",
+        "docs:build": "npm run build:site --workspace=@bari77/gc-docs"
+    },
+    "devDependencies": {
+        "@bari77/gc-lint": "*",
+        "eslint": "^9.39.5",
+        "prettier": "^3.9.10"
+    },
+    "engines": {
+        "node": ">=20"
+    },
+    "overrides": {
+        "@angular/cdk": "21.0.6"
+    },
+    "license": "UNLICENSED"
 }

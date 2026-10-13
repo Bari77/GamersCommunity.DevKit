@@ -9,14 +9,8 @@ import {
     input,
     output,
     signal,
-} from '@angular/core';
-
-export interface WidgetSelectOption {
-    value: string;
-    label: string;
-    /** Secondary line under the label, e.g. the file a layout is read from. */
-    hint?: string;
-}
+} from "@angular/core";
+import { WidgetSelectOption } from "./widget-select-option.model";
 
 let nextSelectId = 0;
 
@@ -25,17 +19,17 @@ let nextSelectId = 0;
  * which no stylesheet can reach, so the panel is plain markup driven by the listbox pattern.
  */
 @Component({
-    selector: 'gc-widget-select',
+    selector: "gc-widget-select",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './widget-select.component.html',
-    styleUrl: './widget-select.component.scss',
+    templateUrl: "./widget-select.component.html",
+    styleUrl: "./widget-select.component.scss",
     host: {
-        '[class.gc-select--compact]': 'compact()',
-        '[class.gc-select--open]': 'open()',
-        '(keydown)': 'onKeydown($event)',
-        '(focusout)': 'onFocusOut($event)',
-        '(document:pointerdown)': 'onDocumentPointerDown($event)',
+        "[class.gc-select--compact]": "compact()",
+        "[class.gc-select--open]": "open()",
+        "(keydown)": "onKeydown($event)",
+        "(focusout)": "onFocusOut($event)",
+        "(document:pointerdown)": "onDocumentPointerDown($event)",
     },
 })
 export class WidgetSelectComponent {
@@ -43,9 +37,9 @@ export class WidgetSelectComponent {
 
     public readonly value = input<string | null>(null);
 
-    public readonly ariaLabel = input('');
+    public readonly ariaLabel = input("");
 
-    public readonly placeholder = input('Select…');
+    public readonly placeholder = input("Select…");
 
     public readonly disabled = input(false, { transform: booleanAttribute });
 
@@ -71,9 +65,7 @@ export class WidgetSelectComponent {
                 return;
             }
 
-            this.host.nativeElement
-                .querySelector(`#${this.id}-option-${index}`)
-                ?.scrollIntoView({ block: 'nearest' });
+            this.host.nativeElement.querySelector(`#${this.id}-option-${index}`)?.scrollIntoView({ block: "nearest" });
         });
     }
 
@@ -99,19 +91,19 @@ export class WidgetSelectComponent {
             return;
         }
 
-        if (event.key === 'Escape' && this.open()) {
+        if (event.key === "Escape" && this.open()) {
             this.close();
             event.stopPropagation();
             return;
         }
 
-        if (event.key === 'Tab') {
+        if (event.key === "Tab") {
             this.open.set(false);
             return;
         }
 
         if (!this.open()) {
-            if (['Enter', ' ', 'ArrowDown', 'ArrowUp'].includes(event.key)) {
+            if (["Enter", " ", "ArrowDown", "ArrowUp"].includes(event.key)) {
                 this.openPanel();
                 event.preventDefault();
             }
@@ -121,20 +113,20 @@ export class WidgetSelectComponent {
         const options = this.options();
 
         switch (event.key) {
-            case 'ArrowDown':
+            case "ArrowDown":
                 this.activeIndex.set(Math.min(this.activeIndex() + 1, options.length - 1));
                 break;
-            case 'ArrowUp':
+            case "ArrowUp":
                 this.activeIndex.set(Math.max(this.activeIndex() - 1, 0));
                 break;
-            case 'Home':
+            case "Home":
                 this.activeIndex.set(0);
                 break;
-            case 'End':
+            case "End":
                 this.activeIndex.set(options.length - 1);
                 break;
-            case 'Enter':
-            case ' ': {
+            case "Enter":
+            case " ": {
                 const option = options[this.activeIndex()];
                 if (option) {
                     this.pick(option);

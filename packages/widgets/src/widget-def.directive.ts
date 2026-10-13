@@ -1,13 +1,13 @@
-import { booleanAttribute, Directive, TemplateRef, inject, input } from '@angular/core';
-import { registerWidgetTemplateDef } from './widget-def.registry';
-import { WidgetTemplateContext } from './widget-template';
+import { booleanAttribute, Directive, TemplateRef, inject, input } from "@angular/core";
+import { registerWidgetTemplateDef } from "./widget-def.registry";
+import { WidgetTemplateContext } from "./widget-template";
 
 /**
  * Declares how one widget *type* renders. The grid instantiates it once per placed
  * widget, so template order in the host has no effect and a type can appear twice.
  */
 @Directive({
-    selector: '[gcWidget]',
+    selector: "[gcWidget]",
     standalone: true,
 })
 export class WidgetDefDirective {
@@ -16,18 +16,18 @@ export class WidgetDefDirective {
      * one render pass before Angular evaluates a `[gcWidget]` expression. A def still waiting
      * for its type matches no widget instead of throwing while the grid looks through the list.
      */
-    public readonly type = input('', { alias: 'gcWidget' });
+    public readonly type = input("", { alias: "gcWidget" });
 
     /**
      * The hover pencil then starts in-place data editing (via `editingData` / `stopDataEdit` on
      * the template context). The gear still opens instance settings (title and catalog fields).
      */
-    public readonly editable = input(false, { alias: 'gcWidgetEditable', transform: booleanAttribute });
+    public readonly editable = input(false, { alias: "gcWidgetEditable", transform: booleanAttribute });
 
     public readonly template = inject<TemplateRef<WidgetTemplateContext>>(TemplateRef);
 
     public constructor() {
-        registerWidgetTemplateDef(this, 'widget');
+        registerWidgetTemplateDef(this, "widget");
     }
 
     public static ngTemplateContextGuard(

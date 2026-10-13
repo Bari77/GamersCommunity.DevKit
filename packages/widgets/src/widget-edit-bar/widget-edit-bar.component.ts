@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model, output } from "@angular/core";
 
 /**
  * `Edit` on its own, swapped for `Cancel` + `Save` once editing starts.
@@ -7,22 +7,22 @@ import { ChangeDetectionStrategy, Component, input, model, output } from '@angul
  * mode (with `saving` on) until persistence succeeds and it clears `editing`.
  */
 @Component({
-    selector: 'gc-widget-edit-bar',
+    selector: "gc-widget-edit-bar",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './widget-edit-bar.component.html',
-    styleUrl: './widget-edit-bar.component.scss',
+    templateUrl: "./widget-edit-bar.component.html",
+    styleUrl: "./widget-edit-bar.component.scss",
 })
 export class WidgetEditBarComponent {
     public readonly editing = model(false);
 
     public readonly saving = input(false);
 
-    public readonly editLabel = input('Edit');
+    public readonly editLabel = input("Edit");
 
-    public readonly cancelLabel = input('Cancel');
+    public readonly cancelLabel = input("Cancel");
 
-    public readonly saveLabel = input('Save');
+    public readonly saveLabel = input("Save");
 
     public readonly save = output<void>();
 

@@ -1,8 +1,11 @@
-import { Type } from '@angular/core';
-import changelog from '../../../../CHANGELOG.json';
-import themePkg from '../../../../packages/theme/package.json';
-import uiPkg from '../../../../packages/ui/package.json';
-import widgetsPkg from '../../../../packages/widgets/package.json';
+import { Type } from "@angular/core";
+import changelog from "../../../../CHANGELOG.json";
+import themePkg from "../../../../packages/theme/package.json";
+import uiPkg from "../../../../packages/ui/package.json";
+import widgetsPkg from "../../../../packages/widgets/package.json";
+import { DocsSection } from "./docs-section.model";
+import { DocsCard } from "./docs-card.model";
+import { DocsNavGroup } from "./docs-nav-group.model";
 
 /**
  * Single source of truth for the site. Everything else — routes, sidebar, breadcrumb labels, page
@@ -16,9 +19,9 @@ import widgetsPkg from '../../../../packages/widgets/package.json';
  */
 export const DOCS_VERSION = (changelog as { version: string }[])[0].version;
 
-export const REPOSITORY_URL = uiPkg.repository.url.replace(/\.git$/, '');
+export const REPOSITORY_URL = uiPkg.repository.url.replace(/\.git$/, "");
 
-export const SITE_NAME = 'DevKit';
+export const SITE_NAME = "DevKit";
 
 export const PACKAGES = {
     ui: uiPkg.name,
@@ -27,9 +30,9 @@ export const PACKAGES = {
 } as const;
 
 /** Range the consuming application has to satisfy, straight from the published peer dependencies. */
-export const ANGULAR_RANGE = uiPkg.peerDependencies['@angular/core'];
+export const ANGULAR_RANGE = uiPkg.peerDependencies["@angular/core"];
 
-export const GRIDSTER_RANGE = widgetsPkg.peerDependencies['angular-gridster2'];
+export const GRIDSTER_RANGE = widgetsPkg.peerDependencies["angular-gridster2"];
 
 export interface DocsPage {
     /** Route segment, relative to the section. Empty for the section landing page. */
@@ -59,270 +62,235 @@ export interface DocsPage {
     load: () => Promise<Type<unknown>>;
 }
 
-export interface DocsSection {
-    /** Route segment shared by the pages below. Empty for the top-level pages. */
-    path: string;
-
-    /** Package documented here. Doubles as sidebar heading, page eyebrow and import target. */
-    package?: string;
-
-    /** Sidebar heading, for a section that documents no single package. */
-    label?: string;
-
-    /** Breadcrumb step for the section segment itself. */
-    breadcrumb?: string;
-
-    /** One-liner on the home page card that leads into this section. */
-    summary?: string;
-
-    pages: DocsPage[];
-}
-
 /** Sidebar heading of a section, and the default eyebrow of its pages. */
 export function sectionHeading(section: DocsSection): string {
-    return section.package ?? section.label ?? '';
+    return section.package ?? section.label ?? "";
 }
 
 export const docsSections: DocsSection[] = [
     {
-        path: '',
-        label: 'Démarrer',
+        path: "",
+        label: "Démarrer",
         pages: [
             {
-                path: '',
-                label: 'Présentation',
+                path: "",
+                label: "Présentation",
                 heading: SITE_NAME,
-                eyebrow: 'GamersCommunity',
-                load: () => import('./pages/overview/overview.component').then((m) => m.OverviewComponent),
+                eyebrow: "GamersCommunity",
+                load: () => import("./pages/overview/overview.component").then((m) => m.OverviewComponent),
             },
             {
-                path: 'installation',
-                label: 'Installation',
-                load: () =>
-                    import('./pages/installation/installation.component').then((m) => m.InstallationComponent),
+                path: "installation",
+                label: "Installation",
+                load: () => import("./pages/installation/installation.component").then((m) => m.InstallationComponent),
             },
             {
-                path: 'versions',
-                label: 'Versions',
-                heading: 'Journal des versions',
-                load: () =>
-                    import('./pages/releases/releases-page.component').then((m) => m.ReleasesPageComponent),
+                path: "versions",
+                label: "Versions",
+                heading: "Journal des versions",
+                load: () => import("./pages/releases/releases-page.component").then((m) => m.ReleasesPageComponent),
             },
         ],
     },
     {
-        path: 'ui',
+        path: "ui",
         package: PACKAGES.ui,
-        breadcrumb: 'Composants UI',
+        breadcrumb: "Composants UI",
         summary:
             "Primitives sans logique métier : fil d'Ariane, squelettes, modale, invite de décision, mur d'incitation, ligne d'entité et éditeur HTML riche.",
         pages: [
             {
-                path: '',
+                path: "",
                 label: "Vue d'ensemble",
-                heading: 'Composants UI',
-                load: () => import('./pages/ui/ui-index.component').then((m) => m.UiIndexComponent),
+                heading: "Composants UI",
+                load: () => import("./pages/ui/ui-index.component").then((m) => m.UiIndexComponent),
             },
             {
-                path: 'breadcrumb',
-                label: 'Breadcrumb',
-                selector: 'gc-breadcrumb',
+                path: "breadcrumb",
+                label: "Breadcrumb",
+                selector: "gc-breadcrumb",
                 summary: "Fil d'Ariane construit à partir de l'arbre de routes actif.",
-                symbols: ['BreadcrumbComponent'],
-                typeSymbols: ['Breadcrumb'],
-                load: () =>
-                    import('./pages/ui/breadcrumb-page.component').then((m) => m.BreadcrumbPageComponent),
+                symbols: ["BreadcrumbComponent"],
+                typeSymbols: ["Breadcrumb"],
+                load: () => import("./pages/ui/breadcrumb-page.component").then((m) => m.BreadcrumbPageComponent),
             },
             {
-                path: 'entity-row',
-                label: 'Entity row',
-                selector: 'gc-entity-row',
+                path: "entity-row",
+                label: "Entity row",
+                selector: "gc-entity-row",
                 summary: "Ligne de rail d'accueil avec accent, visuel projeté, pastilles et date.",
-                symbols: ['EntityRowComponent'],
-                typeSymbols: ['EntityRowFact'],
-                load: () =>
-                    import('./pages/ui/entity-row-page.component').then((m) => m.EntityRowPageComponent),
+                symbols: ["EntityRowComponent"],
+                typeSymbols: ["EntityRowFact"],
+                load: () => import("./pages/ui/entity-row-page.component").then((m) => m.EntityRowPageComponent),
             },
             {
-                path: 'skeleton',
-                label: 'Skeleton',
-                selector: 'gc-skeleton',
+                path: "skeleton",
+                label: "Skeleton",
+                selector: "gc-skeleton",
                 summary: "Bloc gris scintillant tenant la place d'un contenu en cours de chargement.",
-                symbols: ['SkeletonComponent'],
-                load: () => import('./pages/ui/skeleton-page.component').then((m) => m.SkeletonPageComponent),
+                symbols: ["SkeletonComponent"],
+                load: () => import("./pages/ui/skeleton-page.component").then((m) => m.SkeletonPageComponent),
             },
             {
-                path: 'skeleton-text',
-                label: 'Skeleton text',
-                selector: 'gc-skeleton-text',
-                summary: 'Empilement de lignes de squelette imitant un paragraphe.',
-                symbols: ['SkeletonTextComponent'],
+                path: "skeleton-text",
+                label: "Skeleton text",
+                selector: "gc-skeleton-text",
+                summary: "Empilement de lignes de squelette imitant un paragraphe.",
+                symbols: ["SkeletonTextComponent"],
+                load: () => import("./pages/ui/skeleton-text-page.component").then((m) => m.SkeletonTextPageComponent),
+            },
+            {
+                path: "modal",
+                label: "Modal",
+                selector: "gc-modal",
+                summary: "Panneau centré en surimpression accueillant un contenu projeté.",
+                symbols: ["ModalComponent"],
+                load: () => import("./pages/ui/modal-page.component").then((m) => m.ModalPageComponent),
+            },
+            {
+                path: "decision-prompt",
+                label: "Decision prompt",
+                selector: "gc-decision-prompt",
+                summary: "Modale de choix entre un engagement principal et la poursuite sans lui.",
+                symbols: ["DecisionPromptComponent"],
                 load: () =>
-                    import('./pages/ui/skeleton-text-page.component').then((m) => m.SkeletonTextPageComponent),
+                    import("./pages/ui/decision-prompt-page.component").then((m) => m.DecisionPromptPageComponent),
             },
             {
-                path: 'modal',
-                label: 'Modal',
-                selector: 'gc-modal',
-                summary: 'Panneau centré en surimpression accueillant un contenu projeté.',
-                symbols: ['ModalComponent'],
-                load: () => import('./pages/ui/modal-page.component').then((m) => m.ModalPageComponent),
-            },
-            {
-                path: 'decision-prompt',
-                label: 'Decision prompt',
-                selector: 'gc-decision-prompt',
-                summary: 'Modale de choix entre un engagement principal et la poursuite sans lui.',
-                symbols: ['DecisionPromptComponent'],
-                load: () =>
-                    import('./pages/ui/decision-prompt-page.component').then((m) => m.DecisionPromptPageComponent),
-            },
-            {
-                path: 'create-wall',
-                label: 'Create wall',
-                selector: 'gc-create-wall',
+                path: "create-wall",
+                label: "Create wall",
+                selector: "gc-create-wall",
                 summary: "Invitation à franchir l'étape qui débloque une interaction encore inaccessible.",
-                symbols: ['CreateWallComponent'],
-                load: () =>
-                    import('./pages/ui/create-wall-page.component').then((m) => m.CreateWallPageComponent),
+                symbols: ["CreateWallComponent"],
+                load: () => import("./pages/ui/create-wall-page.component").then((m) => m.CreateWallPageComponent),
             },
             {
-                path: 'rich-text',
-                label: 'Rich text',
-                selector: 'gc-rich-editor',
-                summary: 'Édition TipTap et affichage HTML assaini pour présentations et contenus longs.',
-                symbols: [
-                    'RichEditorComponent',
-                    'RichContentComponent',
-                    'isRichHtmlBlank',
-                    'stripRichHtmlPlainText',
-                ],
-                load: () => import('./pages/ui/rich-text-page.component').then((m) => m.RichTextPageComponent),
+                path: "rich-text",
+                label: "Rich text",
+                selector: "gc-rich-editor",
+                summary: "Édition TipTap et affichage HTML assaini pour présentations et contenus longs.",
+                symbols: ["RichEditorComponent", "RichContentComponent", "isRichHtmlBlank", "stripRichHtmlPlainText"],
+                load: () => import("./pages/ui/rich-text-page.component").then((m) => m.RichTextPageComponent),
             },
         ],
     },
     {
-        path: 'theme',
+        path: "theme",
         package: PACKAGES.theme,
-        breadcrumb: 'Thème',
-        summary: 'Design tokens, typographie, animations et utilitaires en SCSS pur, sans aucune dépendance.',
+        breadcrumb: "Thème",
+        summary: "Design tokens, typographie, animations et utilitaires en SCSS pur, sans aucune dépendance.",
         pages: [
             {
-                path: '',
+                path: "",
                 label: "Vue d'ensemble",
-                heading: 'Thème',
-                load: () => import('./pages/theme/theme-index.component').then((m) => m.ThemeIndexComponent),
+                heading: "Thème",
+                load: () => import("./pages/theme/theme-index.component").then((m) => m.ThemeIndexComponent),
             },
             {
-                path: 'tokens',
-                label: 'Tokens',
+                path: "tokens",
+                label: "Tokens",
                 summary: "Les variables CSS de couleur, de police et d'espacement, redéfinissables par jeu.",
-                load: () => import('./pages/theme/tokens-page.component').then((m) => m.TokensPageComponent),
+                load: () => import("./pages/theme/tokens-page.component").then((m) => m.TokensPageComponent),
             },
             {
-                path: 'typography',
-                label: 'Typographie',
-                summary: 'La base html/body et le traitement des titres.',
-                load: () =>
-                    import('./pages/theme/typography-page.component').then((m) => m.TypographyPageComponent),
+                path: "typography",
+                label: "Typographie",
+                summary: "La base html/body et le traitement des titres.",
+                load: () => import("./pages/theme/typography-page.component").then((m) => m.TypographyPageComponent),
             },
             {
-                path: 'motion',
-                label: 'Animations',
+                path: "motion",
+                label: "Animations",
                 summary: "Les keyframes d'entrée et de pulsation, et les classes qui les appliquent.",
-                load: () => import('./pages/theme/motion-page.component').then((m) => m.MotionPageComponent),
+                load: () => import("./pages/theme/motion-page.component").then((m) => m.MotionPageComponent),
             },
             {
-                path: 'utilities',
-                label: 'Utilitaires',
+                path: "utilities",
+                label: "Utilitaires",
                 summary: "Le petit lot de classes d'espacement et d'alignement.",
-                load: () =>
-                    import('./pages/theme/utilities-page.component').then((m) => m.UtilitiesPageComponent),
+                load: () => import("./pages/theme/utilities-page.component").then((m) => m.UtilitiesPageComponent),
             },
         ],
     },
     {
-        path: 'widgets',
+        path: "widgets",
         package: PACKAGES.widgets,
-        breadcrumb: 'Widgets',
-        summary:
-            'Tableau de bord personnalisable, murs d’entité, chat LFG et médias joueur partagés entre remotes.',
+        breadcrumb: "Widgets",
+        summary: "Tableau de bord personnalisable, murs d’entité, chat LFG et médias joueur partagés entre remotes.",
         pages: [
             {
-                path: '',
-                label: 'Concepts',
-                load: () => import('./pages/widgets/concepts-page.component').then((m) => m.ConceptsPageComponent),
+                path: "",
+                label: "Concepts",
+                load: () => import("./pages/widgets/concepts-page.component").then((m) => m.ConceptsPageComponent),
             },
             {
-                path: 'workspace',
-                label: 'Workspace',
-                selector: 'gc-widget-workspace',
-                summary: 'Le composant assemblé, sa démonstration et ses entrées.',
-                symbols: ['WidgetDefDirective', 'WidgetWorkspaceComponent'],
-                typeSymbols: ['WidgetCatalog', 'WidgetWorkspace'],
-                load: () =>
-                    import('./pages/widgets/workspace-page.component').then((m) => m.WorkspacePageComponent),
+                path: "workspace",
+                label: "Workspace",
+                selector: "gc-widget-workspace",
+                summary: "Le composant assemblé, sa démonstration et ses entrées.",
+                symbols: ["WidgetDefDirective", "WidgetWorkspaceComponent"],
+                typeSymbols: ["WidgetCatalog", "WidgetWorkspace"],
+                load: () => import("./pages/widgets/workspace-page.component").then((m) => m.WorkspacePageComponent),
             },
             {
-                path: 'catalog',
-                label: 'Catalogue',
-                summary: 'Déclarer les types disponibles et leurs champs de réglage.',
-                load: () => import('./pages/widgets/catalog-page.component').then((m) => m.CatalogPageComponent),
+                path: "catalog",
+                label: "Catalogue",
+                summary: "Déclarer les types disponibles et leurs champs de réglage.",
+                load: () => import("./pages/widgets/catalog-page.component").then((m) => m.CatalogPageComponent),
             },
             {
-                path: 'built-in',
-                label: 'Widgets fournis',
-                summary: 'Liste de liens, galerie et lecteur Twitch prêts à brancher.',
-                symbols: ['LinkListComponent', 'MediaGalleryComponent', 'TwitchEmbedComponent'],
-                typeSymbols: ['GcGalleryItem', 'GcLink'],
-                load: () => import('./pages/widgets/built-in-page.component').then((m) => m.BuiltInPageComponent),
+                path: "built-in",
+                label: "Widgets fournis",
+                summary: "Liste de liens, galerie et lecteur Twitch prêts à brancher.",
+                symbols: ["LinkListComponent", "MediaGalleryComponent", "TwitchEmbedComponent"],
+                typeSymbols: ["GcGalleryItem", "GcLink"],
+                load: () => import("./pages/widgets/built-in-page.component").then((m) => m.BuiltInPageComponent),
             },
             {
-                path: 'entity-wall',
-                label: 'Entity wall',
-                selector: 'gc-entity-wall',
-                summary: 'Mur équipe/guilde avec file de modération et slots composer/edit.',
+                path: "entity-wall",
+                label: "Entity wall",
+                selector: "gc-entity-wall",
+                summary: "Mur équipe/guilde avec file de modération et slots composer/edit.",
                 symbols: [
-                    'EntityWallComponent',
-                    'EntityWallComposerDirective',
-                    'EntityWallEditDirective',
-                    'EntityWallExtrasDirective',
+                    "EntityWallComponent",
+                    "EntityWallComposerDirective",
+                    "EntityWallEditDirective",
+                    "EntityWallExtrasDirective",
                 ],
-                typeSymbols: ['EntityWallPost', 'EntityWallLabels'],
-                load: () =>
-                    import('./pages/widgets/entity-wall-page.component').then((m) => m.EntityWallPageComponent),
+                typeSymbols: ["EntityWallPost", "EntityWallLabels"],
+                load: () => import("./pages/widgets/entity-wall-page.component").then((m) => m.EntityWallPageComponent),
             },
             {
-                path: 'lfg-chat',
-                label: 'LFG chat',
-                selector: 'gc-lfg-chat',
-                summary: 'Shell de chat LFG / recrutement (scroll, composer, poster-as).',
+                path: "lfg-chat",
+                label: "LFG chat",
+                selector: "gc-lfg-chat",
+                summary: "Shell de chat LFG / recrutement (scroll, composer, poster-as).",
                 symbols: [
-                    'LfgChatComponent',
-                    'LfgChatLeadingDirective',
-                    'LfgChatMetaDirective',
-                    'LfgChatNeedsSheetDirective',
-                    'LfgChatPublishErrorDirective',
+                    "LfgChatComponent",
+                    "LfgChatLeadingDirective",
+                    "LfgChatMetaDirective",
+                    "LfgChatNeedsSheetDirective",
+                    "LfgChatPublishErrorDirective",
                 ],
-                typeSymbols: ['LfgChatMessage', 'LfgChatLabels', 'LfgChatComposerState'],
-                load: () => import('./pages/widgets/lfg-chat-page.component').then((m) => m.LfgChatPageComponent),
+                typeSymbols: ["LfgChatMessage", "LfgChatLabels", "LfgChatComposerState"],
+                load: () => import("./pages/widgets/lfg-chat-page.component").then((m) => m.LfgChatPageComponent),
             },
             {
-                path: 'player-media',
-                label: 'Player media',
-                selector: 'gc-player-media-manager',
-                summary: 'Manager joueur et admin staff pour photos / vidéos de fiche.',
-                symbols: ['PlayerMediaManagerComponent', 'PlayerMediaAdminComponent'],
-                typeSymbols: ['PlayerMediaManagerLabels', 'PlayerMediaAdminLabels'],
+                path: "player-media",
+                label: "Player media",
+                selector: "gc-player-media-manager",
+                summary: "Manager joueur et admin staff pour photos / vidéos de fiche.",
+                symbols: ["PlayerMediaManagerComponent", "PlayerMediaAdminComponent"],
+                typeSymbols: ["PlayerMediaManagerLabels", "PlayerMediaAdminLabels"],
                 load: () =>
-                    import('./pages/widgets/player-media-page.component').then((m) => m.PlayerMediaPageComponent),
+                    import("./pages/widgets/player-media-page.component").then((m) => m.PlayerMediaPageComponent),
             },
             {
-                path: 'persistence',
-                label: 'Persistance',
-                summary: 'Lire, écrire et réparer un workspace stocké.',
+                path: "persistence",
+                label: "Persistance",
+                summary: "Lire, écrire et réparer un workspace stocké.",
                 load: () =>
-                    import('./pages/widgets/persistence-page.component').then((m) => m.PersistencePageComponent),
+                    import("./pages/widgets/persistence-page.component").then((m) => m.PersistencePageComponent),
             },
         ],
     },
@@ -330,13 +298,7 @@ export const docsSections: DocsSection[] = [
 
 /** Absolute route of a page, so links never have to restate the section segment. */
 export function docsPath(section: DocsSection, page: DocsPage): string {
-    return `/${[section.path, page.path].filter(Boolean).join('/')}`;
-}
-
-export interface DocsCard {
-    link: string;
-    title: string;
-    description: string;
+    return `/${[section.path, page.path].filter(Boolean).join("/")}`;
 }
 
 export function docsSection(sectionPath: string): DocsSection {
@@ -362,16 +324,8 @@ export function pageCards(sectionPath: string): DocsCard[] {
 
 /** Cards for the sections that document a package, used by the home page. */
 export const packageCards: DocsCard[] = docsSections.flatMap((section) =>
-    section.summary
-        ? [{ link: `/${section.path}`, title: sectionHeading(section), description: section.summary }]
-        : [],
+    section.summary ? [{ link: `/${section.path}`, title: sectionHeading(section), description: section.summary }] : [],
 );
-
-export interface DocsNavGroup {
-    label: string;
-    links: { path: string; label: string }[];
-}
-
 export const docsNav: DocsNavGroup[] = docsSections.map((section) => ({
     label: sectionHeading(section),
     links: section.pages.map((page) => ({ path: docsPath(section, page), label: page.label })),

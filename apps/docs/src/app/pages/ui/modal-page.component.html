@@ -1,0 +1,87 @@
+<gcd-page
+    lead="Panneau centré en surimpression qui accueille un contenu projeté et laisse à l'appelant la maîtrise de son ouverture."
+>
+    <p>
+        Le composant ne décide jamais seul de se fermer : il signale une intention de fermeture par
+        <code>dismissed</code>
+        , et c'est l'appelant qui repasse
+        <code>open</code>
+        à
+        <code>false</code>
+        . Ce détour permet de retenir la fermeture, par exemple pendant l'enregistrement d'un formulaire.
+    </p>
+
+    <gcd-demo title="Modale renvoyable" [html]="basicHtml" [ts]="basicTs">
+        <button type="button" class="gcd-demo-button" (click)="open.set(true)">Ouvrir la modale</button>
+
+        <gc-modal [open]="open()" ariaLabel="Exemple de modale" (dismissed)="open.set(false)">
+            <h2 class="gcd-modal-title">Rejoindre l'équipe</h2>
+            <p class="gcd-modal-text">
+                Cliquez en dehors du panneau ou appuyez sur Échap : le composant émet
+                <code>dismissed</code>
+                , et c'est la page qui referme.
+            </p>
+            <button type="button" class="gcd-demo-button" (click)="open.set(false)">Fermer</button>
+        </gc-modal>
+    </gcd-demo>
+
+    <gcd-demo
+        title="Modale bloquante"
+        description="Avec dismissible à false, ni le fond ni la touche Échap ne ferment le panneau."
+        [html]="blockingHtml"
+    >
+        <button type="button" class="gcd-demo-button" (click)="blocking.set(true)">Ouvrir une modale bloquante</button>
+
+        <gc-modal [open]="blocking()" [dismissible]="false" ariaLabel="Traitement en cours">
+            <h2 class="gcd-modal-title">Transfert en cours</h2>
+            <p class="gcd-modal-text">Seule une action du panneau peut refermer cette modale.</p>
+            <button type="button" class="gcd-demo-button" (click)="blocking.set(false)">Terminer</button>
+        </gc-modal>
+    </gcd-demo>
+
+    <h2>API</h2>
+
+    <gcd-api heading="Entrées" [rows]="inputs" />
+
+    <gcd-api heading="Sorties" [rows]="outputs" [showDefault]="false" />
+
+    <h2>Comportement</h2>
+
+    <ul>
+        <li>
+            à l'ouverture, le panneau prend le focus, ce qui donne un point de départ correct à la navigation au clavier
+            ;
+        </li>
+        <li>
+            le panneau porte
+            <code>role="dialog"</code>
+            et
+            <code>aria-modal="true"</code>
+            , et reprend
+            <code>ariaLabel</code>
+            comme étiquette accessible ;
+        </li>
+        <li>
+            la touche Échap est écoutée au niveau du document, donc elle fonctionne sans que le focus soit dans le
+            panneau ;
+        </li>
+        <li>
+            <code>dismissed</code>
+            transporte l'origine de la demande,
+            <code>'backdrop'</code>
+            ou
+            <code>'escape'</code>
+            , si vous voulez les traiter différemment.
+        </li>
+    </ul>
+
+    <div class="gcd-note">
+        <p>
+            Rien n'est rendu tant que
+            <code>open</code>
+            vaut
+            <code>false</code>
+            : le contenu projeté n'est ni créé ni initialisé, il est donc inutile de le conditionner vous-même.
+        </p>
+    </div>
+</gcd-page>

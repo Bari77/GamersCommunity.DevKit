@@ -1,0 +1,21 @@
+.gcd-bar {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px dashed var(--gcd-border);
+    border-radius: 0.4rem;
+}
+
+.gcd-chip {
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--gcd-border);
+    border-radius: 0.3rem;
+    font-size: 0.78rem;
+    color: #c9d4ea;
+}
+
+.gcd-chip--accent {
+    border-color: var(--gc-accent);
+    color: var(--gc-accent);
+}

@@ -1,21 +1,17 @@
-import { makeEnvironmentProviders, type EnvironmentProviders, type Type } from "@angular/core";
-import { GC_ENVIRONMENT, type GcRuntimeEnvironment } from "../env/tokens";
+import { makeEnvironmentProviders, EnvironmentProviders, Type } from "@angular/core";
+import { GC_ENVIRONMENT, GcRuntimeEnvironment } from "../env/tokens";
 import { PlayerMediaService } from "../media/player-media.service";
 import { PlatformGamesService } from "../platform/platform-games.service";
 import { PlatformSessionService } from "../platform/platform-session.service";
 import { GameMembershipStore } from "./game-membership.store";
-import {
-  GAME_MEMBERSHIP_CONFIG,
-  GAME_PLAYER_SHEET_API,
-  type GameMembershipConfig,
-  type GamePlayerSheetApi,
-} from "./tokens";
+import { GAME_MEMBERSHIP_CONFIG, GAME_PLAYER_SHEET_API, GameMembershipConfig } from "./tokens";
+import { GamePlayerSheetApi } from "./game-player-sheet-api";
 
 export interface GameRemoteKernelOptions {
-  environment: GcRuntimeEnvironment;
-  membership: GameMembershipConfig;
-  /** Typically the game's `PlayersService` (resolve + load). */
-  playerSheetApi: Type<GamePlayerSheetApi>;
+    environment: GcRuntimeEnvironment;
+    membership: GameMembershipConfig;
+    /** Typically the game's `PlayersService` (resolve + load). */
+    playerSheetApi: Type<GamePlayerSheetApi>;
 }
 
 /**
@@ -31,14 +27,14 @@ export interface GameRemoteKernelOptions {
  * injects `GameMembershipStore` at root does not hit NG0201 before route providers load.
  */
 export function provideGameRemoteKernel(options: GameRemoteKernelOptions): EnvironmentProviders {
-  return makeEnvironmentProviders([
-    { provide: GC_ENVIRONMENT, useValue: options.environment },
-    { provide: GAME_MEMBERSHIP_CONFIG, useValue: options.membership },
-    options.playerSheetApi,
-    { provide: GAME_PLAYER_SHEET_API, useExisting: options.playerSheetApi },
-    PlatformSessionService,
-    PlatformGamesService,
-    GameMembershipStore,
-    PlayerMediaService,
-  ]);
+    return makeEnvironmentProviders([
+        { provide: GC_ENVIRONMENT, useValue: options.environment },
+        { provide: GAME_MEMBERSHIP_CONFIG, useValue: options.membership },
+        options.playerSheetApi,
+        { provide: GAME_PLAYER_SHEET_API, useExisting: options.playerSheetApi },
+        PlatformSessionService,
+        PlatformGamesService,
+        GameMembershipStore,
+        PlayerMediaService,
+    ]);
 }

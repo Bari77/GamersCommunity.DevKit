@@ -1,40 +1,42 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { WidgetCatalogEntry, WidgetListField, WidgetSettingsField, WidgetTextField } from '../catalog';
-import { WidgetSettings } from '../workspace';
+import { ChangeDetectionStrategy, Component, computed, input, output } from "@angular/core";
+import { WidgetSettingsField, WidgetTextField } from "../catalog";
+import { WidgetListField } from "../widget-list-field";
+import { WidgetCatalogEntry } from "../widget-catalog-entry";
+import { WidgetSettings } from "../workspace";
 
 type SettingsRow = Record<string, unknown>;
 
 /** Settings key every widget owns, whatever its catalog entry declares. */
-export const WIDGET_TITLE_KEY = 'title';
+export const WIDGET_TITLE_KEY = "title";
 
 /** Renders the settings form described by a catalog entry, so hosts declare data, not UI. */
 @Component({
-    selector: 'gc-widget-settings',
+    selector: "gc-widget-settings",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './widget-settings.component.html',
-    styleUrl: './widget-settings.component.scss',
+    templateUrl: "./widget-settings.component.html",
+    styleUrl: "./widget-settings.component.scss",
 })
 export class WidgetSettingsComponent {
     public readonly entry = input.required<WidgetCatalogEntry>();
 
     public readonly settings = input.required<WidgetSettings>();
 
-    public readonly closeLabel = input('Close');
+    public readonly closeLabel = input("Close");
 
-    public readonly doneLabel = input('Done');
+    public readonly doneLabel = input("Done");
 
-    public readonly titleLabel = input('Widget title');
+    public readonly titleLabel = input("Widget title");
 
-    public readonly titleHint = input('Leave empty to drop the header.');
+    public readonly titleHint = input("Leave empty to drop the header.");
 
-    public readonly addRowLabel = input('Add');
+    public readonly addRowLabel = input("Add");
 
-    public readonly removeRowLabel = input('Remove');
+    public readonly removeRowLabel = input("Remove");
 
-    public readonly moveUpLabel = input('Move up');
+    public readonly moveUpLabel = input("Move up");
 
-    public readonly moveDownLabel = input('Move down');
+    public readonly moveDownLabel = input("Move down");
 
     public readonly settingsChange = output<WidgetSettings>();
 
@@ -55,7 +57,7 @@ export class WidgetSettingsComponent {
 
     protected value(key: string): string {
         const raw = this.settings()[key];
-        return raw === null || raw === undefined ? '' : String(raw);
+        return raw === null || raw === undefined ? "" : String(raw);
     }
 
     protected rows(key: string): SettingsRow[] {
@@ -65,7 +67,7 @@ export class WidgetSettingsComponent {
 
     protected rowValue(row: SettingsRow, key: string): string {
         const raw = row[key];
-        return raw === null || raw === undefined ? '' : String(raw);
+        return raw === null || raw === undefined ? "" : String(raw);
     }
 
     protected setValue(key: string, event: Event): void {

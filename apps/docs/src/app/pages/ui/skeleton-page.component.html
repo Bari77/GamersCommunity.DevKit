@@ -1,0 +1,42 @@
+<gcd-page
+    lead="Bloc scintillant qui occupe la place d'un contenu encore en cours de chargement, pour éviter que la page ne saute quand la donnée arrive."
+>
+    <p>
+        Le composant ne fait que dessiner une forme : c'est à l'appelant de lui donner les dimensions du contenu qu'il
+        remplace. Bien dimensionné, il supprime le décalage de mise en page au moment où la donnée s'affiche.
+    </p>
+
+    <gcd-demo title="Dimensions libres" [html]="basicHtml">
+        <gc-skeleton width="18rem" height="1.25rem" />
+        <gc-skeleton width="12rem" height="1.25rem" />
+        <gc-skeleton width="18rem" height="6rem" radius="0.6rem" />
+    </gcd-demo>
+
+    <gcd-demo title="Forme ronde" description="Pour un avatar, la forme circle ignore le rayon." [html]="circleHtml">
+        <gc-skeleton shape="circle" width="4rem" height="4rem" />
+    </gcd-demo>
+
+    <h2>Usage courant</h2>
+
+    <p>
+        Le cas le plus fréquent est de brancher l'affichage sur l'état de chargement d'une ressource, en gardant
+        exactement la même structure de part et d'autre de la condition.
+    </p>
+
+    <gcd-code language="html" [code]="usageSnippet" />
+
+    <h2>API</h2>
+
+    <gcd-api heading="Entrées" [rows]="inputs" />
+
+    <div class="gcd-note">
+        <p>
+            Le composant porte
+            <code>aria-hidden="true"</code>
+            : il est invisible pour les lecteurs d'écran, qui n'ont rien à annoncer tant que la donnée n'est pas là. Si
+            l'attente doit être signalée, ajoutez une région
+            <code>aria-live</code>
+            à côté.
+        </p>
+    </div>
+</gcd-page>

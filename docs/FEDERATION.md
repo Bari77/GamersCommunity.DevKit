@@ -24,12 +24,12 @@ This is a **micro-frontend**: an independently deployable remote, composed at ru
 
 ## Why it matters here
 
-| Goal | Federation |
-|------|------------|
-| Split teams (Shell vs WoW vs …) | Yes |
-| Deploy a game without republishing the whole shell | Yes (`remoteEntry` URL) |
-| SPA-like reactive site | Yes (no iframe) |
-| Fully isolate CSS/JS like a third-party widget | No (shared Angular runtime) |
+| Goal                                               | Federation                  |
+| -------------------------------------------------- | --------------------------- |
+| Split teams (Shell vs WoW vs …)                    | Yes                         |
+| Deploy a game without republishing the whole shell | Yes (`remoteEntry` URL)     |
+| SPA-like reactive site                             | Yes (no iframe)             |
+| Fully isolate CSS/JS like a third-party widget     | No (shared Angular runtime) |
 
 ## Flow
 

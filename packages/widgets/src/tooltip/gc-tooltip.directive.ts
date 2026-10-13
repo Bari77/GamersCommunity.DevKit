@@ -1,6 +1,6 @@
-import { Directive, ElementRef, HostListener, inject, input, OnDestroy, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, HostListener, inject, input, OnDestroy, Renderer2 } from "@angular/core";
 
-const STYLE_ID = 'gc-tooltip-styles';
+const STYLE_ID = "gc-tooltip-styles";
 const SHOW_DELAY_MS = 100;
 
 /**
@@ -9,32 +9,32 @@ const SHOW_DELAY_MS = 100;
  * sits above the grid the same way a host Nebular tooltip would.
  */
 @Directive({
-    selector: '[gcTooltip]',
+    selector: "[gcTooltip]",
     standalone: true,
 })
 export class GcTooltipDirective implements OnDestroy {
-    public readonly gcTooltip = input('');
+    public readonly gcTooltip = input("");
 
     private readonly host = inject(ElementRef<HTMLElement>);
     private readonly renderer = inject(Renderer2);
     private tip: HTMLElement | null = null;
     private showTimer: ReturnType<typeof setTimeout> | null = null;
 
-    @HostListener('mouseenter')
-    @HostListener('focus')
+    @HostListener("mouseenter")
+    @HostListener("focus")
     protected onEnter(): void {
         this.clearTimer();
         this.showTimer = setTimeout(() => this.show(), SHOW_DELAY_MS);
     }
 
-    @HostListener('mouseleave')
-    @HostListener('blur')
+    @HostListener("mouseleave")
+    @HostListener("blur")
     protected onLeave(): void {
         this.hide();
     }
 
-    @HostListener('window:scroll')
-    @HostListener('window:resize')
+    @HostListener("window:scroll")
+    @HostListener("window:resize")
     protected onViewportChange(): void {
         this.hide();
     }
@@ -51,9 +51,9 @@ export class GcTooltipDirective implements OnDestroy {
 
         ensureStyles();
 
-        const tip = this.renderer.createElement('div') as HTMLElement;
-        this.renderer.addClass(tip, 'gc-tooltip');
-        this.renderer.setAttribute(tip, 'role', 'tooltip');
+        const tip = this.renderer.createElement("div") as HTMLElement;
+        this.renderer.addClass(tip, "gc-tooltip");
+        this.renderer.setAttribute(tip, "role", "tooltip");
         this.renderer.appendChild(tip, this.renderer.createText(text));
         this.renderer.appendChild(document.body, tip);
         this.tip = tip;
@@ -65,11 +65,11 @@ export class GcTooltipDirective implements OnDestroy {
         const tipRect = tip.getBoundingClientRect();
         const gap = 8;
         let top = rect.bottom + gap;
-        let placement: 'top' | 'bottom' = 'bottom';
+        let placement: "top" | "bottom" = "bottom";
 
         if (top + tipRect.height > window.innerHeight - 8) {
             top = rect.top - tipRect.height - gap;
-            placement = 'top';
+            placement = "top";
         }
 
         const left = Math.min(
@@ -77,8 +77,8 @@ export class GcTooltipDirective implements OnDestroy {
             window.innerWidth - tipRect.width - 8,
         );
 
-        this.renderer.setStyle(tip, 'top', `${Math.max(8, top)}px`);
-        this.renderer.setStyle(tip, 'left', `${left}px`);
+        this.renderer.setStyle(tip, "top", `${Math.max(8, top)}px`);
+        this.renderer.setStyle(tip, "left", `${left}px`);
         this.renderer.addClass(tip, `gc-tooltip--${placement}`);
     }
 
@@ -101,11 +101,11 @@ export class GcTooltipDirective implements OnDestroy {
 }
 
 function ensureStyles(): void {
-    if (typeof document === 'undefined' || document.getElementById(STYLE_ID)) {
+    if (typeof document === "undefined" || document.getElementById(STYLE_ID)) {
         return;
     }
 
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
 .gc-tooltip {

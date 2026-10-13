@@ -6,7 +6,7 @@ namespace DevGateway.Middleware;
 
 public sealed class ExceptionMiddleware(RequestDelegate next)
 {
-    public async Task Invoke(HttpContext context)
+    public async Task InvokeAsync(HttpContext context)
     {
         try
         {

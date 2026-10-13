@@ -1,13 +1,6 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, signal } from '@angular/core';
-import { ActivatedRouteSnapshot, NavigationEnd, Router, RouterLink } from '@angular/router';
-
-/** One step of the navigation trail. */
-export interface Breadcrumb {
-    label: string;
-
-    /** Absolute URL of the step, built from the route segments leading to it. */
-    url: string;
-}
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, signal } from "@angular/core";
+import { ActivatedRouteSnapshot, NavigationEnd, Router, RouterLink } from "@angular/router";
+import { Breadcrumb } from "./breadcrumb.model";
 
 /**
  * Navigation trail rebuilt from the router state after every navigation. A route joins the trail by
@@ -18,29 +11,25 @@ export interface Breadcrumb {
  * special casing: leave its `data` alone and nothing renders.
  */
 @Component({
-    selector: 'gc-breadcrumb',
+    selector: "gc-breadcrumb",
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [RouterLink],
-    templateUrl: './breadcrumb.component.html',
-    styleUrl: './breadcrumb.component.scss',
+    templateUrl: "./breadcrumb.component.html",
+    styleUrl: "./breadcrumb.component.scss",
     host: {
-        '[class.gc-breadcrumb--empty]': 'crumbs().length === 0',
+        "[class.gc-breadcrumb--empty]": "crumbs().length === 0",
     },
 })
 export class BreadcrumbComponent {
     /** Label of the leading step, prepended once the trail holds at least one route. Leave empty to drop it. */
-    public readonly rootLabel = input('');
+    public readonly rootLabel = input("");
 
-    public readonly rootLink = input('/');
+    public readonly rootLink = input("/");
 
-    public readonly separator = input('/');
+    public readonly separator = input("/");
 
-    public readonly ariaLabel = input('Breadcrumb');
-
-    private readonly router = inject(Router);
-
-    private readonly trail = signal<Breadcrumb[]>(this.readTrail());
+    public readonly ariaLabel = input("Breadcrumb");
 
     protected readonly crumbs = computed<Breadcrumb[]>(() => {
         const trail = this.trail();
@@ -53,6 +42,10 @@ export class BreadcrumbComponent {
 
         return rootLabel ? [{ label: rootLabel, url: this.rootLink() }, ...trail] : trail;
     });
+
+    private readonly router = inject(Router);
+
+    private readonly trail = signal<Breadcrumb[]>(this.readTrail());
 
     public constructor() {
         const subscription = this.router.events.subscribe((event) => {
@@ -67,10 +60,10 @@ export class BreadcrumbComponent {
     private readTrail(): Breadcrumb[] {
         const trail: Breadcrumb[] = [];
         let snapshot: ActivatedRouteSnapshot | null = this.router.routerState.snapshot.root;
-        let url = '';
+        let url = "";
 
         while (snapshot) {
-            const segments = snapshot.url.map((segment) => segment.path).join('/');
+            const segments = snapshot.url.map((segment) => segment.path).join("/");
 
             if (segments) {
                 url += `/${segments}`;
@@ -78,9 +71,9 @@ export class BreadcrumbComponent {
 
             // Read the raw route config rather than `snapshot.data`: the latter inherits its parent's
             // data across empty-path routes, which would repeat a step for every componentless wrapper.
-            const label: unknown = snapshot.routeConfig?.data?.['breadcrumb'];
+            const label: unknown = snapshot.routeConfig?.data?.["breadcrumb"];
 
-            if (typeof label === 'string' && label.length > 0) {
+            if (typeof label === "string" && label.length > 0) {
                 trail.push({ label, url });
             }
 

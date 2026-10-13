@@ -1,0 +1,100 @@
+<gcd-page
+    lead="Trois contenus prêts à brancher dans un gabarit gcWidget, utilisables aussi bien en dehors du tableau de bord."
+>
+    <p>
+        Ce sont des composants indépendants : ils ne connaissent ni le workspace ni le catalogue, et se contentent de
+        leurs entrées. Rien n'empêche de les utiliser sur une page ordinaire. Placés dans un workspace sous les types
+        <code>gc-links</code>
+        ,
+        <code>gc-twitch</code>
+        ,
+        <code>gc-photos</code>
+        et
+        <code>gc-videos</code>
+        , le crayon ouvre leur éditeur interne sans gabarit hôte.
+    </p>
+
+    <h2>gc-link-list</h2>
+
+    <p>
+        Affiche une liste de liens en devinant le réseau à partir de l'URL, ce qui lui donne son icône et sa couleur.
+        Les entrées sans adresse sont ignorées, et un libellé absent est remplacé par le nom d'hôte.
+    </p>
+
+    <gcd-demo title="Liste de liens" [html]="linksHtml" [bare]="true">
+        <gc-link-list [links]="links" emptyLabel="Aucun lien pour l'instant." />
+    </gcd-demo>
+
+    <gcd-api heading="Entrées" [rows]="linkInputs" />
+
+    <gcd-code language="typescript" label="Type GcLink" [code]="linkTypeSnippet" />
+
+    <h2>gc-media-gallery</h2>
+
+    <p>
+        Présente une grille de photos ou de vidéos. En mode
+        <code>video</code>
+        , l'URL publique est convertie en URL de lecteur pour YouTube, Vimeo, Dailymotion, ainsi que les VOD et les
+        clips Twitch ; une adresse non reconnue retombe sur une lecture directe.
+    </p>
+
+    <gcd-demo title="Galerie de photos" [html]="galleryHtml" [bare]="true">
+        <gc-media-gallery [items]="photos" kind="photo" emptyLabel="Aucune image." />
+    </gcd-demo>
+
+    <gcd-api heading="Entrées" [rows]="galleryInputs" />
+
+    <gcd-code language="typescript" label="Type GcGalleryItem" [code]="galleryTypeSnippet" />
+
+    <div class="gcd-note">
+        <p>
+            La visionneuse plein écran est déplacée dans
+            <code>&lt;body&gt;</code>
+            à l'ouverture. C'est volontaire : une tuile de grille est positionnée par
+            <code>transform</code>
+            , ce qui ancrerait autrement une surimpression
+            <code>fixed</code>
+            sur le widget au lieu de la fenêtre.
+        </p>
+    </div>
+
+    <h2>gc-twitch-embed</h2>
+
+    <p>
+        Intègre le lecteur d'une chaîne. L'entrée accepte aussi bien un nom de chaîne qu'une URL
+        <code>twitch.tv</code>
+        complète ; une valeur non reconnue affiche le message de repli plutôt qu'un cadre vide.
+    </p>
+
+    <gcd-demo
+        title="Lecteur Twitch"
+        description="Le lecteur exige que le domaine parent soit autorisé côté Twitch."
+        [html]="twitchHtml"
+        [bare]="true"
+    >
+        <div class="gcd-twitch">
+            <gc-twitch-embed channel="gamerscommunity" emptyLabel="Ajoutez une chaîne pour afficher le lecteur." />
+        </div>
+    </gcd-demo>
+
+    <gcd-api heading="Entrées" [rows]="twitchInputs" />
+
+    <div class="gcd-note">
+        <p>
+            L'URL du lecteur transporte le domaine courant en paramètre
+            <code>parent</code>
+            , comme Twitch l'exige. En local, cela vaut
+            <code>localhost</code>
+            ; en production, le domaine servant l'application doit être déclaré dans la console Twitch.
+        </p>
+    </div>
+
+    <h2>Aides d'URL</h2>
+
+    <p>
+        Les fonctions utilisées par ces widgets sont exportées : elles servent à préparer une donnée avant de
+        l'enregistrer, ou à valider une saisie.
+    </p>
+
+    <gcd-api [rows]="helpers" [showDefault]="false" />
+</gcd-page>

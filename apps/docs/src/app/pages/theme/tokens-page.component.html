@@ -1,0 +1,55 @@
+<gcd-page
+    lead="Les variables CSS posées sur :root par le thème. Tout le reste du DevKit s'y réfère, ce qui rend l'habillage modifiable sans recompiler le SCSS."
+>
+    <h2>Couleurs</h2>
+
+    <div class="gcd-swatches">
+        @for (swatch of colors; track swatch.token) {
+            <div class="gcd-swatch">
+                <div class="gcd-swatch__preview" [style.background]="swatch.preview"></div>
+                <div class="gcd-swatch__body">
+                    <span class="gcd-swatch__name">{{ swatch.token }}</span>
+                    <span class="gcd-swatch__value">{{ swatch.value }}</span>
+                </div>
+            </div>
+        }
+    </div>
+
+    <h2>Liste complète</h2>
+
+    <gcd-api [rows]="tokens" />
+
+    <h2>Accent par jeu</h2>
+
+    <p>
+        <code>--game-accent</code>
+        vaut
+        <code>var(--gc-accent)</code>
+        par défaut. Un module de jeu le redéfinit pour teinter son espace sans toucher au reste de la plateforme : les
+        composants qui utilisent cette variable, comme la pulsation de
+        <code>gc-pulse-new</code>
+        , suivent automatiquement.
+    </p>
+
+    <gcd-code language="scss" label="Dans le module de jeu" [code]="overrideSnippet" />
+
+    <h2>Consommer un token</h2>
+
+    <p>
+        Les tokens s'utilisent comme n'importe quelle variable CSS, y compris dans les styles encapsulés d'un composant,
+        puisqu'ils sont déclarés sur
+        <code>:root</code>
+        .
+    </p>
+
+    <gcd-code language="scss" [code]="usageSnippet" />
+
+    <div class="gcd-note">
+        <p>
+            Les tokens sont des variables CSS, pas des variables Sass : elles sont résolues par le navigateur. On peut
+            donc les surcharger à l'exécution, par exemple en posant une classe de thème sur
+            <code>&lt;body&gt;</code>
+            , ce qu'une variable Sass ne permettrait pas.
+        </p>
+    </div>
+</gcd-page>

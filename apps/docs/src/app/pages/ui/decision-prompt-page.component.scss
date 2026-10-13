@@ -1,0 +1,16 @@
+.gcd-demo-button {
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--gc-accent);
+    border-radius: 0.35rem;
+    background: transparent;
+    color: var(--gc-accent);
+    font: inherit;
+    font-size: 0.8125rem;
+    cursor: pointer;
+}
+
+.gcd-state {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--gcd-text-dim);
+}
