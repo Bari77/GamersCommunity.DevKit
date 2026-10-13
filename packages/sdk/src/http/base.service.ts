@@ -24,14 +24,6 @@ export abstract class BaseService {
     return this.getJson<Tdto>(url).pipe(map((dto) => modelClass.fromDto(dto)));
   }
 
-  /** Alias of {@link getOne} for callers migrated from Platform’s local BaseService. */
-  protected get<Tdto, Tmodel>(
-    modelClass: DtoConvertibleClass<Tdto, Tmodel>,
-    url: string | null = null,
-  ): Observable<Tmodel> {
-    return this.getOne(modelClass, url);
-  }
-
   protected getAll<Tdto, Tmodel>(
     modelClass: DtoConvertibleClass<Tdto, Tmodel>,
     url: string | null = null,

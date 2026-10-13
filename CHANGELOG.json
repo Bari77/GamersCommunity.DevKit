@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.1.1",
+    "date": "2026-10-13",
+    "summary": "gc-sdk : retire l’alias BaseService.get qui collisionnait avec les services métier (HomeFeed).",
+    "changes": [
+      {
+        "package": "gc-sdk",
+        "kind": "fixed",
+        "text": "Suppression de l’alias get → getOne. Utiliser getOne / getJson uniquement."
+      }
+    ]
+  },
+  {
     "version": "1.1.0",
     "date": "2026-10-13",
     "summary": "gc-sdk : helpers HTTP bruts (postJson, delete, postList) pour supprimer this.http dans les Fronts.",
