@@ -1,5 +1,17 @@
 [
   {
+    "version": "2.0.1",
+    "date": "2026-10-13",
+    "summary": "gc-widgets : peerDependencies @bari77/* en * pour le lockstep majeur.",
+    "changes": [
+      {
+        "package": "gc-widgets",
+        "kind": "fixed",
+        "text": "Peers gc-sdk/gc-ui passés de ^1.0.2 à * (aligné msw/playground) pour éviter ERESOLVE sur v2."
+      }
+    ]
+  },
+  {
     "version": "2.0.0",
     "date": "2026-10-13",
     "summary": "gc-sdk BaseService : réponses structurées via modèles fromDto ; scalaires typés ; plus de postJson/getJson.",
