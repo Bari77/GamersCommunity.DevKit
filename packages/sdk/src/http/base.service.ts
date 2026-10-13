@@ -7,9 +7,11 @@ import type { DtoConvertibleClass } from "./dto-convertible";
 /**
  * Shared HTTP helpers for Platform / game Fronts.
  *
- * - `getOne` / `getAll` / `post` / `put` — DTO → domain model via `fromDto`
- * - `getJson` / `postJson` / `putJson` / `delete` — raw JSON / void (RPC actions, primitives)
- * - `postList` — POST → `Tmodel[]` via `fromDto`
+ * Conventions:
+ * 1. Structured payloads always go through a model with `fromDto` (`getOne` / `getAll` / `post` / `put` / `postList`).
+ * 2. Scalar RPC responses use typed helpers (`postBool` / `postNumber` / `postString`, and get/put variants).
+ * 3. Side-effect RPC whose body is ignored → `postVoid` / `putVoid`.
+ * 4. Never expose a generic “raw JSON” escape hatch on subclasses — add a model or a scalar helper instead.
  */
 export abstract class BaseService {
   protected readonly http: HttpClient = inject(HttpClient);
@@ -21,14 +23,14 @@ export abstract class BaseService {
     modelClass: DtoConvertibleClass<Tdto, Tmodel>,
     url: string | null = null,
   ): Observable<Tmodel> {
-    return this.getJson<Tdto>(url).pipe(map((dto) => modelClass.fromDto(dto)));
+    return this.httpGet<Tdto>(url).pipe(map((dto) => modelClass.fromDto(dto)));
   }
 
   protected getAll<Tdto, Tmodel>(
     modelClass: DtoConvertibleClass<Tdto, Tmodel>,
     url: string | null = null,
   ): Observable<Tmodel[]> {
-    return this.getJson<Tdto[]>(url).pipe(map((dtos) => dtos.map((dto) => modelClass.fromDto(dto))));
+    return this.httpGet<Tdto[]>(url).pipe(map((dtos) => dtos.map((dto) => modelClass.fromDto(dto))));
   }
 
   protected post<Tdto, Tmodel>(
@@ -36,7 +38,7 @@ export abstract class BaseService {
     url: string | null = null,
     body: unknown = {},
   ): Observable<Tmodel> {
-    return this.postJson<Tdto>(url, body).pipe(map((dto) => modelClass.fromDto(dto)));
+    return this.httpPost<Tdto>(url, body).pipe(map((dto) => modelClass.fromDto(dto)));
   }
 
   protected put<Tdto, Tmodel>(
@@ -44,7 +46,7 @@ export abstract class BaseService {
     url: string | null = null,
     body: unknown = {},
   ): Observable<Tmodel> {
-    return this.putJson<Tdto>(url, body).pipe(map((dto) => modelClass.fromDto(dto)));
+    return this.httpPut<Tdto>(url, body).pipe(map((dto) => modelClass.fromDto(dto)));
   }
 
   protected postList<Tdto, Tmodel>(
@@ -52,21 +54,54 @@ export abstract class BaseService {
     url: string | null = null,
     body: unknown = {},
   ): Observable<Tmodel[]> {
-    return this.postJson<Tdto[]>(url, body).pipe(
+    return this.httpPost<Tdto[]>(url, body).pipe(
       map((dtos) => (dtos ?? []).map((dto) => modelClass.fromDto(dto))),
     );
   }
 
-  protected getJson<T>(url: string | null = null): Observable<T> {
-    return this.http.get<T>(this.getURL(url));
+  protected getBool(url: string | null = null): Observable<boolean> {
+    return this.httpGet<boolean>(url);
   }
 
-  protected postJson<T>(url: string | null = null, body: unknown = {}): Observable<T> {
-    return this.http.post<T>(this.getURL(url), body);
+  protected postBool(url: string | null = null, body: unknown = {}): Observable<boolean> {
+    return this.httpPost<boolean>(url, body);
   }
 
-  protected putJson<T>(url: string | null = null, body: unknown = {}): Observable<T> {
-    return this.http.put<T>(this.getURL(url), body);
+  protected putBool(url: string | null = null, body: unknown = {}): Observable<boolean> {
+    return this.httpPut<boolean>(url, body);
+  }
+
+  protected getNumber(url: string | null = null): Observable<number> {
+    return this.httpGet<number>(url);
+  }
+
+  protected postNumber(url: string | null = null, body: unknown = {}): Observable<number> {
+    return this.httpPost<number>(url, body);
+  }
+
+  protected putNumber(url: string | null = null, body: unknown = {}): Observable<number> {
+    return this.httpPut<number>(url, body);
+  }
+
+  protected getString(url: string | null = null): Observable<string> {
+    return this.httpGet<string>(url);
+  }
+
+  protected postString(url: string | null = null, body: unknown = {}): Observable<string> {
+    return this.httpPost<string>(url, body);
+  }
+
+  protected putString(url: string | null = null, body: unknown = {}): Observable<string> {
+    return this.httpPut<string>(url, body);
+  }
+
+  /** RPC whose response body is discarded (fire-and-forget with HTTP success). */
+  protected postVoid(url: string | null = null, body: unknown = {}): Observable<void> {
+    return this.httpPost<unknown>(url, body).pipe(map(() => undefined));
+  }
+
+  protected putVoid(url: string | null = null, body: unknown = {}): Observable<void> {
+    return this.httpPut<unknown>(url, body).pipe(map(() => undefined));
   }
 
   protected delete(url: string | null = null): Observable<void> {
@@ -82,5 +117,17 @@ export abstract class BaseService {
     }
 
     return base.toString().replace(/\/+$/, "");
+  }
+
+  private httpGet<T>(url: string | null): Observable<T> {
+    return this.http.get<T>(this.getURL(url));
+  }
+
+  private httpPost<T>(url: string | null, body: unknown): Observable<T> {
+    return this.http.post<T>(this.getURL(url), body);
+  }
+
+  private httpPut<T>(url: string | null, body: unknown): Observable<T> {
+    return this.http.put<T>(this.getURL(url), body);
   }
 }

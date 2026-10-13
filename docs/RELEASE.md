@@ -14,6 +14,9 @@ the **most severe** change in the release (one breaking API change ⇒ major for
 | Breaking / non-backward-compatible | **major** (`X`, `Y=Z=0`) | `v1.1.0` → `v2.0.0` |
 
 Agents and humans must not bump patch for additive features (e.g. new `BaseService` helpers ⇒ **minor**).
+Removing protected helpers subclasses rely on (e.g. drop `postJson`) ⇒ **major**.
+
+`BaseService` convention: structured HTTP → model + `fromDto`; scalars → `postBool` / `postNumber` / `postString`; no generic JSON escape hatch (see ENGINEERING_STANDARDS §5.8).
 
 Consequences:
 

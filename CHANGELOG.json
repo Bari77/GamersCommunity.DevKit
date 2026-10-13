@@ -1,5 +1,17 @@
 [
   {
+    "version": "2.0.0",
+    "date": "2026-10-13",
+    "summary": "gc-sdk BaseService : réponses structurées via modèles fromDto ; scalaires typés ; plus de postJson/getJson.",
+    "changes": [
+      {
+        "package": "gc-sdk",
+        "kind": "changed",
+        "text": "BREAKING: retire getJson/postJson/putJson. Utiliser post/getOne/postList + modèles, ou postBool/postNumber/postString/postVoid."
+      }
+    ]
+  },
+  {
     "version": "1.1.1",
     "date": "2026-10-13",
     "summary": "gc-sdk : retire l’alias BaseService.get qui collisionnait avec les services métier (HomeFeed).",
