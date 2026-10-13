@@ -9,3 +9,4 @@ src/DevGateway/bin/
 src/DevGateway/obj/
 packages/workspace-editor/editor/dist/
 apps/docs/.astro/
+AgentKit/
