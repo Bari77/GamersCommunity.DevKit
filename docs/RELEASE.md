@@ -4,7 +4,16 @@
 
 Every `@bari77/gc-*` package shares one version, driven by the tag. A `vX.Y.Z` tag publishes all
 seven packages at `X.Y.Z`, even the ones whose content did not change — same model as `@angular/*`.
-From **1.0.0** onward the lockstep version follows SemVer (breaking changes bump the major).
+From **1.0.0** onward the lockstep version follows **SemVer** (see table below). Pick the bump from
+the **most severe** change in the release (one breaking API change ⇒ major for the whole lockstep).
+
+| Change kind | Bump | Tag example |
+|-------------|------|-------------|
+| Fix only (no API / contract change) | **patch** (`Z`) | `v1.0.6` → `v1.0.7` |
+| Backward-compatible feature / additive API | **minor** (`Y`, `Z=0`) | `v1.0.6` → `v1.1.0` |
+| Breaking / non-backward-compatible | **major** (`X`, `Y=Z=0`) | `v1.1.0` → `v2.0.0` |
+
+Agents and humans must not bump patch for additive features (e.g. new `BaseService` helpers ⇒ **minor**).
 
 Consequences:
 

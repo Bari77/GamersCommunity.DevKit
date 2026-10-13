@@ -1,10 +1,9 @@
 import { Injectable, inject } from "@angular/core";
-import { map, Observable } from "rxjs";
+import { Observable } from "rxjs";
 import { BaseService } from "../http/base.service";
 import { GAME_MEMBERSHIP_CONFIG } from "../membership/tokens";
 import type {
   PlayerMediaCreateRequestDto,
-  PlayerMediaDto,
   PlayerMediaKind,
   PlayerMediaListRequestDto,
   PlayerMediaUpdateRequestDto,
@@ -26,15 +25,11 @@ export class PlayerMediaService extends BaseService {
 
   public list(kind: PlayerMediaKind, playerPublicId: string): Observable<PlayerMedia[]> {
     const payload: PlayerMediaListRequestDto = { playerPublicId };
-    return this.http
-      .post<PlayerMediaDto[]>(this.getURL(`${RESOURCE[kind]}/actions/List`), payload)
-      .pipe(map((dtos) => dtos.map((dto) => PlayerMedia.fromDto(dto))));
+    return this.postList(PlayerMedia, `${RESOURCE[kind]}/actions/List`, payload);
   }
 
   public create(kind: PlayerMediaKind, data: PlayerMediaCreateRequestDto): Observable<PlayerMedia> {
-    return this.http
-      .post<PlayerMediaDto>(this.getURL(`${RESOURCE[kind]}/actions/Create`), data)
-      .pipe(map((dto) => PlayerMedia.fromDto(dto)));
+    return this.post(PlayerMedia, `${RESOURCE[kind]}/actions/Create`, data);
   }
 
   public update(
@@ -42,12 +37,10 @@ export class PlayerMediaService extends BaseService {
     publicId: string,
     data: PlayerMediaUpdateRequestDto,
   ): Observable<PlayerMedia> {
-    return this.http
-      .put<PlayerMediaDto>(this.getURL(`${RESOURCE[kind]}/${publicId}`), data)
-      .pipe(map((dto) => PlayerMedia.fromDto(dto)));
+    return this.put(PlayerMedia, `${RESOURCE[kind]}/${publicId}`, data);
   }
 
   public remove(kind: PlayerMediaKind, publicId: string): Observable<void> {
-    return this.http.delete<void>(this.getURL(`${RESOURCE[kind]}/${publicId}`));
+    return this.delete(`${RESOURCE[kind]}/${publicId}`);
   }
 }

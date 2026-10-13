@@ -1,6 +1,6 @@
 {
   "name": "@bari77/gc-create-game",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "Scaffold a new GamersCommunity game repo by cloning Games.Template",
   "type": "module",
   "bin": {

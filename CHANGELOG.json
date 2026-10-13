@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.1.0",
+    "date": "2026-10-13",
+    "summary": "gc-sdk : helpers HTTP bruts (postJson, delete, postList) pour supprimer this.http dans les Fronts.",
+    "changes": [
+      {
+        "package": "gc-sdk",
+        "kind": "added",
+        "text": "BaseService: getJson / postJson / putJson / delete / postList, alias get → getOne. PlayerMediaService utilise les helpers. (SemVer minor — API additive, rétrocompatible.)"
+      }
+    ]
+  },
+  {
     "version": "1.0.6",
     "date": "2026-10-12",
     "summary": "gc-workspace-editor : validate ne plante plus sur ENOENT catalog.mjs.",
