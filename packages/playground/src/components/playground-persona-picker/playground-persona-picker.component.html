@@ -1,0 +1,100 @@
+<section class="persona-picker gc-enter" [class.persona-picker--embedded]="embedded()">
+    <nb-card>
+        <nb-card-header class="persona-picker__header">
+            <span>{{ embedded() ? text().switchTitle : text().title }}</span>
+            <span class="persona-picker__count">
+                {{ visible().length }} / {{ personas().length }} {{ text().personas }}
+            </span>
+        </nb-card-header>
+        <nb-card-body>
+            <p class="persona-picker__description">{{ text().description }}</p>
+            <label class="persona-picker__search">
+                <span class="persona-picker__search-label">{{ text().search }}</span>
+                <nb-form-field>
+                    <nb-icon nbPrefix icon="search-outline" pack="eva" />
+                    <input
+                        nbInput
+                        fullWidth
+                        type="search"
+                        [placeholder]="text().searchPlaceholder"
+                        [ngModel]="query()"
+                        (ngModelChange)="query.set($event)"
+                    />
+                </nb-form-field>
+            </label>
+
+            <ul class="persona-picker__grid">
+                @for (card of visible(); track card.id) {
+                    @let current = card.id === activeId();
+                    <li>
+                        <button
+                            type="button"
+                            class="persona"
+                            [class.is-current]="current"
+                            [attr.aria-current]="current ? 'true' : null"
+                            (click)="choose(card)"
+                        >
+                            <span class="persona__head">
+                                <img class="persona__avatar" [src]="card.avatarUrl" alt="" />
+                                <span class="persona__identity">
+                                    <span class="persona__handle">
+                                        <span class="persona__nickname">{{ card.nickname }}</span>
+                                        <span class="persona__discriminator">#{{ card.discriminator }}</span>
+                                    </span>
+                                    @if (card.headline) {
+                                        <span class="persona__headline">{{ card.headline }}</span>
+                                    }
+                                </span>
+                                <span class="persona__badge" [class.persona__badge--current]="current">
+                                    {{ current ? text().current : text().use }}
+                                </span>
+                            </span>
+
+                            @if (card.stats?.length) {
+                                <span class="persona__stats">
+                                    @for (stat of card.stats; track stat.label) {
+                                        <span class="persona__stat">
+                                            <span class="persona__stat-value">{{ stat.value }}</span>
+                                            <span class="persona__stat-label">{{ stat.label }}</span>
+                                        </span>
+                                    }
+                                </span>
+                            }
+
+                            @if (card.details?.length) {
+                                <span class="persona__details">
+                                    @for (detail of card.details; track detail.label) {
+                                        <span class="persona__detail">
+                                            <span class="persona__detail-label">{{ detail.label }}</span>
+                                            <span class="persona__tags">
+                                                @for (tag of detail.tags; track $index) {
+                                                    <span class="persona__tag">
+                                                        {{ tag.text }}
+                                                        @if (tag.hint) {
+                                                            <span class="persona__tag-hint">{{ tag.hint }}</span>
+                                                        }
+                                                    </span>
+                                                } @empty {
+                                                    <span class="persona__tag persona__tag--empty">
+                                                        {{ detail.empty ?? "—" }}
+                                                    </span>
+                                                }
+                                            </span>
+                                        </span>
+                                    }
+                                </span>
+                            }
+                        </button>
+                    </li>
+                } @empty {
+                    <li class="persona-picker__empty">{{ text().empty }}</li>
+                }
+            </ul>
+        </nb-card-body>
+        @if (!embedded() && homeLink(); as link) {
+            <nb-card-footer>
+                <a nbButton status="primary" [routerLink]="link">{{ text().back }}</a>
+            </nb-card-footer>
+        }
+    </nb-card>
+</section>

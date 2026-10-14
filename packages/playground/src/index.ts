@@ -9,6 +9,33 @@ export function shouldUseMocks(env: { useMocks?: boolean }): boolean {
 export async function bootstrapMocks(enabled: boolean, startWorker: () => Promise<unknown>): Promise<void> {
     if (!enabled) return;
     await startWorker();
+    // MSW calls location.reload() when a worker is registered but does not control this
+    // document, then still resolves start(). Requests fired in that window reach the gateway
+    // (401 on private actions such as ListMine) even though the console also shows mocked 200s
+    // from the reload. Never bootstrap until this document is actually controlled.
+    if (!(await serviceWorkerControlsPage())) {
+        await new Promise(() => undefined);
+    }
+}
+
+async function serviceWorkerControlsPage(): Promise<boolean> {
+    if (typeof navigator === "undefined" || !("serviceWorker" in navigator)) {
+        return true;
+    }
+    if (navigator.serviceWorker.controller) {
+        return true;
+    }
+    return new Promise((resolve) => {
+        const timer = window.setTimeout(() => resolve(!!navigator.serviceWorker.controller), 1500);
+        navigator.serviceWorker.addEventListener(
+            "controllerchange",
+            () => {
+                window.clearTimeout(timer);
+                resolve(true);
+            },
+            { once: true },
+        );
+    });
 }
 
 /** Minimal persona identity shared by MSW mocks, playground session, and workspace previews. */

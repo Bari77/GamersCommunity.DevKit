@@ -4,10 +4,15 @@ import { NbEvaIconsModule } from "@nebular/eva-icons";
 import {
     NbButtonModule,
     NbCardModule,
+    NbContextMenuModule,
+    NbFormFieldModule,
     NbIconModule,
+    NbInputModule,
     NbLayoutModule,
+    NbMenuModule,
     NbSpinnerModule,
     NbThemeModule,
+    NbTooltipModule,
 } from "@nebular/theme";
 
 /**
@@ -20,11 +25,16 @@ export function providePlaygroundUi(themeName = "cosmic"): EnvironmentProviders 
         importProvidersFrom(
             NbThemeModule.forRoot({ name: themeName }),
             NbLayoutModule,
+            NbMenuModule.forRoot(),
+            NbContextMenuModule,
+            NbTooltipModule,
             NbEvaIconsModule,
             NbCardModule,
             NbSpinnerModule,
             NbButtonModule,
             NbIconModule,
+            NbFormFieldModule,
+            NbInputModule,
         ),
     ]);
 }

@@ -1,5 +1,27 @@
 [
     {
+        "version": "2.2.0",
+        "date": "2026-10-14",
+        "summary": "gc-playground : header et sélecteur de persona du playground partagés entre les jeux (@bari77/gc-playground/components) ; bootstrapMocks attend le contrôle du service worker MSW.",
+        "changes": [
+            {
+                "package": "gc-playground",
+                "kind": "added",
+                "text": "Entrée ./components : gc-playground-header (logo, mention playground, cloche barrée, menu Profile / Switch account) et gc-playground-persona-picker (cartes avec stats et lignes de tags, recherche, persona courant). Pilotés par inputs (session, personas, labels) ; chaque jeu ne fournit que ses données."
+            },
+            {
+                "package": "gc-playground",
+                "kind": "changed",
+                "text": "providePlaygroundUi enregistre aussi NbMenuModule.forRoot(), NbContextMenuModule, NbTooltipModule, NbFormFieldModule et NbInputModule (requis par les composants). Peers optionnels @angular/common, forms, router et @bari77/gc-ui. Les Fronts doivent ajouter @bari77/gc-playground (et ses sous-chemins) au skip de federation.config.mjs, comme gc-sdk / gc-widgets."
+            },
+            {
+                "package": "gc-playground",
+                "kind": "fixed",
+                "text": "bootstrapMocks n'amorce plus l'app tant que le service worker MSW ne contrôle pas le document (évite des requêtes réelles vers la gateway pendant le rechargement MSW)."
+            }
+        ]
+    },
+    {
         "version": "2.1.0",
         "date": "2026-10-13",
         "summary": "Nouveau paquet gc-lint : règles ESLint + Prettier communes à tous les Fronts ; libs DevKit alignées sur ces règles.",

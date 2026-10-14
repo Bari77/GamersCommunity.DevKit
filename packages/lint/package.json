@@ -1,6 +1,6 @@
 {
     "name": "@bari77/gc-lint",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "description": "Shared ESLint + Prettier rules for GamersCommunity fronts and DevKit packages",
     "type": "module",
     "exports": {

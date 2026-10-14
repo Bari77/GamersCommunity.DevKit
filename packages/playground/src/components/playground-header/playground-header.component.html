@@ -1,0 +1,61 @@
+<div class="header-content">
+    <div class="left">
+        <a [routerLink]="homeLink()" [nbTooltip]="text().home" nbTooltipPlacement="bottom">
+            <img [src]="logoSrc()" alt="" class="logo" />
+        </a>
+        <span class="playground-mark gc-display">{{ mark() }}</span>
+    </div>
+
+    <div class="right">
+        @if (loading() && !session()) {
+            <gc-skeleton width="2.5rem" height="2.5rem" shape="circle" />
+            <div class="nickname-container nickname-container--skeleton" aria-busy="true">
+                <gc-skeleton width="7rem" height="1.4rem" />
+                <gc-skeleton width="2.75rem" height="1rem" />
+            </div>
+            <gc-skeleton width="3.75rem" height="3.75rem" shape="circle" />
+        } @else if (session(); as session) {
+            <span class="header-bell" [nbTooltip]="text().notificationsOff" nbTooltipPlacement="bottom">
+                <button
+                    type="button"
+                    nbButton
+                    ghost
+                    status="control"
+                    [attr.aria-label]="text().notificationsOff"
+                    disabled
+                >
+                    <nb-icon icon="bell-off-outline" pack="eva" />
+                </button>
+            </span>
+            <div
+                class="nickname-container"
+                [nbTooltip]="copied() ? text().copied : text().copy"
+                [nbTooltipStatus]="copied() ? 'success' : 'control'"
+                nbTooltipPlacement="bottom"
+                (click)="copyHandle()"
+                (mouseleave)="copied.set(false)"
+            >
+                <span class="user-handle user-handle--stacked">
+                    <span class="user-handle__nickname">{{ session.nickname }}</span>
+                    <span class="user-handle__discriminator">#{{ session.discriminator }}</span>
+                </span>
+            </div>
+            <div
+                class="avatar-container"
+                [nbContextMenu]="menuItems()"
+                nbContextMenuTag="gc-playground-header-user"
+                nbContextMenuTrigger="hover"
+            >
+                @if (session.avatarUrl) {
+                    <img class="avatar" [src]="session.avatarUrl" [alt]="session.nickname" />
+                } @else {
+                    <span class="avatar-fallback">{{ session.nickname.charAt(0) }}</span>
+                }
+            </div>
+        } @else {
+            <a nbButton ghost [routerLink]="loginLink()" [attr.aria-label]="text().login">
+                <nb-icon icon="power-outline" pack="eva" />
+            </a>
+        }
+    </div>
+</div>
