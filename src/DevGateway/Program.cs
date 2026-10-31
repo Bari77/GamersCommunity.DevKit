@@ -1,7 +1,9 @@
 using DevGateway.Configuration;
 using DevGateway.Endpoints;
 using DevGateway.Middleware;
+using GamersCommunity.Core.Logging;
 using GamersCommunity.Core.Rabbit;
+using GamersCommunity.Core.Telemetry;
 using Microsoft.Extensions.Options;
 using Serilog;
 
@@ -9,10 +11,10 @@ Console.Title = "DevGateway";
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((ctx, cfg) => cfg
-    .ReadFrom.Configuration(ctx.Configuration)
-    .Enrich.FromLogContext()
-    .WriteTo.Console());
+var loggerSettings = builder.Configuration.GetSection("LoggerSettings").Get<LoggerSettings>() ?? new LoggerSettings();
+Logger.Initialize(loggerSettings, "DevGateway", builder.Environment, builder.Configuration);
+builder.Logging.ClearProviders();
+builder.Services.AddGamersCommunityTelemetry(builder.Configuration, builder.Environment);
 
 builder.Services.AddOptions<RabbitMQSettings>()
     .Bind(builder.Configuration.GetSection("RabbitMQ"))
